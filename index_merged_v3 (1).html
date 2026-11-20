@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>امانت‌داری کریمی - سامانه ویژه مشتریان</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-light: #1e293b;
+      --accent: #0284c7;
+      --accent-soft: #e0f2fe;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --warning: #d97706;
+      --bg-body: #eef2f6;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      direction: rtl;
+      -webkit-tap-highlight-color: transparent;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+
+    body {
+      background: var(--bg-body);
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 18px 18px;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: var(--shadow-md);
+      padding-bottom: 75px;
+    }
+
+    @media (min-width: 540px) {
+      body { padding: 14px; }
+      .app-viewport {
+        min-height: 92vh;
+        max-height: 94vh;
+        border-radius: 22px;
+        border: 1.5px solid var(--border-color);
+        overflow: hidden;
+      }
+    }
+
+    .app-header {
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      border-bottom: 3px solid #38bdf8;
+      z-index: 10;
+    }
+
+    .header-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ffffff;
+    }
+
+    .app-body {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .floating-back-btn {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      border: 2px solid #38bdf8;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.3);
+      z-index: 2500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease;
+    }
+    .floating-back-btn:active { transform: scale(0.95); }
+
+    .clean-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-group { margin-bottom: 12px; }
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--primary-light);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.98rem;
+      text-align: center;
+      outline: none;
+      background: #ffffff;
+      color: var(--text-main);
+      font-weight: 800;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px 16px;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.92rem;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
+      transition: transform 0.12s ease, opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-success { background: linear-gradient(135deg, #059669 0%, #047857 100%); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22); }
+    .btn-whatsapp { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.22); }
+    .btn-secondary { background: #64748b; box-shadow: none; }
+    .btn-danger { background: #dc2626; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
+    .btn-outline {
+      background: #f8fafc;
+      color: var(--primary);
+      border: 1.5px solid var(--border-color);
+      box-shadow: none;
+    }
+
+    .login-hero {
+      text-align: center;
+      padding: 10px 6px 14px 6px;
+    }
+    .login-badge-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      margin-bottom: 10px;
+      border: 1.5px solid #bae6fd;
+    }
+    .login-hero h2 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .login-hero p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .about-accordion {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: #475569;
+      line-height: 1.7;
+    }
+
+    .profile-summary-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
+      border: 1.5px solid #bae6fd;
+    }
+
+    .currency-tabs {
+      display: flex;
+      gap: 5px;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .currency-tab {
+      flex: 1;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 0.84rem;
+      font-weight: 900;
+      cursor: pointer;
+      border-radius: 9px;
+      color: #475569;
+      background: transparent;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .currency-tab.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
+    }
+
+    .balance-box-modern {
+      background: linear-gradient(145deg, #f8fafc 0%, #eff6ff 100%);
+      border: 1.5px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .balance-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #475569;
+    }
+    .balance-main-figure {
+      font-size: 1.95rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin: 6px 0;
+      letter-spacing: 0.5px;
+    }
+    .balance-sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      border-top: 1px solid #dbeafe;
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+    .balance-sub-item {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 6px 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .balance-sub-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      display: block;
+    }
+    .balance-sub-val {
+      font-size: 0.88rem;
+      font-weight: 900;
+    }
+
+    .status-banner {
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .status-banner.positive { background: var(--success-soft); border: 1px solid #a7f3d0; color: #065f46; }
+    .status-banner.negative { background: var(--danger-soft); border: 1px solid #fecaca; color: #991b1b; }
+    .status-banner.neutral { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+
+    .credit-service-drawer {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .calc-box {
+      background: #ecfdf5;
+      border: 1.5px dashed #10b981;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #047857;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .calc-box.error {
+      background: #fef2f2;
+      border-color: #fca5a5;
+      color: #b91c1c;
+    }
+
+    .day-group-bar {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      border-top: 2px solid #38bdf8;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .tx-card-container {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 0;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .tx-card-header {
+      padding: 12px 14px;
+      background: #f1f5f9;
+      border-bottom: 1.5px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tx-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .tx-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      font-size: 0.78rem;
+    }
+    .tx-table th {
+      background: #e2e8f0;
+      color: #1e293b;
+      font-weight: 900;
+      padding: 8px 10px;
+      text-align: right;
+      font-size: 0.74rem;
+      border-bottom: 1.5px solid #cbd5e1;
+    }
+    .tx-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+    .tx-table tr {
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .tx-table tr:active { background: #e0f2fe; }
+    .tx-row-credit { background: #f8fffb; }
+    .tx-row-debit { background: #fff9f9; }
+
+    .tx-detail-btn-shake {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+      animation: detailShakeAnim 1.4s ease-in-out infinite;
+    }
+    @keyframes detailShakeAnim {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); background-color: #38bdf8; }
+    }
+
+    .fullscreen-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #f8fafc;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      visibility: hidden;
+    }
+    .fullscreen-modal.open {
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    .modal-header {
+      padding: 13px 16px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      border-bottom: 3px solid #38bdf8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .modal-scroll-body {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      background: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .center-dialog-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(4px);
+      z-index: 3000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .center-dialog-box {
+      background: #ffffff;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 20px;
+      padding: 22px 18px;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+      border: 1.5px solid var(--border-color);
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.62);
+      backdrop-filter: blur(5px);
+      z-index: 3800;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      transition: opacity 0.22s ease;
+    }
+
+    .loading-card-box {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 26px 28px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
+      border: 2px solid #bae6fd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .real-spinner-ring {
+      width: 48px; height: 48px;
+      border: 4.5px solid #e0f2fe;
+      border-top: 4.5px solid #0284c7;
+      border-right: 4.5px solid #38bdf8;
+      border-radius: 50%;
+      animation: realSpinAnim 0.75s linear infinite;
+    }
+    @keyframes realSpinAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .loading-title-text { font-size: 0.96rem; font-weight: 900; color: var(--primary); }
+    .loading-sub-text { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; line-height: 1.5; }
+
+    .single-alert-popup {
+      position: fixed;
+      top: 16px; left: 50%;
+      transform: translateX(-50%) translateY(-180%);
+      width: calc(100% - 24px);
+      max-width: 480px;
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 16px 40px rgba(6, 95, 70, 0.42);
+      border: 1.5px solid #6ee7b7;
+      z-index: 4300;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .single-alert-popup.visible { transform: translateX(-50%) translateY(0); }
+
+    .alert-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      padding-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+    .alert-content-box {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .alert-dismiss-btn {
+      background: #ffffff;
+      color: #047857;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .header-action-btn {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .receipt-section-box {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .receipt-row-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 10px;
+      gap: 12px;
+    }
+    .receipt-row-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .receipt-row-label { color: #64748b; font-weight: 800; font-size: 0.82rem; }
+    .receipt-row-val { color: #0f172a; font-weight: 900; font-size: 0.88rem; text-align: left; word-break: break-word; }
+
+    .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div id="singleAlertPopup" class="single-alert-popup hidden" role="alert">
+    <div class="alert-top-row">
+      <span id="alertTitleText">🔔 اعلان تراکنش جدید</span>
+    </div>
+    <div class="alert-content-box" id="alertBodyContent"></div>
+    <button type="button" class="alert-dismiss-btn" onclick="dismissCurrentAlertPopup()">متوجه شدم، بستن اعلان ✓</button>
+  </div>
+
+  <div id="realLoadingOverlay" class="loading-overlay hidden">
+    <div class="loading-card-box">
+      <div class="real-spinner-ring"></div>
+      <div id="loadingOverlayTitle" class="loading-title-text">در حال دریافت آخرین اطلاعات از سرور...</div>
+      <div id="loadingOverlaySub" class="loading-sub-text">لطفاً چند لحظه صبر کنید تا تراکنش‌ها و مانده حساب شما به‌روز شوند</div>
+    </div>
+  </div>
+
+  <div class="app-viewport">
+    <header class="app-header">
+      <div class="header-title">🛡️ امانت‌داری کریمی</div>
+    </header>
+
+    <main class="app-body">
+      <!-- ================= گام ۱: ورود با شماره تماس ================= -->
+      <div id="phoneSection" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
+        <div>
+          <div class="clean-card">
+            <div class="login-hero">
+              <div class="login-badge-icon">🔐</div>
+              <h2>ورود به حساب مشتریان</h2>
+              <p>برای مشاهده موجودی و سابقه تراکنش‌ها، شماره تماس ثبت‌شده خود را وارد کنید</p>
+            </div>
+
+            <div class="form-group">
+              <label for="phoneInput">شماره تماس مشتری:</label>
+              <input type="tel" inputmode="numeric" id="phoneInput" placeholder="شماره تماس" dir="ltr" onkeydown="if(event.key==='Enter') checkPhone()">
+            </div>
+
+            <button type="button" class="btn" id="btnCheckPhone" onclick="checkPhone()">ادامه و شناسایی حساب ←</button>
+
+            <div id="biometricBtnWrapper" class="hidden" style="margin-top: 10px;">
+              <button type="button" class="btn btn-success" onclick="loginWithBiometric()">🔑 ورود سریع با اثر انگشت</button>
+            </div>
+          </div>
+
+          <div class="clean-card" style="padding:12px 14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.84rem; font-weight:900; color:var(--primary);">✨ هنوز حساب ندارید؟</span>
+              <button type="button" onclick="toggleAboutInfo()" style="background:none; border:none; color:var(--accent); font-size:0.78rem; font-weight:800; cursor:pointer; width:auto; padding:2px 4px;">درباره خدمات ما ▾</button>
+            </div>
+            <div id="aboutServicesBox" class="about-accordion hidden">
+              دریافت امانت‌های نقدی، نگهداری امن، انجام معاملات و حواله‌جات سریع با حساب‌رسانی دقیق و شفاف. می‌توانید همین حالا به‌صورت آنلاین حساب افتتاح کنید یا از طریق واتساپ با ما در ارتباط باشید.
+            </div>
+            <button type="button" class="btn btn-success" style="margin-top:10px; padding:11px; font-size:0.86rem;" onclick="openSelfRegister()">
+              ➕ افتتاح حساب جدید (توسط مشتری)
+            </button>
+            <a href="https://wa.me/9647721878997" target="_blank" class="btn btn-whatsapp" style="margin-top:8px; padding:10px; font-size:0.82rem;">
+              💬 پشتیبانی واتساپ
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= گام ۲: ورود سریع با کد حساب (مشاهده حساب بدون نیاز به رمز عبور) ================= -->
+      <div id="accountSection" class="hidden" style="margin: auto 0;">
+        <div class="clean-card" style="text-align:center; padding:20px 16px;">
+          <div class="login-badge-icon" style="background:var(--success-soft); color:var(--success); border-color:#a7f3d0;">👤</div>
+          <div id="greetingMsg" style="font-weight:900; color:var(--primary); margin-bottom:4px; font-size:1.05rem;"></div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">لطفاً کد اختصاصی حساب (Account ID) خود را وارد نمایید:</p>
+
+          <div class="form-group">
+            <input type="text" id="accountIdInput" placeholder="کد حساب (Account ID)" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
+          </div>
+
+          <button type="button" class="btn btn-success" id="btnVerifyAcc" onclick="verifyAccount()">ورود به حساب 🚀</button>
+          <button type="button" class="btn btn-outline" onclick="navigateToStep('phone')" style="margin-top:8px;">← تغییر شماره تماس</button>
+        </div>
+      </div>
+
+      <!-- ================= گام ۳: افتتاح حساب واقعی توسط مشتری (ذخیره در accounts به همراه ستون PinHash) ================= -->
+      <div id="registerSection" class="hidden">
+        <div class="clean-card">
+          <div class="login-hero">
+            <div class="login-badge-icon" style="background:var(--success-soft); color:var(--success); border-color:#a7f3d0;">🆕</div>
+            <h2>افتتاح حساب جدید (نقدی)</h2>
+            <p>اطلاعات زیر را تکمیل کنید تا حساب شما در سامانه ثبت شود</p>
+          </div>
+
+          <div class="form-group" style="background:#fffbeb; border:1.5px dashed #f59e0b; padding:10px; border-radius:12px;">
+            <label style="color:#b45309;">شناسه اختصاصی حساب (Account ID):</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="regAccId" dir="ltr" readonly style="background:#fff; font-weight:900; font-size:1.05rem;">
+              <button type="button" class="btn btn-outline" style="width:auto; padding:10px 12px; font-size:0.8rem;" onclick="copyRegAccId()">📋 کپی</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regFullName">نام و نام خانوادگی کامل:</label>
+            <input type="text" id="regFullName" placeholder="نام و نام خانوادگی خود را بنویسید">
+          </div>
+
+          <div class="form-group">
+            <label for="regPhone">شماره همراه (واتساپ):</label>
+            <input type="tel" id="regPhone" placeholder="+96477xxxxxxxx" dir="ltr">
+          </div>
+
+          <div class="form-group">
+            <label for="regPin">تعیین رمز ارسال شارژ (حداقل ۴ کاراکتر):</label>
+            <input type="password" id="regPin" placeholder="یک رمز امن برای ارسال شارژ انتخاب کنید" dir="ltr">
+          </div>
+
+          <div class="form-group">
+            <label for="regPinConfirm">تکرار رمز ارسال شارژ:</label>
+            <input type="password" id="regPinConfirm" placeholder="رمز را مجدداً وارد کنید" dir="ltr">
+          </div>
+
+          <button type="button" class="btn btn-success" id="btnCreateAccount" onclick="submitRealAccountCreation()">✅ ثبت و افتتاح قطعی حساب</button>
+          <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">← بازگشت به صفحه ورود</button>
+        </div>
+      </div>
+
+      <!-- ================= گام ۴: داشبورد اصلی امانت‌داری کریمی + ارسال شارژ با تأیید رمز PinHash ================= -->
+      <div id="dashboardSection" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
+        <div class="profile-summary-card" style="margin-bottom: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span id="dashName" style="font-size: 1.05rem; font-weight: 900; color: var(--primary);">---</span>
+            <span style="font-size: 0.72rem; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 2px 10px; border-radius: 20px; font-weight: 800;">● حساب فعال</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); padding-top: 6px; border-top: 1px dashed #e2e8f0; margin-bottom: 10px;">
+            <span>تلفن: <b id="dashPhone" class="eng-num" style="color: var(--primary);">---</b></span>
+            <span>کد حساب: <b id="dashAccountId" class="eng-num" style="color: var(--accent);">---</b></span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+            <button type="button" onclick="toggleBiometricSetting()" id="bioToggleBtn" style="padding: 8px 4px; border-radius: 10px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: var(--primary); font-size: 0.72rem; font-weight: 800; cursor: pointer; text-align: center;">🔑 اثرانگشت</button>
+            <button type="button" onclick="openSetPinModal()" id="setPinBtn" style="padding: 8px 4px; border-radius: 10px; border: 1.5px solid #a7f3d0; background: #ecfdf5; color: #065f46; font-size: 0.72rem; font-weight: 800; cursor: pointer; text-align: center;">🔒 رمز شارژ</button>
+            <button type="button" onclick="logout()" style="padding: 8px 4px; border-radius: 10px; border: 1.5px solid #fca5a5; background: #fef2f2; color: #991b1b; font-size: 0.72rem; font-weight: 800; cursor: pointer; text-align: center;">🚪 خروج</button>
+          </div>
+        </div>
+
+        <div class="clean-card" style="margin-bottom: 0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+            <div>
+              <span style="font-size:0.9rem; font-weight:900; color:var(--primary); display:block;">📊 موجودی و مانده حساب:</span>
+              <span id="lastSyncTimeText" style="font-size:0.68rem; color:var(--text-muted); font-weight:700;">آخرین همگام‌سازی: اکنون</span>
+            </div>
+            <button type="button" id="refreshAccountBtn" onclick="refreshAccountData()" class="btn btn-outline" style="width:auto; padding:6px 12px; font-size:0.76rem; border-radius:9px; border-color:#7dd3fc; background:#f0f9ff; color:#0369a1;">
+              🔄 بروزرسانی حساب
+            </button>
+          </div>
+
+          <div class="currency-tabs" id="currencyTabs"></div>
+
+          <div class="balance-box-modern">
+            <div class="balance-label">مانده خالص حساب (<span id="odometerCurrencyLabel">AFN</span>)</div>
+            <div id="odometerValue" class="balance-main-figure eng-num">0</div>
+            <div class="balance-sub-grid">
+              <div class="balance-sub-item">
+                <span class="balance-sub-title">مجموع بستانکار (+)</span>
+                <span id="odometerCredit" class="balance-sub-val eng-num" style="color:var(--success);">0</span>
+              </div>
+              <div class="balance-sub-item">
+                <span class="balance-sub-title">مجموع بدهکار (-)</span>
+                <span id="odometerDebit" class="balance-sub-val eng-num" style="color:var(--danger);">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="accountPsychologyMsg"></div>
+
+          <button type="button" class="btn btn-success" id="toggleCreditDrawerBtn" onclick="toggleCreditDrawer()" style="margin-top:4px;">
+            📲 ارسال کردیت و شارژ (کسر از موجودی دینار) ▾
+          </button>
+
+          <div id="creditServiceDrawer" class="credit-service-drawer hidden">
+            <div class="currency-tabs" style="margin-bottom:10px;">
+              <button type="button" class="currency-tab active" id="tabAfnBtn" onclick="switchTopupMode('afn')">🇦🇫 شارژ افغانستان</button>
+              <button type="button" class="currency-tab" id="tabIqBtn" onclick="switchTopupMode('iq')">🇮🇶 شارژ عراق (واتساپ)</button>
+            </div>
+
+            <div id="topupAfnForm">
+              <div class="form-group">
+                <label for="afnTargetPhone">شماره موبایل مقصد در افغانستان (۱۰ رقم با صفر):</label>
+                <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              </div>
+              <div class="form-group">
+                <label for="afnAmountInput">مبلغ شارژ به افغانی (AFN):</label>
+                <input type="number" id="afnAmountInput" placeholder="مثلاً 100" dir="ltr" oninput="recalcTopupCost()">
+              </div>
+              <div class="calc-box" id="afnCalcBox">
+                معادل کسر از موجودی دینار (IQD): <b id="afnCalculatedIqd" class="eng-num">0</b> IQD
+              </div>
+            </div>
+
+            <div id="topupIqForm" class="hidden">
+              <div class="form-group">
+                <label for="iqNetworkSelect">شبکه همراه عراق:</label>
+                <select id="iqNetworkSelect">
+                  <option value="Zain (زین عراق)">Zain (زین عراق)</option>
+                  <option value="AsiaCell (آسیاسل)">AsiaCell (آسیاسل)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="iqCardSelect">مبلغ کارت شارژ عراق (IQD):</label>
+                <select id="iqCardSelect" onchange="recalcTopupCost()">
+                  <option value="1000">1,000 دینار</option>
+                  <option value="2000">2,000 دینار</option>
+                  <option value="3000">3,000 دینار</option>
+                  <option value="5000">5,000 دینار</option>
+                  <option value="10000">10,000 دینار</option>
+                  <option value="15000">15,000 دینار</option>
+                  <option value="25000">25,000 دینار</option>
+                </select>
+              </div>
+              <div class="calc-box" id="iqCalcBox">
+                مبلغ کسر از موجودی دینار (IQD): <b id="iqCalculatedIqd" class="eng-num">1,000</b> IQD
+              </div>
+            </div>
+
+            <div id="topupEligibilityMsg" style="font-size:0.76rem; font-weight:800; color:#b91c1c; margin-top:8px; text-align:center;"></div>
+
+            <button type="button" class="btn" id="btnExecuteTopup" style="margin-top:10px;" onclick="executeCustomerTopup()">
+              ⚡ ثبت تراکنش، کسر دینار و ارسال شارژ
+            </button>
+          </div>
+        </div>
+
+        <div class="tx-card-container">
+          <div class="tx-card-header">
+            <span style="font-size: 0.9rem; font-weight: 900; color: var(--primary);">📋 دفتر سابقه تراکنش‌ها</span>
+            <span id="txCountBadge" class="eng-num" style="font-size: 0.78rem; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px; font-weight: 800;">0 تراکنش</span>
+          </div>
+          <div class="tx-table-wrapper" id="transactionsContainer"></div>
+        </div>
+
+        <div>
+          <a id="directWhatsAppMsg" href="https://wa.me/9647721878997" target="_blank" class="btn btn-whatsapp" style="padding: 12px; font-size: 0.88rem; border-radius: 14px;">
+            💬 ارسال پیام به امانت‌داری کریمی در واتساپ
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <button type="button" id="floatingBackBtn" class="floating-back-btn" onclick="handleFloatingBack()">
+      ← بازگشت
+    </button>
+  </div>
+
+  <!-- مودال تغییر رمز ارسال شارژ (نیازمند وارد کردن رمز فعلی) -->
+  <div id="setPinModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box">
+      <div style="font-size:2rem; margin-bottom:6px;">🔒</div>
+      <h3 style="font-size:1.02rem; font-weight:900; color:var(--primary); margin-bottom:6px;">تغییر رمز ارسال شارژ</h3>
+      <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
+        برای تغییر رمز، ابتدا رمز فعلی ارسال شارژ را وارد کنید و سپس رمز جدید را ثبت نمایید.
+      </p>
+      <div class="form-group">
+        <input type="password" id="oldAccountPinInput" placeholder="رمز فعلی ارسال شارژ" dir="ltr">
+      </div>
+      <div class="form-group">
+        <input type="password" id="newAccountPinInput" placeholder="رمز جدید (حداقل ۴ کاراکتر)" dir="ltr">
+      </div>
+      <div class="form-group">
+        <input type="password" id="confirmAccountPinInput" placeholder="تکرار رمز جدید" dir="ltr">
+      </div>
+      <button type="button" class="btn btn-success" onclick="saveAccountPassword()" style="margin-bottom:8px;">💾 ذخیره رمز جدید</button>
+      <button type="button" class="btn btn-outline" onclick="closeSetPinModal()">انصراف</button>
+    </div>
+  </div>
+
+  <!-- مودال تأیید رمز تراکنش در لحظه ارسال شارژ -->
+  <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box" style="border-color:#7dd3fc;">
+      <div style="font-size:2rem; margin-bottom:6px;">🛡️</div>
+      <h3 style="font-size:1.02rem; font-weight:900; color:var(--primary); margin-bottom:6px;">تأیید رمز ارسال شارژ</h3>
+      <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
+        برای کسر از موجودی دینار و ارسال شارژ، رمز تراکنش خود را وارد کنید:
+      </p>
+      <div class="form-group">
+        <input type="password" id="txVerifyPinInput" placeholder="رمز عبور ارسال شارژ" dir="ltr" onkeydown="if(event.key==='Enter') confirmAndRunTopup()">
+      </div>
+      <button type="button" class="btn btn-success" id="btnConfirmTopupWithPin" onclick="confirmAndRunTopup()" style="margin-bottom:8px;">✅ تأیید رمز و ارسال قطعی شارژ</button>
+      <button type="button" class="btn btn-outline" onclick="closeTxPinConfirmModal()">انصراف</button>
+    </div>
+  </div>
+
+  <!-- مودال فعال‌سازی رمز برای حساب‌های قدیمی (PinHash خالی در جدول accounts) -->
+  <div id="legacyPinActivationModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box" style="border-color:#fcd34d;">
+      <div style="font-size:2.1rem; margin-bottom:6px;">🔐</div>
+      <h3 style="font-size:1.02rem; font-weight:900; color:var(--primary); margin-bottom:6px;">فعال‌سازی رمز ارسال شارژ</h3>
+      <p style="font-size:0.8rem; color:#475569; line-height:1.65; margin-bottom:14px;">
+        حساب شما از قبل ثبت شده و هنوز <b>رمز ارسال شارژ</b> ندارد. برای امنیت موجودی شما، تعیین رمز اولیه فقط با تأیید مدیریت در واتساپ انجام می‌شود:
+      </p>
+      <a id="legacyActivateWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:8px; font-size:0.86rem;">
+        💬 درخواست فعال‌سازی رمز در واتساپ
+      </a>
+      <button type="button" class="btn btn-outline" onclick="closeLegacyPinActivationModal()">متوجه شدم، بازگشت</button>
+    </div>
+  </div>
+
+  <div id="biometricPromptModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box">
+      <div style="width:58px; height:58px; background:var(--success-soft); color:var(--success); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:1.8rem; margin-bottom:10px; border:1.5px solid #a7f3d0;">🔑</div>
+      <h3 style="font-size:1.05rem; font-weight:900; color:var(--primary); margin-bottom:6px;">فعال‌سازی ورود با اثر انگشت</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.65; margin-bottom:16px;">
+        برای امنیت بیشتر و ورود سریع بدون نیاز به وارد کردن مجدد شماره و کد حساب، اثر انگشت خود را فعال کنید.
+      </p>
+      <button type="button" class="btn btn-success" onclick="confirmEnableBiometric()" style="margin-bottom:8px;">✅ فعال‌سازی اثر انگشت</button>
+      <button type="button" class="btn btn-outline" onclick="dismissBiometricPrompt()" style="font-size:0.82rem; padding:10px;">فعلاً نیاز نیست</button>
+    </div>
+  </div>
+
+  <div id="errorModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box" style="border-color:#fca5a5;">
+      <div style="font-size:2.4rem; margin-bottom:6px;">⚠️</div>
+      <h3 style="font-size:1.05rem; font-weight:900; color:var(--danger); margin-bottom:8px;">شماره تماس یافت نشد</h3>
+      <p style="font-size:0.82rem; color:#475569; line-height:1.65; margin-bottom:16px;">
+        شماره واردشده در سیستم ثبت نشده است. می‌توانید همین حالا به‌صورت آنلاین حساب بسازید یا با پشتیبانی در ارتباط باشید:
+      </p>
+      <button type="button" class="btn btn-success" onclick="closeErrorModal(); openSelfRegister();" style="margin-bottom:8px;">➕ افتتاح حساب جدید</button>
+      <a id="modalWhatsAppErrorBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:8px; font-size:0.86rem;">
+        💬 پیام به واتساپ پشتیبانی
+      </a>
+      <button type="button" class="btn btn-secondary" onclick="closeErrorModal()">بازگشت و اصلاح شماره</button>
+    </div>
+  </div>
+
+  <div id="txDetailModal" class="fullscreen-modal" style="z-index:2100;">
+    <div class="modal-header">
+      <h3 style="font-size:0.98rem; font-weight:900;">🧾 رسید تراکنش</h3>
+      <button type="button" class="header-action-btn" onclick="handleModalBackClick('txDetailModal')">← بستن</button>
+    </div>
+    <div class="modal-scroll-body">
+      <div id="receiptToCapture" class="receipt-section-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px dashed #cbd5e1; padding-bottom:10px;">
+          <span style="font-size:0.92rem; font-weight:900; color:var(--primary);">🛡️ امانت‌داری کریمی</span>
+          <span style="font-size:0.76rem; color:var(--text-muted); font-weight:800;" class="eng-num" id="receiptDateStr">---</span>
+        </div>
+        <div id="modalBody" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </div>
+      <button type="button" id="shareReceiptBtn" class="btn btn-whatsapp" onclick="shareReceiptToWhatsApp()">📤 اشتراک‌گذاری رسید (انتخاب مخاطب واتساپ)</button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://zpehwkvtbiceurfpafiw.supabase.co";
+    const SUPABASE_KEY = "sb_publishable__ZK44kWZES328UQJ7P_zzw_tZoc465D";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const OWNER_WHATSAPP = "9647721878997";
+    const AFN_TO_IQD_RATE = 26.5;
+    const TELEGRAM_BOT_TOKEN = "8900776593:AAH0BPYT34-GlJ_00fUN0b56mUpz4s2k6SA";
+    const TELEGRAM_CHAT_ID = "-1003555048687";
+    const TELEGRAM_SEND_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    let accountsList = [];
+    let transactionsList = [];
+    let currentFoundUser = null;
+    let customerTransactions = [];
+    let customerBalances = {};
+    let currencyList = [];
+    let activeCurrencyIndex = 0;
+    let selectedTxItem = null;
+    let currentStep = 'phone';
+    let isHandlingPopState = false;
+    let isInitialFetchDone = false;
+    let pendingAlertQueue = [];
+    let topupMode = 'afn';
+    let pendingTopupPayload = null;
+
+    function loadCachedData() {
+      try {
+        const cachedAcc = localStorage.getItem('karimi_cache_accounts');
+        const cachedTx = localStorage.getItem('karimi_cache_transactions');
+        if (cachedAcc) accountsList = JSON.parse(cachedAcc);
+        if (cachedTx) transactionsList = JSON.parse(cachedTx);
+      } catch(e) {}
+    }
+
+    loadCachedData();
+
+    function toEnglishDigits(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[۰-۹٠-٩]/g, function (d) {
+        return d.charCodeAt(0) >= 1776 ? d.charCodeAt(0) - 1776 : d.charCodeAt(0) - 1632;
+      });
+    }
+
+    function extractDateOnly(rawDate) {
+      if (!rawDate) return 'بدون تاریخ';
+      let s = toEnglishDigits(String(rawDate)).trim();
+      if (s.includes('T')) return s.split('T')[0];
+      if (s.includes(' ')) return s.split(' ')[0];
+      return s.slice(0, 10);
+    }
+
+    function extractTimeOnly(rawDate) {
+      if (!rawDate) return '';
+      let s = String(rawDate).trim();
+      if (!s.includes('T') && !s.includes(' ')) return '';
+      let d = new Date(s);
+      if (isNaN(d.getTime())) return '';
+      let hh = String(d.getHours()).padStart(2, '0');
+      let mm = String(d.getMinutes()).padStart(2, '0');
+      if (hh === '00' && mm === '00') return '';
+      return `${hh}:${mm}`;
+    }
+
+    function getTxTimestamp(tx) {
+      let raw = getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']);
+      if (!raw) return 0;
+      let s = toEnglishDigits(String(raw)).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+        let t = new Date(s + 'T00:00:00').getTime();
+        return isNaN(t) ? 0 : t;
+      }
+      let t = new Date(s).getTime();
+      return isNaN(t) ? 0 : t;
+    }
+
+    function sortChronologically(list, ascending = false) {
+      return list.slice().sort((a, b) => {
+        let ta = getTxTimestamp(a);
+        let tb = getTxTimestamp(b);
+        if (ta !== tb) return ascending ? (ta - tb) : (tb - ta);
+        let ida = String(getVal(a, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+        let idb = String(getVal(b, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+        return ascending ? ida.localeCompare(idb) : idb.localeCompare(ida);
+      });
+    }
+
+    function getPersianDayName(dateStr) {
+      try {
+        let d = new Date(dateStr + 'T12:00:00');
+        if (isNaN(d.getTime())) return '';
+        const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+        return days[d.getDay()];
+      } catch (e) { return ''; }
+    }
+
+    function playSound(type) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        if (type === 'click') {
+          osc.frequency.setValueAtTime(520, ctx.currentTime);
+          gain.gain.setValueAtTime(0.03, ctx.currentTime);
+          osc.start(); osc.stop(ctx.currentTime + 0.035);
+        } else if (type === 'success') {
+          osc.frequency.setValueAtTime(540, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(860, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.05, ctx.currentTime);
+          osc.start(); osc.stop(ctx.currentTime + 0.1);
+        }
+      } catch (e) {}
+    }
+
+    function getVal(obj, keys) {
+      if (!obj) return '';
+      for (let k of keys) {
+        if (obj[k] !== undefined && obj[k] !== null && obj[k] !== "") return obj[k];
+        let lower = k.toLowerCase();
+        for (let prop in obj) {
+          if (prop.toLowerCase() === lower && obj[prop] !== undefined && obj[prop] !== null && obj[prop] !== "") {
+            return obj[prop];
+          }
+        }
+      }
+      return '';
+    }
+
+    function getLast9Digits(str) {
+      if (!str) return '';
+      let cleaned = toEnglishDigits(String(str)).replace(/\D/g, '');
+      return cleaned.slice(-9);
+    }
+
+    function formatEnMoney(amount) {
+      let num = parseFloat(amount);
+      if (isNaN(num)) return '0';
+      return num.toLocaleString('en-US');
+    }
+
+    // هش SHA-256 برای ذخیره و بررسی رمز ارسال شارژ در ستون PinHash
+    async function hashPin(plain) {
+      const clean = String(plain || '').trim();
+      if (!window.crypto || !window.crypto.subtle) return clean;
+      const enc = new TextEncoder().encode(clean);
+      const buf = await window.crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // خواندن مستقیم رمز هش‌شده از ستون PinHash جدول accounts
+    function getStoredPinHashForAccount(accObj, accId) {
+      if (accObj) {
+        const colPin = getVal(accObj, ['PinHash', 'pinhash', 'pin_hash']);
+        if (colPin) return String(colPin).trim();
+      }
+      const found = accountsList.find(a =>
+        String(getVal(a, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === String(accId || '').trim().toLowerCase()
+      );
+      if (found) {
+        const colPin = getVal(found, ['PinHash', 'pinhash', 'pin_hash']);
+        if (colPin) return String(colPin).trim();
+      }
+      return '';
+    }
+
+    // ذخیره مستقیم هش SHA-256 در ستون PinHash جدول accounts در Supabase
+    async function persistPinHashInSupabase(accId, pinHash) {
+      const cleanId = String(accId || '').trim();
+      const { error } = await _supabase
+        .from('accounts')
+        .update({ PinHash: pinHash })
+        .eq('AccountID', cleanId);
+      return !error;
+    }
+
+    function toggleAboutInfo() {
+      playSound('click');
+      document.getElementById('aboutServicesBox').classList.toggle('hidden');
+    }
+
+    function showRealLoading(titleText = "در حال دریافت آخرین تراکنش‌ها...", subText = "لطفاً چند لحظه صبر کنید تا اطلاعات حساب به‌روز شود") {
+      const overlay = document.getElementById('realLoadingOverlay');
+      if (document.getElementById('loadingOverlayTitle')) document.getElementById('loadingOverlayTitle').innerText = titleText;
+      if (document.getElementById('loadingOverlaySub')) document.getElementById('loadingOverlaySub').innerText = subText;
+      if (overlay) overlay.classList.remove('hidden');
+    }
+
+    function hideRealLoading() {
+      const overlay = document.getElementById('realLoadingOverlay');
+      if (overlay) overlay.classList.add('hidden');
+    }
+
+    function processAlertQueue() {
+      if (pendingAlertQueue.length === 0) {
+        document.getElementById('singleAlertPopup').classList.remove('visible');
+        setTimeout(() => document.getElementById('singleAlertPopup').classList.add('hidden'), 380);
+        return;
+      }
+      const nextItem = pendingAlertQueue.shift();
+      const popup = document.getElementById('singleAlertPopup');
+      document.getElementById('alertTitleText').innerText = nextItem.title;
+      document.getElementById('alertBodyContent').innerHTML = nextItem.body;
+      popup.classList.remove('hidden');
+      setTimeout(() => popup.classList.add('visible'), 50);
+      playSound('success');
+    }
+
+    function dismissCurrentAlertPopup() {
+      playSound('click');
+      const popup = document.getElementById('singleAlertPopup');
+      popup.classList.remove('visible');
+      setTimeout(() => {
+        popup.classList.add('hidden');
+        processAlertQueue();
+      }, 380);
+    }
+
+    function showSingleInfoPopup(titleText, descText) {
+      pendingAlertQueue.push({ title: titleText, body: descText });
+      if (!document.getElementById('singleAlertPopup').classList.contains('visible')) {
+        processAlertQueue();
+      }
+    }
+
+    function updateLastSyncLabel() {
+      const el = document.getElementById('lastSyncTimeText');
+      if (!el) return;
+      const now = new Date();
+      el.innerText = `آخرین بروزرسانی: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    }
+
+    function getUserVisibleTransactions(accId) {
+      if (!accId) return [];
+      return transactionsList.filter(tx => {
+        const matchAcc = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === String(accId).trim().toLowerCase();
+        const op = String(getVal(tx, ['OperationType', 'operationtype'])).trim();
+        return matchAcc && op !== 'SECURITY_PIN';
+      });
+    }
+
+    function getUserTransactionIds(accId) {
+      return getUserVisibleTransactions(accId).map(tx => String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx)));
+    }
+
+    function checkAndAnnounceNewTransactions(accId, previousIds, isOnInitialOpen = false) {
+      if (!accId) return;
+      const currentTxs = getUserVisibleTransactions(accId);
+      const prevSet = new Set(previousIds || []);
+      const newlyAdded = currentTxs.filter(tx => {
+        const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
+        return !prevSet.has(tid);
+      });
+
+      const seenStorageKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
+      let storedSeenIds = [];
+      try { storedSeenIds = JSON.parse(localStorage.getItem(seenStorageKey) || '[]'); } catch (e) {}
+      const storedSeenSet = new Set(storedSeenIds);
+
+      const unseenSinceLastVisit = currentTxs.filter(tx => {
+        const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
+        return !storedSeenSet.has(tid);
+      });
+
+      const targetNewList = newlyAdded.length > 0 ? newlyAdded : (isOnInitialOpen ? unseenSinceLastVisit : []);
+      const nowTs = Date.now();
+      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+      const recentValidList = targetNewList.filter(tx => {
+        let ts = getTxTimestamp(tx);
+        return !ts || (nowTs - ts) <= ONE_DAY_MS;
+      });
+
+      if (recentValidList.length > 0) {
+        recentValidList.forEach(tx => {
+          let op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+          let amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
+          let curr = getVal(tx, ['Currency', 'currency']) || 'AFN';
+          let dir = String(getVal(tx, ['Direction', 'direction']));
+          let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
+          let labelDir = isCredit ? 'واریز (بستانکار +)' : 'برداشت (بدهکار -)';
+          let date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
+          let time = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at']));
+
+          pendingAlertQueue.push({
+            title: "🔔 تراکنش جدید در غیاب شما",
+            body: `نوع عملیات: <b>${op}</b><br>مبلغ: <span class="eng-num" style="color:#6ee7b7; font-weight:900;">${amt} ${curr}</span><br>جهت: ${labelDir}<br>تاریخ ثبت: <span class="eng-num">${date} ${time}</span>`
+          });
+        });
+        processAlertQueue();
+      } else if (!isOnInitialOpen) {
+        showSingleInfoPopup("✅ حساب شما به‌روز است", "تمامی تراکنش‌ها بررسی شد؛ مورد جدیدی در ۲۴ ساعت گذشته وجود ندارد.");
+      }
+
+      const allCurrentIds = currentTxs.map(tx => String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx)));
+      try { localStorage.setItem(seenStorageKey, JSON.stringify(allCurrentIds)); } catch (e) {}
+    }
+
+    function handleModalBackClick(modalId) {
+      playSound('click');
+      const modalEl = document.getElementById(modalId);
+      if (modalEl) modalEl.classList.remove('open');
+    }
+
+    function navigateToStep(step, pushHist = true) {
+      currentStep = step;
+      document.getElementById('phoneSection').classList.add('hidden');
+      document.getElementById('accountSection').classList.add('hidden');
+      document.getElementById('registerSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.add('hidden');
+
+      if (step === 'phone') document.getElementById('phoneSection').classList.remove('hidden');
+      else if (step === 'account') document.getElementById('accountSection').classList.remove('hidden');
+      else if (step === 'register') document.getElementById('registerSection').classList.remove('hidden');
+      else if (step === 'dashboard') document.getElementById('dashboardSection').classList.remove('hidden');
+
+      if (pushHist && !isHandlingPopState) {
+        window.history.pushState({ appState: step }, '');
+      }
+    }
+
+    function handleFloatingBack() {
+      playSound('click');
+      const detailModal = document.getElementById('txDetailModal');
+      if (detailModal.classList.contains('open')) {
+        detailModal.classList.remove('open');
+        return;
+      }
+      if (currentStep === 'account' || currentStep === 'register') {
+        navigateToStep('phone');
+      } else if (currentStep === 'dashboard') {
+        if (confirm("آیا می‌خواهید از حساب خود خارج شوید؟")) {
+          logout();
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const savedPhone = localStorage.getItem('karimi_phone');
+      const savedAccId = localStorage.getItem('karimi_accId');
+
+      if (savedPhone && savedAccId) {
+        if (accountsList.length > 0) {
+          autoLogin(savedPhone, savedAccId, false);
+        }
+        showRealLoading("در حال همگام‌سازی و دریافت تراکنش‌های جدید...", "اتصال مستقیم به سرور امانت‌داری کریمی");
+        const prevIds = getUserTransactionIds(savedAccId);
+        await fetchDataFromSupabaseFresh();
+        autoLogin(savedPhone, savedAccId, false);
+        hideRealLoading();
+        updateLastSyncLabel();
+        checkAndAnnounceNewTransactions(savedAccId, prevIds, true);
+      } else {
+        navigateToStep('phone', false);
+        if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
+          document.getElementById('biometricBtnWrapper').classList.remove('hidden');
+        }
+        fetchDataFromSupabaseFresh();
+      }
+    });
+
+    async function fetchDataFromSupabaseFresh() {
+      try {
+        const [accRes, txRes] = await Promise.all([
+          _supabase.from('accounts').select('*'),
+          _supabase.from('transactions').select('*')
+        ]);
+        if (accRes.data) {
+          accountsList = accRes.data;
+          localStorage.setItem('karimi_cache_accounts', JSON.stringify(accRes.data));
+        }
+        if (txRes.data) {
+          transactionsList = txRes.data;
+          localStorage.setItem('karimi_cache_transactions', JSON.stringify(txRes.data));
+        }
+        isInitialFetchDone = true;
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function refreshAccountData() {
+      playSound('click');
+      const btn = document.getElementById('refreshAccountBtn');
+      if (btn) { btn.disabled = true; btn.innerText = '⏳ در حال اتصال...'; }
+
+      const savedAccId = localStorage.getItem('karimi_accId') || (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
+      const prevIds = getUserTransactionIds(savedAccId);
+
+      showRealLoading("در حال بروزرسانی واقعی حساب...", "دریافت آخرین تراکنش‌ها و محاسبه مجدد مانده از سرور");
+      await fetchDataFromSupabaseFresh();
+
+      if (savedAccId) {
+        let found = accountsList.find(u => String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase());
+        if (found) currentFoundUser = found;
+        processDashboard(savedAccId, false);
+      }
+
+      hideRealLoading();
+      updateLastSyncLabel();
+      if (btn) { btn.disabled = false; btn.innerText = '🔄 بروزرسانی حساب'; }
+      checkAndAnnounceNewTransactions(savedAccId, prevIds, false);
+    }
+
+    async function checkPhone() {
+      playSound('click');
+      const rawInput = toEnglishDigits(document.getElementById('phoneInput').value.trim());
+      if (!rawInput) return;
+
+      const userLast9 = getLast9Digits(rawInput);
+      if (userLast9.length < 9) {
+        alert("لطفاً شماره تلفن خود را کامل وارد کنید.");
+        return;
+      }
+
+      showRealLoading("در حال جستجوی شماره تماس...", "بررسی اطلاعات حساب در سامانه");
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
+
+      const found = accountsList.find(u => {
+        let phoneVal = getVal(u, ['Phone', 'phone', 'تلفن', 'mobile']);
+        return getLast9Digits(phoneVal) === userLast9;
+      });
+
+      if (found) {
+        currentFoundUser = found;
+        let nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری گرامی';
+
+        document.getElementById('greetingMsg').innerText = `خوش آمدید، ${nameVal}`;
+        document.getElementById('accountIdInput').value = '';
+
+        navigateToStep('account');
+        setTimeout(() => document.getElementById('accountIdInput').focus(), 150);
+      } else {
+        const encodedText = encodeURIComponent(`سلام کریمی عزیز، شماره تماس من ${rawInput} است. برای بررسی یا افتتاح حساب پیام می‌دهم.`);
+        document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/9647721878997?text=${encodedText}`;
+        document.getElementById('errorModal').classList.remove('hidden');
+      }
+    }
+
+    function closeErrorModal() {
+      playSound('click');
+      document.getElementById('errorModal').classList.add('hidden');
+    }
+
+    async function verifyAccount() {
+      playSound('click');
+      const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim());
+      let sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+
+      if (sheetAccId.toLowerCase() !== accIdInput.toLowerCase()) {
+        alert("کد حساب (Account ID) واردشده صحیح نیست.");
+        return;
+      }
+
+      showRealLoading("در حال بارگذاری کامل حساب و تراکنش‌ها...", "دریافت آخرین وضعیت مالی شما");
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
+
+      let phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+      localStorage.setItem('karimi_phone', phoneVal);
+      localStorage.setItem('karimi_accId', sheetAccId);
+      playSound('success');
+      processDashboard(sheetAccId, true);
+      updateLastSyncLabel();
+      checkAndAnnounceNewTransactions(sheetAccId, [], true);
+    }
+
+    function openSelfRegister() {
+      playSound('click');
+      const randomId = "ACC-" + Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('regAccId').value = randomId;
+      document.getElementById('regFullName').value = '';
+      document.getElementById('regPhone').value = '';
+      document.getElementById('regPin').value = '';
+      document.getElementById('regPinConfirm').value = '';
+      navigateToStep('register');
+    }
+
+    function copyRegAccId() {
+      const el = document.getElementById('regAccId');
+      navigator.clipboard?.writeText(el.value);
+      alert("✅ شناسه حساب کپی شد: " + el.value);
+    }
+
+    async function submitRealAccountCreation() {
+      const accId = document.getElementById('regAccId').value.trim();
+      const name = document.getElementById('regFullName').value.trim();
+      const phone = toEnglishDigits(document.getElementById('regPhone').value.trim());
+      const pin = toEnglishDigits(document.getElementById('regPin').value.trim());
+      const pinConfirm = toEnglishDigits(document.getElementById('regPinConfirm').value.trim());
+
+      if (!name || !phone || !pin) {
+        alert("لطفاً نام، شماره همراه و رمز ارسال شارژ را کامل وارد کنید.");
+        return;
+      }
+      if (pin.length < 4) {
+        alert("رمز باید حداقل ۴ کاراکتر باشد.");
+        return;
+      }
+      if (pin !== pinConfirm) {
+        alert("رمز و تکرار آن یکسان نیستند.");
+        return;
+      }
+
+      showRealLoading("در حال ثبت حساب جدید در سامانه...", "ایجاد حساب در پایگاه داده امانت‌داری کریمی");
+      await fetchDataFromSupabaseFresh();
+
+      const last9 = getLast9Digits(phone);
+      if (last9.length >= 9 && accountsList.some(a => getLast9Digits(getVal(a, ['Phone', 'phone'])) === last9)) {
+        hideRealLoading();
+        alert("این شماره همراه قبلاً در سیستم ثبت شده است. می‌توانید از صفحه ورود وارد شوید.");
+        return;
+      }
+
+      const hashed = await hashPin(pin);
+      const newAccountObj = {
+        AccountID: accId,
+        Name: name,
+        Phone: phone,
+        PinHash: hashed
+      };
+
+      const { error } = await _supabase.from('accounts').insert([newAccountObj]);
+      if (error) {
+        hideRealLoading();
+        alert("❌ خطا در ثبت حساب جدید: " + error.message);
+        return;
+      }
+
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
+
+      playSound('success');
+      alert(`✅ حساب شما با موفقیت افتتاح شد!
+شناسه حساب: ${accId}
+اکنون با شماره و کد حساب خود وارد شوید.`);
+      document.getElementById('phoneInput').value = phone;
+      navigateToStep('phone');
+    }
+
+    function openLegacyPinActivationModal(accId) {
+      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
+      const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
+      const msg = encodeURIComponent(
+        `سلام کریمی عزیز، درخواست فعال‌سازی رمز ارسال شارژ برای حساب قدیمی خود را دارم:\n` +
+        `👤 نام: ${nameVal}\n` +
+        `🆔 کد حساب: ${accId}\n` +
+        `📱 شماره ثبت‌شده: ${phoneVal}`
+      );
+      document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
+      document.getElementById('legacyPinActivationModal').classList.remove('hidden');
+    }
+
+    function closeLegacyPinActivationModal() {
+      document.getElementById('legacyPinActivationModal').classList.add('hidden');
+    }
+
+    function openSetPinModal() {
+      playSound('click');
+      if (!currentFoundUser) return;
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const existingHash = getStoredPinHashForAccount(currentFoundUser, accId);
+      if (!existingHash) {
+        openLegacyPinActivationModal(accId);
+        return;
+      }
+      document.getElementById('oldAccountPinInput').value = '';
+      document.getElementById('newAccountPinInput').value = '';
+      document.getElementById('confirmAccountPinInput').value = '';
+      document.getElementById('setPinModal').classList.remove('hidden');
+    }
+
+    function closeSetPinModal() {
+      document.getElementById('setPinModal').classList.add('hidden');
+    }
+
+    async function saveAccountPassword() {
+      if (!currentFoundUser) return;
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const existingHash = getStoredPinHashForAccount(currentFoundUser, accId);
+      if (!existingHash) {
+        closeSetPinModal();
+        openLegacyPinActivationModal(accId);
+        return;
+      }
+
+      const oldPin = toEnglishDigits(document.getElementById('oldAccountPinInput').value.trim());
+      const p1 = toEnglishDigits(document.getElementById('newAccountPinInput').value.trim());
+      const p2 = toEnglishDigits(document.getElementById('confirmAccountPinInput').value.trim());
+
+      if (!oldPin) {
+        alert("لطفاً رمز فعلی ارسال شارژ را وارد کنید.");
+        return;
+      }
+      const hashedOld = await hashPin(oldPin);
+      if (hashedOld !== existingHash && oldPin !== existingHash) {
+        alert("❌ رمز فعلی واردشده اشتباه است.");
+        return;
+      }
+      if (p1.length < 4) {
+        alert("رمز جدید باید حداقل ۴ کاراکتر باشد.");
+        return;
+      }
+      if (p1 !== p2) {
+        alert("رمز جدید و تکرار آن مطابقت ندارند.");
+        return;
+      }
+
+      showRealLoading("در حال تغییر امن رمز ارسال شارژ...", "به‌روزرسانی ستون PinHash در سرور");
+      const hashed = await hashPin(p1);
+      const ok = await persistPinHashInSupabase(accId, hashed);
+      await fetchDataFromSupabaseFresh();
+      let refreshed = accountsList.find(u => String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase());
+      if (refreshed) currentFoundUser = refreshed;
+      hideRealLoading();
+
+      if (!ok) {
+        alert("❌ خطا در ذخیره‌سازی رمز جدید در سرور.");
+        return;
+      }
+      closeSetPinModal();
+      updatePinBtnState(accId);
+      showSingleInfoPopup("✅ رمز ارسال شارژ تغییر کرد", "رمز جدید شما با موفقیت در ستون PinHash ذخیره شد.");
+    }
+
+    function updatePinBtnState(accId) {
+      const btn = document.getElementById('setPinBtn');
+      if (!btn) return;
+      const hasPin = Boolean(getStoredPinHashForAccount(currentFoundUser, accId));
+      btn.innerText = hasPin ? "🟢 تغییر رمز شارژ" : "🔒 فعال‌سازی رمز";
+    }
+
+    function autoLogin(phone, accId, announce = false) {
+      const userLast9 = getLast9Digits(phone);
+      const found = accountsList.find(u => getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9);
+
+      if (found) {
+        let sheetAccId = String(getVal(found, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+        if (sheetAccId.toLowerCase() === accId.trim().toLowerCase()) {
+          currentFoundUser = found;
+          processDashboard(sheetAccId, false);
+          if (announce) checkAndAnnounceNewTransactions(sheetAccId, [], true);
+          return;
+        }
+      }
+      localStorage.removeItem('karimi_phone');
+      localStorage.removeItem('karimi_accId');
+      navigateToStep('phone', false);
+    }
+
+    async function triggerBiometricAuth() {
+      if (window.PublicKeyCredential) {
+        try {
+          await navigator.credentials.get({
+            publicKey: {
+              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112]),
+              timeout: 60000,
+              userVerification: "preferred"
+            }
+          });
+        } catch (e) {}
+      }
+      return true;
+    }
+
+    async function loginWithBiometric() {
+      playSound('click');
+      const bioPhone = localStorage.getItem('karimi_biometric_phone');
+      const bioAccId = localStorage.getItem('karimi_biometric_accId');
+      if (localStorage.getItem('karimi_biometric_enabled') !== 'true' || !bioPhone || !bioAccId) {
+        alert("ورود با اثر انگشت هنوز فعال نشده است.");
+        return;
+      }
+      await triggerBiometricAuth();
+      showRealLoading("در حال ورود سریع و بروزرسانی حساب...", "دریافت آخرین تراکنش‌ها از سرور");
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
+      autoLogin(bioPhone, bioAccId, true);
+      updateLastSyncLabel();
+    }
+
+    async function confirmEnableBiometric() {
+      playSound('success');
+      await triggerBiometricAuth();
+      let phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+      let sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      localStorage.setItem('karimi_biometric_enabled', 'true');
+      localStorage.setItem('karimi_biometric_phone', phoneVal);
+      localStorage.setItem('karimi_biometric_accId', sheetAccId);
+      document.getElementById('biometricPromptModal').classList.add('hidden');
+      updateBioBtnText();
+      showSingleInfoPopup("✅ اثر انگشت فعال شد", "از این پس می‌توانید با یک لمس وارد حساب خود شوید.");
+    }
+
+    function dismissBiometricPrompt() {
+      playSound('click');
+      document.getElementById('biometricPromptModal').classList.add('hidden');
+    }
+
+    function toggleBiometricSetting() {
+      playSound('click');
+      let currentStatus = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      if (currentStatus) {
+        localStorage.setItem('karimi_biometric_enabled', 'false');
+        alert("ورود با اثر انگشت غیرفعال شد.");
+        updateBioBtnText();
+      } else {
+        confirmEnableBiometric();
+      }
+    }
+
+    function updateBioBtnText() {
+      let isEnabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      const btn = document.getElementById('bioToggleBtn');
+      if (btn) btn.innerText = isEnabled ? "🟢 اثرانگشت" : "🔑 اثرانگشت";
+    }
+
+    function logout() {
+      playSound('click');
+      localStorage.removeItem('karimi_phone');
+      localStorage.removeItem('karimi_accId');
+      currentFoundUser = null;
+      navigateToStep('phone');
+      if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
+        document.getElementById('biometricBtnWrapper').classList.remove('hidden');
+      } else {
+        document.getElementById('biometricBtnWrapper').classList.add('hidden');
+      }
+    }
+
+    function processDashboard(sheetAccId, isFreshLogin = false) {
+      navigateToStep('dashboard');
+      updateBioBtnText();
+      updatePinBtnState(sheetAccId);
+
+      let rawName = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
+      let nameVal = `جناب آقای ${rawName} محترم`;
+      let phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---';
+
+      document.getElementById('dashName').innerText = nameVal;
+      document.getElementById('dashPhone').innerText = toEnglishDigits(phoneVal);
+      document.getElementById('dashAccountId').innerText = sheetAccId;
+
+      let rawUserTxs = getUserVisibleTransactions(sheetAccId);
+      customerTransactions = sortChronologically(rawUserTxs, false);
+
+      customerBalances = {};
+      customerTransactions.forEach(tx => {
+        let curr = String(getVal(tx, ['Currency', 'currency']) || 'AFN').toUpperCase();
+        let rawAmt = getVal(tx, ['Amount', 'amount', 'value']);
+        let amount = isNaN(parseFloat(rawAmt)) ? 0 : parseFloat(rawAmt);
+        let dir = String(getVal(tx, ['Direction', 'direction'])).trim();
+
+        if (!customerBalances[curr]) customerBalances[curr] = { credit: 0, debit: 0, net: 0 };
+        if (dir.includes('بستانکار') || dir.includes('دریافت')) customerBalances[curr].credit += amount;
+        else if (dir.includes('بدهکار') || dir.includes('پرداخت')) customerBalances[curr].debit += amount;
+      });
+
+      for (let c in customerBalances) {
+        customerBalances[c].net = customerBalances[c].credit - customerBalances[c].debit;
+      }
+
+      currencyList = Object.keys(customerBalances);
+      if (currencyList.length === 0) {
+        currencyList = ['AFN'];
+        customerBalances['AFN'] = { credit: 0, debit: 0, net: 0 };
+      }
+
+      if (activeCurrencyIndex >= currencyList.length) activeCurrencyIndex = 0;
+      renderCurrencyTabs();
+      renderTransactionsList();
+      recalcTopupCost();
+
+      if (isFreshLogin && localStorage.getItem('karimi_biometric_enabled') !== 'true') {
+        setTimeout(() => {
+          document.getElementById('biometricPromptModal').classList.remove('hidden');
+        }, 400);
+      }
+    }
+
+    function renderCurrencyTabs() {
+      let tabsHtml = '';
+      currencyList.forEach((curr, idx) => {
+        let activeClass = idx === activeCurrencyIndex ? 'active' : '';
+        tabsHtml += `<button type="button" class="currency-tab ${activeClass}" onclick="switchCurrency(${idx})">${curr}</button>`;
+      });
+      document.getElementById('currencyTabs').innerHTML = tabsHtml;
+      updateBalanceDisplay();
+    }
+
+    function switchCurrency(idx) {
+      playSound('click');
+      activeCurrencyIndex = idx;
+      renderCurrencyTabs();
+    }
+
+    function updateBalanceDisplay() {
+      let currName = currencyList[activeCurrencyIndex];
+      let b = customerBalances[currName] || { credit: 0, debit: 0, net: 0 };
+      document.getElementById('odometerCurrencyLabel').innerText = currName;
+
+      let psychBox = document.getElementById('accountPsychologyMsg');
+      if (b.net > 0) {
+        psychBox.className = 'status-banner positive';
+        psychBox.innerHTML = `✅ <span><b>اعتبار بستانکاری:</b> حساب شما به مبلغ ${formatEnMoney(b.net)} ${currName} بستانکار است.</span>`;
+      } else if (b.net < 0) {
+        psychBox.className = 'status-banner negative';
+        psychBox.innerHTML = `⚠️ <span><b>مانده بدهکاری:</b> حساب شما به مبلغ ${formatEnMoney(Math.abs(b.net))} ${currName} بدهکار می‌باشد.</span>`;
+      } else {
+        psychBox.className = 'status-banner neutral';
+        psychBox.innerHTML = `⚖️ <span><b>حساب تسویه است:</b> مانده این ارز صفر می‌باشد.</span>`;
+      }
+
+      document.getElementById('odometerValue').innerText = formatEnMoney(b.net);
+      document.getElementById('odometerCredit').innerText = formatEnMoney(b.credit);
+      document.getElementById('odometerDebit').innerText = formatEnMoney(b.debit);
+    }
+
+    function toggleCreditDrawer() {
+      playSound('click');
+      const drawer = document.getElementById('creditServiceDrawer');
+      const btn = document.getElementById('toggleCreditDrawerBtn');
+      const isHidden = drawer.classList.toggle('hidden');
+      btn.innerText = isHidden
+        ? '📲 ارسال کردیت و شارژ (کسر از موجودی دینار) ▾'
+        : '📲 بستن بخش ارسال کردیت و شارژ ▴';
+      if (!isHidden) recalcTopupCost();
+    }
+
+    function switchTopupMode(mode) {
+      playSound('click');
+      topupMode = mode;
+      document.getElementById('tabAfnBtn').classList.toggle('active', mode === 'afn');
+      document.getElementById('tabIqBtn').classList.toggle('active', mode === 'iq');
+      document.getElementById('topupAfnForm').classList.toggle('hidden', mode !== 'afn');
+      document.getElementById('topupIqForm').classList.toggle('hidden', mode !== 'iq');
+      recalcTopupCost();
+    }
+
+    function getNetIqdBalance() {
+      return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
+    }
+
+    function recalcTopupCost() {
+      const netIqd = getNetIqdBalance();
+      const eligMsg = document.getElementById('topupEligibilityMsg');
+      const btn = document.getElementById('btnExecuteTopup');
+
+      if (netIqd <= 0) {
+        eligMsg.innerText = "❌ برای ارسال کردیت و شارژ، باید موجودی دینار (IQD) مثبت در حساب شما وجود داشته باشد.";
+        btn.disabled = true;
+        return;
+      }
+
+      if (topupMode === 'afn') {
+        const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
+        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+        const box = document.getElementById('afnCalcBox');
+        document.getElementById('afnCalculatedIqd').innerText = formatEnMoney(requiredIqd);
+
+        if (requiredIqd > netIqd) {
+          box.classList.add('error');
+          eligMsg.innerText = `⚠️ مبلغ دینار مورد نیاز (${formatEnMoney(requiredIqd)} IQD) از موجودی دینار شما (${formatEnMoney(netIqd)} IQD) بیشتر است.`;
+          btn.disabled = true;
+        } else {
+          box.classList.remove('error');
+          eligMsg.innerText = "";
+          btn.disabled = false;
+        }
+      } else {
+        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+        const box = document.getElementById('iqCalcBox');
+        document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
+
+        if (cardAmt > netIqd) {
+          box.classList.add('error');
+          eligMsg.innerText = `⚠️ مبلغ کارت (${formatEnMoney(cardAmt)} IQD) از موجودی دینار شما (${formatEnMoney(netIqd)} IQD) بیشتر است.`;
+          btn.disabled = true;
+        } else {
+          box.classList.remove('error');
+          eligMsg.innerText = "";
+          btn.disabled = false;
+        }
+      }
+    }
+
+    async function executeCustomerTopup() {
+      if (!currentFoundUser) return;
+      const netIqd = getNetIqdBalance();
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+
+      if (topupMode === 'afn') {
+        const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
+
+        if (!/^07\d{8}$/.test(targetPhone)) {
+          alert("شماره مقصد افغانستان باید ۱۰ رقم و با 07 شروع شود.");
+          return;
+        }
+        if (isNaN(afnAmt) || afnAmt <= 0) {
+          alert("مبلغ افغانی را به درستی وارد کنید.");
+          return;
+        }
+        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+        if (requiredIqd > netIqd || netIqd <= 0) {
+          alert("موجودی دینار حساب شما کافی نیست.");
+          return;
+        }
+        pendingTopupPayload = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
+        document.getElementById('txPinSummaryText').innerHTML =
+          `ارسال شارژ <b>${formatEnMoney(afnAmt)} AFN</b> به شماره <span class="eng-num">${targetPhone}</span><br>` +
+          `مبلغ کسر از موجودی دینار: <b class="eng-num" style="color:var(--danger);">${formatEnMoney(requiredIqd)} IQD</b>`;
+      } else {
+        const network = document.getElementById('iqNetworkSelect').value;
+        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+        if (cardAmt <= 0 || cardAmt > netIqd) {
+          alert("موجودی دینار حساب شما برای این کارت شارژ کافی نیست.");
+          return;
+        }
+        pendingTopupPayload = { mode: 'iq', accId, accName, network, cardAmt };
+        document.getElementById('txPinSummaryText').innerHTML =
+          `درخواست کارت شارژ <b>${network}</b><br>` +
+          `مبلغ کسر از موجودی دینار: <b class="eng-num" style="color:var(--danger);">${formatEnMoney(cardAmt)} IQD</b>`;
+      }
+
+      // بررسی وجود رمز در ستون PinHash جدول accounts قبل از کسر موجودی
+      showRealLoading("در حال بررسی وضعیت امنیتی حساب...", "کنترل رمز ارسال شارژ");
+      await fetchDataFromSupabaseFresh();
+      let refreshed = accountsList.find(u => String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase());
+      if (refreshed) currentFoundUser = refreshed;
+      hideRealLoading();
+
+      const storedPinHash = getStoredPinHashForAccount(currentFoundUser, accId);
+      if (!storedPinHash) {
+        openLegacyPinActivationModal(accId);
+        return;
+      }
+
+      document.getElementById('txVerifyPinInput').value = '';
+      document.getElementById('txPinConfirmModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 120);
+    }
+
+    function closeTxPinConfirmModal() {
+      document.getElementById('txPinConfirmModal').classList.add('hidden');
+      pendingTopupPayload = null;
+    }
+
+    async function confirmAndRunTopup() {
+      if (!pendingTopupPayload || !currentFoundUser) return;
+      const pinInput = toEnglishDigits(document.getElementById('txVerifyPinInput').value.trim());
+      if (!pinInput) {
+        alert("لطفاً رمز ارسال شارژ را وارد کنید.");
+        return;
+      }
+
+      const storedPinHash = getStoredPinHashForAccount(currentFoundUser, pendingTopupPayload.accId);
+      const hashedInput = await hashPin(pinInput);
+      if (hashedInput !== storedPinHash && pinInput !== storedPinHash) {
+        alert("❌ رمز ارسال شارژ اشتباه است.");
+        return;
+      }
+
+      const payload = pendingTopupPayload;
+      document.getElementById('txPinConfirmModal').classList.add('hidden');
+      pendingTopupPayload = null;
+
+      const txId = "TX-" + Math.floor(100000 + Math.random() * 900000);
+      const nowIso = new Date().toISOString();
+
+      if (payload.mode === 'afn') {
+        showRealLoading("در حال ارسال به ربات تلگرام و انتظار برای پاسخ...", "تا دریافت پاسخ مثبت از تلگرام، تراکنش ثبت نخواهد شد");
+
+        const tgPlainText =
+          `📲 درخواست شارژ افغانستان\n` +
+          `━━━━━━━━━━━━━━\n` +
+          `🔖 کد سند: ${txId}\n` +
+          `👤 مشتری: ${payload.accName} (${payload.accId})\n` +
+          `📱 شماره مقصد: ${payload.targetPhone}\n` +
+          `💵 مبلغ شارژ: ${formatEnMoney(payload.afnAmt)} AFN\n` +
+          `💸 کسر از دینار: ${formatEnMoney(payload.requiredIqd)} IQD`;
+
+        let tgData = null;
+        let lastErr = null;
+
+        try {
+          const resp = await fetch(TELEGRAM_SEND_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: tgPlainText
+            })
+          });
+          const json = await resp.json().catch(() => null);
+          if (resp.ok && json && json.ok === true && json.result && json.result.message_id) {
+            tgData = json;
+          } else {
+            lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
+          }
+        } catch (postErr) {
+          lastErr = postErr && postErr.message ? postErr.message : "Failed to fetch";
+        }
+
+        // Fallback via GET query string if POST failed (avoids preflight/protocol blocks)
+        if (!tgData) {
+          try {
+            const qs = new URLSearchParams({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: tgPlainText
+            });
+            const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: "GET" });
+            const getJson = await getResp.json().catch(() => null);
+            if (getResp.ok && getJson && getJson.ok === true && getJson.result && getJson.result.message_id) {
+              tgData = getJson;
+              lastErr = null;
+            } else if (!lastErr) {
+              lastErr = (getJson && getJson.description) ? getJson.description : `HTTP ${getResp.status}`;
+            }
+          } catch (getErr) {
+            lastErr = getErr && getErr.message ? getErr.message : lastErr;
+          }
+        }
+
+        if (!tgData || tgData.ok !== true || !tgData.result || !tgData.result.message_id) {
+          hideRealLoading();
+          const originHint = (window.location.protocol === 'file:')
+            ? ' (فایل به‌صورت file:// باز است؛ در صورت مسدود بودن درخواست مستقیم از مرورگر، باید روی هاست/سرور یا پروکسی اجرا شود)'
+            : '';
+          showSingleInfoPopup(
+            "❌ پاسخ مثبت از تلگرام دریافت نشد",
+            `علت: <b>${lastErr || 'عدم دریافت تاییدیه'}</b>${originHint}<br>هیچ تراکنشی ثبت نشد و موجودی کسر نگردید.`
+          );
+          return;
+        }
+
+        const apiReference = `TG-${tgData.result.message_id}`;
+        const txRecord = {
+          TransID: txId,
+          AccountID: payload.accId,
+          Date: nowIso,
+          Amount: Number(payload.requiredIqd),
+          Currency: "IQD",
+          Direction: "بدهکار",
+          OperationType: "ارسال شارژ افغانستان",
+          Description: `شارژ ${payload.targetPhone} (${payload.afnAmt} AFN) - کد: ${apiReference}`
+        };
+
+        const { error } = await _supabase.from('transactions').insert([txRecord]);
+        hideRealLoading();
+
+        if (error) {
+          alert("❌ خطا در ثبت تراکنش در دیتابیس: " + error.message);
+          return;
+        }
+
+        document.getElementById('afnTargetPhone').value = '';
+        document.getElementById('afnAmountInput').value = '';
+        recalcTopupCost();
+        await refreshAccountData();
+        showSingleInfoPopup("✅ تاییدیه تلگرام دریافت و تراکنش ثبت شد", `کد پیام تلگرام: <b>${apiReference}</b><br>مبلغ ${formatEnMoney(payload.requiredIqd)} IQD کسر شد.`);
+      } else {
+        showRealLoading("در حال ثبت درخواست شارژ عراق...", "ثبت تراکنش دینار و انتقال به واتساپ مدیریت");
+
+        const txRecord = {
+          TransID: txId,
+          AccountID: payload.accId,
+          Date: nowIso,
+          Amount: Number(payload.cardAmt),
+          Currency: "IQD",
+          Direction: "بدهکار",
+          OperationType: "درخواست شارژ عراق",
+          Description: `رصید ${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`
+        };
+
+        const { error } = await _supabase.from('transactions').insert([txRecord]);
+        hideRealLoading();
+
+        if (error) {
+          alert("❌ خطا در ثبت تراکنش: " + error.message);
+          return;
+        }
+
+        const waMsg = encodeURIComponent(
+          `سلام کریمی عزیز، درخواست شارژ عراق دارم [کد: ${txId}]\n` +
+          `👤 مشتری: ${payload.accName} (${payload.accId})\n` +
+          `📡 شبکه: ${payload.network}\n` +
+          `💵 مبلغ کسر شده از حساب: ${formatEnMoney(payload.cardAmt)} IQD`
+        );
+        document.getElementById('iqNetworkSelect').selectedIndex = 0;
+        document.getElementById('iqCardSelect').selectedIndex = 0;
+        recalcTopupCost();
+        window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${waMsg}`, '_blank');
+        await refreshAccountData();
+      }
+    }
+
+    function renderTransactionsList() {
+      const container = document.getElementById('transactionsContainer');
+      document.getElementById('txCountBadge').innerText = `${toEnglishDigits(customerTransactions.length)} تراکنش`;
+      container.innerHTML = "";
+
+      if (customerTransactions.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:30px 16px; color:#64748b; font-size:0.85rem; font-weight:700;">هیچ تراکنشی ثبت نشده است.</div>';
+        return;
+      }
+
+      let chronologicalAll = sortChronologically(customerTransactions, true);
+      let rowNumMap = {};
+      chronologicalAll.forEach((t, i) => {
+        let tid = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || i);
+        rowNumMap[tid] = i + 1;
+      });
+
+      let sortedList = sortChronologically(customerTransactions, false);
+      let groups = [];
+      let groupMap = {};
+
+      sortedList.forEach(tx => {
+        let rawDate = getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '';
+        let dayKey = extractDateOnly(rawDate);
+        if (!groupMap[dayKey]) {
+          groupMap[dayKey] = { date: dayKey, items: [] };
+          groups.push(groupMap[dayKey]);
+        }
+        groupMap[dayKey].items.push(tx);
+      });
+
+      let finalHtml = "";
+      groups.forEach(group => {
+        let dayName = getPersianDayName(group.date);
+        let dayTitle = dayName ? `${dayName} — ${toEnglishDigits(group.date)}` : toEnglishDigits(group.date);
+
+        let rowsHtml = "";
+        group.items.forEach(tx => {
+          let tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+          let txNum = rowNumMap[tid] || '-';
+          let dir = String(getVal(tx, ['Direction', 'direction']));
+          let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
+          let amtColor = isCredit ? 'var(--success)' : 'var(--danger)';
+          let rowClass = isCredit ? 'tx-row-credit' : 'tx-row-debit';
+          let rawAmt = getVal(tx, ['Amount', 'amount', 'value']);
+          let amountVal = isNaN(parseFloat(rawAmt)) ? 0 : parseFloat(rawAmt);
+          let opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'عملیات';
+          let rawDate = getVal(tx, ['Date', 'date', 'created_at']) || '';
+          let timeStr = extractTimeOnly(rawDate);
+          let descStr = (getVal(tx, ['Description', 'description', 'desc']) || '-').replaceAll('+', ' ');
+          let currStr = getVal(tx, ['Currency', 'currency']) || 'AFN';
+
+          let originalIdx = tid
+            ? customerTransactions.findIndex(item => String(getVal(item, ['TransID', 'transid', 'id', 'transaction_id'])) === tid)
+            : customerTransactions.indexOf(tx);
+          if (originalIdx < 0) originalIdx = customerTransactions.indexOf(tx);
+
+          rowsHtml += `
+            <tr class="${rowClass}" onclick="openDetailModal(${originalIdx})">
+              <td style="font-weight:900; color:#475569;" class="eng-num">${toEnglishDigits(txNum)}</td>
+              <td>
+                <div style="font-weight:900; color:var(--primary);">${opType}</div>
+                <div style="font-size:0.68rem; color:var(--text-muted);" class="eng-num">${timeStr}</div>
+              </td>
+              <td><span style="font-size:0.74rem; font-weight:900; color:${amtColor};">${isCredit ? 'بستانکار' : 'بدهکار'}</span></td>
+              <td>
+                <div style="font-weight:900; color:${amtColor}; font-size:0.84rem;" class="eng-num">${formatEnMoney(amountVal)}</div>
+                <div style="font-size:0.68rem; color:#475569; font-weight:800;">${currStr}</div>
+              </td>
+              <td style="text-align:left;">
+                <button type="button" class="tx-detail-btn-shake" onclick="event.stopPropagation(); openDetailModal(${originalIdx});">جزئیات</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        finalHtml += `
+          <div class="day-group-bar">
+            <div>📅 ${dayTitle} <span style="color:var(--accent); font-size:0.72rem;" class="eng-num">(${toEnglishDigits(group.items.length)})</span></div>
+          </div>
+          <table class="tx-table">
+            <thead><tr><th>ردیف</th><th>عملیات</th><th>جهت</th><th>مبلغ</th><th style="text-align:left;">جزئیات</th></tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        `;
+      });
+      container.innerHTML = finalHtml;
+    }
+
+    function openDetailModal(idx) {
+      playSound('click');
+      selectedTxItem = customerTransactions[idx];
+      if (!selectedTxItem) return;
+
+      let tx = selectedTxItem;
+      let dir = String(getVal(tx, ['Direction', 'direction'])).trim();
+      let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
+      let amtColor = isCredit ? 'var(--success)' : 'var(--danger)';
+      let rawAmt = getVal(tx, ['Amount', 'amount', 'value']);
+      let amountVal = isNaN(parseFloat(rawAmt)) ? 0 : parseFloat(rawAmt);
+      let transId = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
+      let opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش مالی';
+      let dateStr = getVal(tx, ['Date', 'date', 'created_at']) || '---';
+      let dateOnly = extractDateOnly(dateStr);
+      let timeStr = extractTimeOnly(dateStr) || 'ثبت سیستمی';
+      let dayName = getPersianDayName(dateOnly);
+      let fullDateDisplay = dayName ? `${dayName}، ${toEnglishDigits(dateOnly)}` : toEnglishDigits(dateOnly);
+      let descStr = (getVal(tx, ['Description', 'description', 'desc']) || 'بدون توضیحات اضافی').replaceAll('+', ' ');
+      let currStr = getVal(tx, ['Currency', 'currency']) || 'AFN';
+      let statusStr = getVal(tx, ['Status', 'status']) || 'تأیید و ثبت شده در دفتر کل';
+      let nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
+
+      document.getElementById('receiptDateStr').innerText = dateOnly + (extractTimeOnly(dateStr) ? ' | ' + extractTimeOnly(dateStr) : '');
+
+      let txCurr = currStr.toUpperCase();
+      let allChron = sortChronologically(customerTransactions, true);
+      let runningBalance = 0, balBefore = 0, balAfter = 0, txRankNumber = 1;
+
+      allChron.forEach((t, indexPos) => {
+        let c = String(getVal(t, ['Currency', 'currency']) || 'AFN').toUpperCase();
+        let tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+        if (tidItem === transId || t === tx) txRankNumber = indexPos + 1;
+        if (c === txCurr) {
+          let a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
+          let d = String(getVal(t, ['Direction', 'direction'])).trim();
+          if (tidItem === transId || t === tx) {
+            balBefore = runningBalance;
+            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
+            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+            balAfter = runningBalance;
+          } else {
+            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
+            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+          }
+        }
+      });
+
+      let changeSign = isCredit ? '+' : '-';
+      let bodyHtml = `
+        <div class="receipt-row-item"><span class="receipt-row-label">نام صاحب حساب:</span><span class="receipt-row-val">${nameVal}</span></div>
+        <div class="receipt-row-item"><span class="receipt-row-label">تاریخ و ساعت:</span><span class="receipt-row-val eng-num">${fullDateDisplay} | ${toEnglishDigits(timeStr)}</span></div>
+        <div class="receipt-row-item"><span class="receipt-row-label">نوع تراکنش:</span><span class="receipt-row-val" style="color:var(--accent);">${opType}</span></div>
+        <div class="receipt-row-item"><span class="receipt-row-label">جهت تراکنش:</span><span class="receipt-row-val" style="color:${amtColor};">${isCredit ? 'واریز به حساب (بستانکار)' : 'برداشت از حساب (بدهکار)'}</span></div>
+        <div class="receipt-row-item"><span class="receipt-row-label">کد تراکنش (سند):</span><span class="receipt-row-val eng-num" style="color:var(--accent);">${toEnglishDigits(transId)}</span></div>
+        <div class="receipt-row-item"><span class="receipt-row-label">ردیف تراکنش:</span><span class="receipt-row-val eng-num">ردیف ${toEnglishDigits(txRankNumber)}</span></div>
+        <div class="receipt-row-item"><span class="receipt-row-label">مبلغ معامله:</span><span class="receipt-row-val eng-num" style="color:${amtColor}; font-size: 1.05rem;">${formatEnMoney(amountVal)} ${currStr}</span></div>
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%); border: 1.5px solid #bae6fd; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; margin: 4px 0;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem;"><span style="color:#475569; font-weight:800;">مانده قبل از این تراکنش:</span><b class="eng-num">${formatEnMoney(balBefore)} ${currStr}</b></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.84rem;"><span style="color:#475569; font-weight:800;">مبلغ دقیق تراکنش:</span><b class="eng-num" style="color:${amtColor};">${changeSign} ${formatEnMoney(amountVal)} ${currStr}</b></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.86rem; border-top:1.5px dashed #cbd5e1; padding-top:7px; font-weight:900;"><span>مانده پس از این تراکنش:</span><b class="eng-num">${formatEnMoney(balAfter)} ${currStr}</b></div>
+        </div>
+        <div class="receipt-row-item"><span class="receipt-row-label">وضعیت سند:</span><span class="receipt-row-val" style="color:var(--success);">✔ ${statusStr}</span></div>
+
+      `;
+
+      document.getElementById('modalBody').innerHTML = bodyHtml;
+      document.getElementById('txDetailModal').classList.add('open');
+    }
+
+    function shareReceiptToWhatsApp() {
+      playSound('click');
+      if (!selectedTxItem) return;
+      let tx = selectedTxItem;
+      let dir = String(getVal(tx, ['Direction', 'direction']));
+      let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
+      let amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
+      let curr = getVal(tx, ['Currency', 'currency']) || 'AFN';
+      let op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+      let tid = getVal(tx, ['TransID', 'transid', 'id']) || '---';
+      let date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
+      let name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
+
+      let shareText = `🛡️ *رسید تراکنش - امانت‌داری کریمی*\n━━━━━━━━━━━━━━\n👤 صاحب حساب: ${name}\n📌 نوع عملیات: ${op}\n💵 مبلغ: ${amt} ${curr}\n🔄 جهت: ${isCredit ? 'واریز (بستانکار +)' : 'برداشت (بدهکار -)'}\n🔖 شماره سند: ${tid}\n📅 تاریخ: ${date}\n━━━━━━━━━━━━━━\n✅ ثبت شده در دفتر کل رسمی امانت‌داری کریمی`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+    }
+  </script>
+</body>
+</html>
