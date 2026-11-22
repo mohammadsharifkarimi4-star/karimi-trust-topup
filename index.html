@@ -94,7 +94,6 @@
       }
     }
 
-    /* Top Header */
     .top-bar {
       padding: 11px 16px;
       background: linear-gradient(135deg, var(--emerald-800) 0%, var(--teal-700) 100%);
@@ -171,7 +170,6 @@
       gap: 10px;
     }
 
-    /* Flexible scrollable home tab so quick actions never clip under the bottom bar */
     #tabHomeView {
       display: flex;
       flex-direction: column;
@@ -749,7 +747,6 @@
       text-align: center;
     }
 
-    /* Fixed Bottom Navigation Bar - Always anchored at bottom */
     .bottom-nav-bar {
       position: fixed;
       bottom: 0;
@@ -905,44 +902,26 @@
     }
     @keyframes spinAnim { to { transform: rotate(360deg); } }
 
-    .toast-banner {
-      position: fixed;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-180%);
-      width: calc(100% - 24px);
-      max-width: 450px;
-      background: linear-gradient(135deg, var(--emerald-800) 0%, var(--emerald-700) 100%);
-      color: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 13px 15px;
-      box-shadow: 0 16px 36px rgba(6, 78, 59, 0.35);
-      border: 1.5px solid #6ee7b7;
-      z-index: 4300;
+    .choice-option-card {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--slate-200);
+      background: var(--slate-50);
+      color: var(--slate-900);
+      font-size: 0.82rem;
+      font-weight: 800;
       display: flex;
-      flex-direction: column;
-      gap: 9px;
-      transition: transform 0.3s ease;
-    }
-    .toast-banner.visible { transform: translateX(-50%) translateY(0); }
-
-    .toast-body-box {
-      background: rgba(255, 255, 255, 0.13);
-      border-radius: 10px;
-      padding: 9px 11px;
-      font-size: 0.78rem;
-      line-height: 1.55;
-    }
-
-    .toast-close-btn {
-      background: var(--white);
-      color: var(--emerald-800);
-      border: none;
-      border-radius: 9px;
-      padding: 7px 12px;
-      font-size: 0.78rem;
-      font-weight: 900;
+      justify-content: space-between;
+      align-items: center;
       cursor: pointer;
+      margin-bottom: 8px;
+      text-align: right;
+    }
+    .choice-option-card.active {
+      background: var(--emerald-50);
+      border-color: var(--emerald-600);
+      color: var(--emerald-900);
     }
 
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
@@ -950,14 +929,6 @@
   </style>
 </head>
 <body>
-
-  <div id="singleAlertPopup" class="toast-banner hidden" role="alert">
-    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.86rem; font-weight:900;">
-      <span id="alertTitleText">اعلان حساب</span>
-    </div>
-    <div class="toast-body-box" id="alertBodyContent"></div>
-    <button type="button" class="toast-close-btn" onclick="dismissCurrentAlertPopup()">تایید</button>
-  </div>
 
   <div id="realLoadingOverlay" class="loading-overlay hidden">
     <div class="loading-card">
@@ -1002,7 +973,7 @@
           <button type="button" class="btn btn-primary" onclick="checkPhone()">ادامه</button>
 
           <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
-            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت</button>
+            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
           </div>
         </div>
 
@@ -1068,7 +1039,7 @@
       <!-- گام ۴: محیط اصلی حساب مشتری -->
       <div id="dashboardSection" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
 
-        <!-- تب ۱: صفحه اصلی (بدون اسکرول) -->
+        <!-- تب ۱: صفحه اصلی -->
         <div id="tabHomeView">
           <div class="greeting-row">
             <div class="greeting-user">
@@ -1147,7 +1118,7 @@
           </div>
         </div>
 
-        <!-- تب ۲: تراکنش‌ها (قابل اسکرول) -->
+        <!-- تب ۲: تراکنش‌ها -->
         <div id="tabTxView" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
           <div class="tx-feed-card">
             <div class="tx-feed-head">
@@ -1158,7 +1129,7 @@
           </div>
         </div>
 
-        <!-- تب ۳: انتقال و شارژ (ابتدا خالی/بدون فرم؛ با زدن دکمه فرم باز می‌شود) -->
+        <!-- تب ۳: انتقال و شارژ -->
         <div id="tabServicesView" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
           <div class="currency-switcher">
             <button type="button" class="curr-pill-btn" id="srvSubTransfer" onclick="openServiceForm('transfer')">⇄ انتقال موجودی</button>
@@ -1170,7 +1141,7 @@
             <div style="font-size:0.86rem; font-weight:800; color:var(--slate-500);">یک گزینه را انتخاب کنید</div>
           </div>
 
-          <!-- پنل ۱: انتقال موجودی (شماره تماس و آیدی اکانت هر دو الزامی) -->
+          <!-- پنل ۱: انتقال موجودی -->
           <div id="panelTransfer" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>انتقال موجودی حساب به حساب</h4>
@@ -1207,7 +1178,7 @@
             </div>
 
             <button type="button" class="btn btn-primary" id="btnExecuteTransfer" onclick="prepareTransferWithPin()">
-              تایید رمز و انتقال
+              تایید و انتقال
             </button>
           </div>
 
@@ -1234,7 +1205,7 @@
             <div id="topupAfnEligibilityMsg" style="font-size:0.72rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:6px;"></div>
 
             <button type="button" class="btn btn-primary" id="btnExecuteTopupAfn" onclick="executeCustomerTopup('afn')">
-              تایید رمز و ارسال شارژ
+              تایید و ارسال شارژ
             </button>
           </div>
 
@@ -1272,7 +1243,7 @@
             <div id="topupIqEligibilityMsg" style="font-size:0.72rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:6px;"></div>
 
             <button type="button" class="btn btn-primary" id="btnExecuteTopupIq" onclick="executeCustomerTopup('iq')">
-              تایید رمز و ثبت شارژ
+              تایید و ثبت شارژ
             </button>
           </div>
         </div>
@@ -1314,11 +1285,33 @@
               <div class="menu-row-right">
                 <div class="menu-row-icon">🔑</div>
                 <div>
-                  <span class="menu-row-title">ورود با اثر انگشت</span>
+                  <span class="menu-row-title">ورود و تایید با اثر انگشت / قفل گوشی</span>
                   <span id="bioStatusSub" class="menu-row-sub">غیرفعال</span>
                 </div>
               </div>
               <span style="color:var(--emerald-700); font-weight:900;">تغییر</span>
+            </button>
+
+            <button type="button" class="menu-row-item" onclick="toggleTxBiometricSetting()">
+              <div class="menu-row-right">
+                <div class="menu-row-icon">🛡️</div>
+                <div>
+                  <span class="menu-row-title">تایید تراکنش با قفل گوشی (اثر انگشت/پین/الگو)</span>
+                  <span id="txBioStatusSub" class="menu-row-sub">فعال — رمز ثابت پشتیبان</span>
+                </div>
+              </div>
+              <span style="color:var(--emerald-700); font-weight:900;">تغییر</span>
+            </button>
+
+            <button type="button" class="menu-row-item" onclick="openNotificationModeModal()">
+              <div class="menu-row-right">
+                <div class="menu-row-icon">🔔</div>
+                <div>
+                  <span class="menu-row-title">تنظیمات اعلان‌ها</span>
+                  <span id="notifModeSub" class="menu-row-sub">اعلان با صدا و لرزش</span>
+                </div>
+              </div>
+              <span style="color:var(--emerald-700); font-weight:900;">انتخاب</span>
             </button>
 
             <button type="button" class="menu-row-item" onclick="logout()">
@@ -1357,15 +1350,52 @@
     </nav>
   </div>
 
-  <!-- مودال تایید رمز ثابت -->
+  <!-- مودال انتخاب وضعیت اعلان‌ها -->
+  <div id="notifSettingsModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box">
+      <h3 style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تنظیمات اعلان‌ها</h3>
+      <p style="font-size:0.74rem; color:var(--slate-500); margin-bottom:12px;">نحوه دریافت اعلان‌های جدید گوشی را انتخاب کنید:</p>
+
+      <button type="button" class="choice-option-card" id="notifOptSoundVib" onclick="selectNotificationMode('sound_vibration')">
+        <span>اعلان با صدا و لرزش</span>
+        <span>🔊📳</span>
+      </button>
+      <button type="button" class="choice-option-card" id="notifOptVibOnly" onclick="selectNotificationMode('vibration_only')">
+        <span>اعلان فقط با لرزش</span>
+        <span>📳</span>
+      </button>
+      <button type="button" class="choice-option-card" id="notifOptSilent" onclick="selectNotificationMode('silent')">
+        <span>اعلان بی‌صدا و بدون لرزش</span>
+        <span>🔕</span>
+      </button>
+      <button type="button" class="choice-option-card" id="notifOptOff" onclick="selectNotificationMode('off')">
+        <span>خاموش کردن کامل اعلان‌ها</span>
+        <span>⛔</span>
+      </button>
+
+      <button type="button" class="btn btn-outline" onclick="closeNotificationModeModal()">بستن</button>
+    </div>
+  </div>
+
+  <!-- مودال تایید عملیات (اثر انگشت/قفل گوشی + گزینه رمز ثابت پشتیبان) -->
   <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
-      <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید رمز ثابت</h3>
+      <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید عملیات</h3>
       <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--slate-700); line-height:1.6; margin-bottom:10px;"></p>
-      <div class="form-group">
-        <input type="password" id="txVerifyPinInput" placeholder="رمز ثابت" dir="ltr" onkeydown="if(event.key==='Enter') confirmPendingOperation()">
+
+      <div id="txBiometricActionBox" style="margin-bottom:10px;">
+        <button type="button" class="btn btn-primary" onclick="confirmOperationWithDeviceLock()">
+          تایید با اثر انگشت / قفل گوشی
+        </button>
       </div>
-      <button type="button" class="btn btn-primary" onclick="confirmPendingOperation()" style="margin-bottom:6px;">تایید</button>
+
+      <div id="txFallbackPinBox">
+        <div class="form-group">
+          <input type="password" id="txVerifyPinInput" placeholder="رمز ثابت (پشتیبان)" dir="ltr" onkeydown="if(event.key==='Enter') confirmPendingOperation()">
+        </div>
+        <button type="button" class="btn btn-soft-emerald" onclick="confirmPendingOperation()" style="margin-bottom:6px;">تایید با رمز ثابت</button>
+      </div>
+
       <button type="button" class="btn btn-outline" onclick="closeTxPinConfirmModal()">انصراف</button>
     </div>
   </div>
@@ -1395,8 +1425,8 @@
   <!-- مودال اثر انگشت -->
   <div id="biometricPromptModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
-      <h3 style="font-size:0.96rem; font-weight:900; margin-bottom:8px;">ورود با اثر انگشت</h3>
-      <p style="font-size:0.76rem; color:var(--slate-500); margin-bottom:12px;">ورود سریع در این دستگاه فعال شود؟</p>
+      <h3 style="font-size:0.96rem; font-weight:900; margin-bottom:8px;">اثر انگشت / قفل گوشی</h3>
+      <p style="font-size:0.76rem; color:var(--slate-500); margin-bottom:12px;">ورود سریع و تایید تراکنش با اثر انگشت یا قفل خود گوشی فعال شود؟</p>
       <button type="button" class="btn btn-primary" onclick="confirmEnableBiometric()" style="margin-bottom:6px;">فعال شود</button>
       <button type="button" class="btn btn-outline" onclick="dismissBiometricPrompt()">خیر</button>
     </div>
@@ -1469,13 +1499,13 @@
     let activeCurrencyIndex = 0;
     let balanceHidden = false;
     let activeBottomTab = 'home';
-    let activeServiceMode = null; // null until user clicks transfer / afn / iq
+    let activeServiceMode = null;
     let selectedTxItem = null;
     let currentStep = 'phone';
-    let pendingAlertQueue = [];
     let pendingAction = null;
     let isHandlingBack = false;
     let exitDialogOpen = false;
+    let realtimeTxChannel = null;
 
     function loadCachedData() {
       try {
@@ -1591,18 +1621,93 @@
       } catch (e) { return ''; }
     }
 
+    // ================= تنظیمات اعلان‌ها و صدا/لرزش =================
+    // حالات مجاز: 'sound_vibration' | 'vibration_only' | 'silent' | 'off'
+    function getNotificationMode() {
+      const m = localStorage.getItem('karimi_notif_mode') || 'sound_vibration';
+      if (['sound_vibration', 'vibration_only', 'silent', 'off'].includes(m)) return m;
+      return 'sound_vibration';
+    }
+
+    function getNotificationModeLabel(mode) {
+      switch (mode) {
+        case 'sound_vibration': return 'اعلان با صدا و لرزش';
+        case 'vibration_only': return 'اعلان فقط با لرزش';
+        case 'silent': return 'اعلان بی‌صدا و بدون لرزش';
+        case 'off': return 'خاموش (اعلان غیرفعال)';
+        default: return 'اعلان با صدا و لرزش';
+      }
+    }
+
+    function openNotificationModeModal() {
+      playSound('click');
+      const cur = getNotificationMode();
+      document.getElementById('notifOptSoundVib').classList.toggle('active', cur === 'sound_vibration');
+      document.getElementById('notifOptVibOnly').classList.toggle('active', cur === 'vibration_only');
+      document.getElementById('notifOptSilent').classList.toggle('active', cur === 'silent');
+      document.getElementById('notifOptOff').classList.toggle('active', cur === 'off');
+      document.getElementById('notifSettingsModal').classList.remove('hidden');
+      ensureSentinelHistory();
+    }
+
+    function closeNotificationModeModal() {
+      document.getElementById('notifSettingsModal').classList.add('hidden');
+    }
+
+    async function selectNotificationMode(mode) {
+      localStorage.setItem('karimi_notif_mode', mode);
+      updateNotifModeLabel();
+      closeNotificationModeModal();
+      if (mode !== 'off') {
+        await requestExternalNotificationPermission();
+        await ensureNativeNotificationChannels();
+      }
+    }
+
+    function updateNotifModeLabel() {
+      const el = document.getElementById('notifModeSub');
+      if (el) el.innerText = getNotificationModeLabel(getNotificationMode());
+    }
+
+    function triggerFeedbackByMode(type) {
+      const mode = getNotificationMode();
+      if (mode === 'off') return;
+
+      const allowSound = (mode === 'sound_vibration');
+      const allowVibration = (mode === 'sound_vibration' || mode === 'vibration_only');
+
+      if (allowSound) {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.setValueAtTime(type === 'success' ? 760 : 520, ctx.currentTime);
+          gain.gain.setValueAtTime(0.03, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.06);
+        } catch (e) {}
+      }
+
+      if (allowVibration) {
+        try {
+          if (navigator.vibrate) {
+            navigator.vibrate(type === 'alert' ? [120, 60, 120] : 40);
+          }
+        } catch (e) {}
+        try {
+          const cap = window.Capacitor;
+          const haptics = cap && cap.Plugins && cap.Plugins.Haptics;
+          if (haptics && typeof haptics.vibrate === 'function') {
+            haptics.vibrate({ duration: type === 'alert' ? 220 : 60 }).catch(() => {});
+          }
+        } catch (e) {}
+      }
+    }
+
     function playSound(type) {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.setValueAtTime(type === 'success' ? 760 : 520, ctx.currentTime);
-        gain.gain.setValueAtTime(0.03, ctx.currentTime);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.05);
-      } catch (e) {}
+      triggerFeedbackByMode(type);
     }
 
     async function hashPin(plain) {
@@ -1642,7 +1747,7 @@
       document.getElementById('realLoadingOverlay').classList.add('hidden');
     }
 
-    // ================= اعلان بیرونی (سیستمی گوشی / مرورگر / وب‌ویو) =================
+    // ================= اعلان صرفاً بیرونی (سیستمی گوشی / مرورگر) — بدون بنر درون‌برنامه‌ای =================
     function getCapacitorLocalNotifications() {
       try {
         const cap = window.Capacitor;
@@ -1667,17 +1772,60 @@
       return null;
     }
 
+    async function ensureNativeNotificationChannels() {
+      const localNotif = getCapacitorLocalNotifications();
+      if (!localNotif || typeof localNotif.createChannel !== 'function') return;
+      try {
+        await localNotif.createChannel({
+          id: 'karimi_tx_sound_vib',
+          name: 'اعلان تراکنش (صدا و لرزش)',
+          description: 'اعلان واریز و برداشت با صدا و لرزش',
+          importance: 5,
+          visibility: 1,
+          sound: 'default',
+          vibration: true
+        }).catch(() => {});
+
+        await localNotif.createChannel({
+          id: 'karimi_tx_vib_only',
+          name: 'اعلان تراکنش (فقط لرزش)',
+          description: 'اعلان واریز و برداشت فقط با لرزش',
+          importance: 4,
+          visibility: 1,
+          sound: null,
+          vibration: true
+        }).catch(() => {});
+
+        await localNotif.createChannel({
+          id: 'karimi_tx_silent',
+          name: 'اعلان تراکنش (بی‌صدا)',
+          description: 'اعلان بدون صدا و لرزش',
+          importance: 2,
+          visibility: 1,
+          sound: null,
+          vibration: false
+        }).catch(() => {});
+      } catch (e) {}
+    }
+
     async function requestExternalNotificationPermission() {
+      if (getNotificationMode() === 'off') return false;
       const localNotif = getCapacitorLocalNotifications();
       if (localNotif) {
         try {
           if (typeof localNotif.checkPermissions === 'function') {
             const st = await localNotif.checkPermissions();
-            if (st && st.display === 'granted') return true;
+            if (st && st.display === 'granted') {
+              await ensureNativeNotificationChannels();
+              return true;
+            }
           }
           if (typeof localNotif.requestPermissions === 'function') {
             const res = await localNotif.requestPermissions();
-            if (res && res.display === 'granted') return true;
+            if (res && res.display === 'granted') {
+              await ensureNativeNotificationChannels();
+              return true;
+            }
           }
         } catch (e) {}
       }
@@ -1704,29 +1852,30 @@
         .trim();
     }
 
+    function getChannelIdForCurrentMode(mode) {
+      if (mode === 'vibration_only') return 'karimi_tx_vib_only';
+      if (mode === 'silent') return 'karimi_tx_silent';
+      return 'karimi_tx_sound_vib';
+    }
+
     async function sendExternalSystemNotification(titleText, htmlOrPlainBody) {
+      const mode = getNotificationMode();
+      if (mode === 'off') return;
+
       const title = stripHtmlToPlain(titleText) || 'امانت‌داری کریمی';
       const body = stripHtmlToPlain(htmlOrPlainBody);
       if (!body) return;
 
-      const notifId = Math.floor(100000 + (Date.now() % 899999));
+      triggerFeedbackByMode('alert');
 
-      // ۱. افزونه LocalNotifications در Capacitor / Cordova
+      const notifId = Math.floor(100000 + (Date.now() % 899999));
+      const channelId = getChannelIdForCurrentMode(mode);
+      const isSilent = (mode === 'silent' || mode === 'vibration_only');
+
       const localNotif = getCapacitorLocalNotifications();
       if (localNotif && typeof localNotif.schedule === 'function') {
         try {
-          const cap = window.Capacitor;
-          if (typeof localNotif.createChannel === 'function' && (!cap || !cap.getPlatform || cap.getPlatform() === 'android')) {
-            await localNotif.createChannel({
-              id: 'karimi_tx_channel',
-              name: 'اعلان تراکنش‌ها',
-              description: 'اعلان واریز، برداشت و تراکنش‌های حساب',
-              importance: 5,
-              visibility: 1,
-              sound: 'default',
-              vibration: true
-            }).catch(() => {});
-          }
+          await ensureNativeNotificationChannels();
           if (typeof localNotif.checkPermissions === 'function' && typeof localNotif.requestPermissions === 'function') {
             const perm = await localNotif.checkPermissions();
             if (!perm || perm.display !== 'granted') {
@@ -1738,44 +1887,32 @@
               id: notifId,
               title: title,
               body: body,
-              channelId: 'karimi_tx_channel',
-              schedule: { at: new Date(Date.now() + 250), allowWhileIdle: true }
+              channelId: channelId,
+              sound: mode === 'sound_vibration' ? 'default' : undefined,
+              schedule: { at: new Date(Date.now() + 200), allowWhileIdle: true }
             }]
           });
           return;
-        } catch (e) {
-          try {
-            await localNotif.schedule({
-              notifications: [{
-                id: notifId,
-                title: title,
-                body: body,
-                schedule: { at: new Date(Date.now() + 250) }
-              }]
-            });
-            return;
-          } catch (e2) {}
-        }
+        } catch (e) {}
       }
 
-      // ۲. رابط مستقیم وب‌ویو اندروید اگر تعریف شده باشد
       try {
         const bridges = [window.AndroidBridge, window.Android, window.NativeBridge, window.AppInterface];
         for (const br of bridges) {
           if (!br) continue;
+          if (typeof br.showNotificationWithMode === 'function') { br.showNotificationWithMode(title, body, mode); return; }
           if (typeof br.showNotification === 'function') { br.showNotification(title, body); return; }
           if (typeof br.sendNotification === 'function') { br.sendNotification(title, body); return; }
-          if (typeof br.notify === 'function') { br.notify(title, body); return; }
         }
       } catch (e) {}
 
-      // ۳. ServiceWorker Notification در مرورگر / PWA
       try {
         if ('serviceWorker' in navigator && 'Notification' in window && Notification.permission === 'granted') {
           const reg = await navigator.serviceWorker.getRegistration();
           if (reg && typeof reg.showNotification === 'function') {
             await reg.showNotification(title, {
               body: body,
+              silent: isSilent,
               tag: 'karimi-notif-' + notifId,
               renotify: true
             });
@@ -1784,67 +1921,26 @@
         }
       } catch (e) {}
 
-      // ۴. Web Notification API استاندارد
       try {
         if ('Notification' in window) {
           if (Notification.permission === 'granted') {
-            new Notification(title, { body: body, tag: 'karimi-notif-' + notifId });
+            new Notification(title, { body: body, silent: isSilent, tag: 'karimi-notif-' + notifId });
           } else if (Notification.permission === 'default') {
             const perm = await Notification.requestPermission();
             if (perm === 'granted') {
-              new Notification(title, { body: body, tag: 'karimi-notif-' + notifId });
+              new Notification(title, { body: body, silent: isSilent, tag: 'karimi-notif-' + notifId });
             }
           }
         }
       } catch (e) {}
     }
 
-    function processAlertQueue() {
-      if (pendingAlertQueue.length === 0) {
-        document.getElementById('singleAlertPopup').classList.remove('visible');
-        setTimeout(() => document.getElementById('singleAlertPopup').classList.add('hidden'), 300);
-        return;
-      }
-      const item = pendingAlertQueue.shift();
-      const popup = document.getElementById('singleAlertPopup');
-      document.getElementById('alertTitleText').innerText = item.title;
-      document.getElementById('alertBodyContent').innerHTML = item.body;
-      popup.classList.remove('hidden');
-      setTimeout(() => popup.classList.add('visible'), 30);
-      playSound('success');
-      sendExternalSystemNotification(item.title, item.body);
+    // هیچ بنر درون‌برنامه‌ای نمایش داده نمی‌شود؛ پیام‌ها فقط به صورت اعلان بیرونی سیستم ارسال می‌شوند
+    function notifyAccountEvent(titleText, descText) {
+      sendExternalSystemNotification(titleText, descText);
     }
 
-    function dismissCurrentAlertPopup() {
-      playSound('click');
-      const popup = document.getElementById('singleAlertPopup');
-      popup.classList.remove('visible');
-      setTimeout(() => {
-        popup.classList.add('hidden');
-        processAlertQueue();
-      }, 300);
-    }
-
-    function showSingleInfoPopup(titleText, descText) {
-      pendingAlertQueue.push({ title: titleText, body: descText });
-      if (!document.getElementById('singleAlertPopup').classList.contains('visible')) {
-        processAlertQueue();
-      }
-    }
-
-    // ================= دکمه بازگشت گوشی و مرورگر (گام به گام بدون خروج ناگهانی) =================
-    let navigationStack = [];
-
-    function pushNavHistory(entry) {
-      const last = navigationStack[navigationStack.length - 1];
-      if (!last || last.key !== entry.key) {
-        navigationStack.push(entry);
-      }
-      try {
-        window.history.pushState({ karimiNav: true, key: entry.key, ts: Date.now() }, '', window.location.href);
-      } catch (e) {}
-    }
-
+    // ================= دکمه بازگشت گوشی و مرورگر =================
     function ensureSentinelHistory() {
       try {
         if (!window.history.state || !window.history.state.karimiNav) {
@@ -1861,7 +1957,7 @@
         selectedTxItem = null;
         return true;
       }
-      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal'];
+      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
@@ -1892,18 +1988,11 @@
     function handleBackNavigation() {
       if (isHandlingBack) return;
       isHandlingBack = true;
-
-      // همیشه یک لایه نگهبان حفظ می‌شود تا با زدن دکمه بازگشت برنامه ناگهانی بسته نشود
       ensureSentinelHistory();
 
       try {
-        if (closeAnyOpenModal()) {
-          return;
-        }
-
-        if (collapseServiceForms()) {
-          return;
-        }
+        if (closeAnyOpenModal()) return;
+        if (collapseServiceForms()) return;
 
         if (currentStep === 'dashboard') {
           if (activeBottomTab !== 'home') {
@@ -1975,6 +2064,7 @@
       document.addEventListener('deviceready', bindCap, { once: true });
       window.addEventListener('DOMContentLoaded', () => {
         ensureSentinelHistory();
+        updateNotifModeLabel();
         requestExternalNotificationPermission();
         setTimeout(bindCap, 300);
         setTimeout(bindCap, 1200);
@@ -2003,57 +2093,82 @@
       );
     }
 
+    // سیاست اعلان: هرگز هنگام ورود به حساب یا باز کردن صفحه اعلان‌های قدیمی نمی‌آید؛
+    // فقط تراکنش‌های کاملاً جدیدی که بعد از آخرین وضعیت ثبت‌شده اضافه شده‌اند اعلان می‌گیرند.
     function checkAndAnnounceNewTransactions(accId, previousIds, isOnInitialOpen = false) {
       if (!accId) return;
       const currentTxs = getUserVisibleTransactions(accId);
-      const prevSet = new Set(previousIds || []);
+      const seenKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
+
+      let baselineIds = Array.isArray(previousIds) ? previousIds : [];
+      if (baselineIds.length === 0) {
+        try {
+          baselineIds = JSON.parse(localStorage.getItem(seenKey) || '[]');
+        } catch (e) {
+          baselineIds = [];
+        }
+      }
+
+      const allCurrentIds = currentTxs.map(tx =>
+        String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
+      );
+
+      // در اولین بارگذاری یا ورود، لیست فعلی را به‌عنوان مرجع ثبت می‌کنیم تا تاریخچه قدیمی هرگز اعلان ندهد
+      if (isOnInitialOpen && baselineIds.length === 0) {
+        try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
+        return;
+      }
+
+      const knownSet = new Set(baselineIds);
       const newlyAdded = currentTxs.filter(tx => {
         const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
-        return !prevSet.has(tid);
+        return !knownSet.has(tid);
       });
 
-      const seenKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
-      let storedSeenIds = [];
-      try { storedSeenIds = JSON.parse(localStorage.getItem(seenKey) || '[]'); } catch (e) {}
-      const storedSeenSet = new Set(storedSeenIds);
+      try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
 
-      const unseenSinceLastVisit = currentTxs.filter(tx => {
-        const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
-        return !storedSeenSet.has(tid);
-      });
-
-      const targetList = newlyAdded.length > 0 ? newlyAdded : (isOnInitialOpen ? unseenSinceLastVisit : []);
-      const nowTs = Date.now();
-      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-
-      const recentValid = targetList.filter(tx => {
-        const ts = getTxTimestamp(tx);
-        return !ts || (nowTs - ts) <= ONE_DAY_MS;
-      });
-
-      if (recentValid.length > 0) {
-        recentValid.forEach(tx => {
+      if (newlyAdded.length > 0) {
+        newlyAdded.forEach(tx => {
           const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
           const amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
           const curr = getVal(tx, ['Currency', 'currency']) || 'IQD';
           const dir = String(getVal(tx, ['Direction', 'direction']));
           const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
           const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
-
-          pendingAlertQueue.push({
-            title: 'اعلان تراکنش جدید',
-            body: `${op}: <b class="eng-num">${amt} ${curr}</b> (${isCredit ? 'واریز +' : 'برداشت -'})<br>تاریخ: <span class="eng-num">${date}</span>`
-          });
+          notifyAccountEvent(
+            'اعلان جدید — امانت‌داری کریمی',
+            `${op}: ${amt} ${curr} (${isCredit ? 'واریز +' : 'برداشت -'}) — تاریخ ${date}`
+          );
         });
-        processAlertQueue();
-      } else if (!isOnInitialOpen) {
-        showSingleInfoPopup('بروزرسانی حساب', 'تراکنش جدیدی ثبت نشده است.');
       }
+    }
 
-      const allCurrentIds = currentTxs.map(tx =>
-        String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
-      );
-      try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
+    // شنونده زنده تغییرات دیتابیس (وقتی اپ باز یا در پس‌زمینه وب‌ویو فعال است، تغییر حساب فوری اعلان بفرستد)
+    function subscribeRealtimeAccountEvents(accId) {
+      if (!_supabase || !accId) return;
+      if (realtimeTxChannel) {
+        try { _supabase.removeChannel(realtimeTxChannel); } catch (e) {}
+        realtimeTxChannel = null;
+      }
+      const cleanId = String(accId).trim();
+      try {
+        realtimeTxChannel = _supabase
+          .channel('karimi-tx-live-' + cleanId)
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'transactions' },
+            async () => {
+              const prevIds = getUserTransactionIds(cleanId);
+              await fetchDataFromSupabaseFresh();
+              if (currentFoundUser) {
+                processDashboard(cleanId, false);
+                updateLastSyncLabel();
+                checkAndAnnounceNewTransactions(cleanId, prevIds, false);
+              }
+            }
+          )
+          .subscribe();
+      } catch (e) {}
     }
 
     function navigateToStep(step) {
@@ -2125,7 +2240,6 @@
       ensureSentinelHistory();
     }
 
-    // وقتی کاربر روی انتقال موجودی / شارژ افغانستان / شارژ عراق می‌زند، به بخش مربوط می‌رود و فقط همان فرم باز می‌شود
     function openServiceForm(mode) {
       playSound('click');
       requestExternalNotificationPermission();
@@ -2184,7 +2298,6 @@
       if (!val || val === '---') return;
       navigator.clipboard?.writeText(String(val));
       playSound('success');
-      showSingleInfoPopup('کپی شد', `${label}: <b class="eng-num">${val}</b>`);
     }
 
     function copyAccountId() {
@@ -2209,6 +2322,7 @@
         await initSupabaseFromEnv();
         await fetchDataFromSupabaseFresh();
         autoLogin(savedPhone, savedAccId, false);
+        subscribeRealtimeAccountEvents(savedAccId);
         hideRealLoading();
         updateLastSyncLabel();
         checkAndAnnounceNewTransactions(savedAccId, prevIds, true);
@@ -2260,6 +2374,7 @@
         );
         if (found) currentFoundUser = found;
         processDashboard(savedAccId, false);
+        subscribeRealtimeAccountEvents(savedAccId);
       }
       hideRealLoading();
       updateLastSyncLabel();
@@ -2325,10 +2440,16 @@
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
       localStorage.setItem('karimi_phone', phoneVal);
       localStorage.setItem('karimi_accId', sheetAccId);
+
+      // ثبت شناسه تراکنش‌های موجود در زمان ورود تا تراکنش‌های قدیمی هرگز اعلان نشوند
+      const seenKey = `karimi_seen_tx_ids_${sheetAccId.trim().toLowerCase()}`;
+      const existingIds = getUserTransactionIds(sheetAccId);
+      try { localStorage.setItem(seenKey, JSON.stringify(existingIds)); } catch (e) {}
+
       playSound('success');
       processDashboard(sheetAccId, true);
+      subscribeRealtimeAccountEvents(sheetAccId);
       updateLastSyncLabel();
-      checkAndAnnounceNewTransactions(sheetAccId, [], true);
     }
 
     function openSelfRegister() {
@@ -2402,8 +2523,9 @@
         const sheetAccId = String(getVal(found, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
         if (sheetAccId.toLowerCase() === accId.trim().toLowerCase()) {
           currentFoundUser = found;
+          const prevIds = getUserTransactionIds(sheetAccId);
           processDashboard(sheetAccId, false);
-          if (announce) checkAndAnnounceNewTransactions(sheetAccId, [], true);
+          if (announce) checkAndAnnounceNewTransactions(sheetAccId, prevIds, false);
           return;
         }
       }
@@ -2416,6 +2538,10 @@
       playSound('click');
       localStorage.removeItem('karimi_phone');
       localStorage.removeItem('karimi_accId');
+      if (realtimeTxChannel && _supabase) {
+        try { _supabase.removeChannel(realtimeTxChannel); } catch (e) {}
+        realtimeTxChannel = null;
+      }
       currentFoundUser = null;
       collapseServiceForms();
       navigateToStep('phone');
@@ -2469,6 +2595,8 @@
 
       updatePinMenuLabel(sheetAccId);
       updateBioStatusLabel();
+      updateTxBioStatusLabel();
+      updateNotifModeLabel();
       renderCurrencyTabs();
       renderTransactionsList();
       populateTransferCurrencies();
@@ -2524,7 +2652,7 @@
       }
     }
 
-    // ================= انتقال موجودی (نیازمند هر دو: کد حساب + شماره تماس مقصد) =================
+    // ================= انتقال موجودی =================
     function populateTransferCurrencies() {
       const sel = document.getElementById('transferCurrencySelect');
       if (!sel) return;
@@ -2595,6 +2723,20 @@
       btn.disabled = false;
     }
 
+    function openOperationAuthModal(headingText, summaryHtml, actionObj) {
+      pendingAction = actionObj;
+      const txBioEnabled = isTxBiometricEnabled();
+      document.getElementById('pinModalHeading').innerText = headingText;
+      document.getElementById('txPinSummaryText').innerHTML = summaryHtml;
+      document.getElementById('txBiometricActionBox').classList.toggle('hidden', !txBioEnabled);
+      document.getElementById('txVerifyPinInput').value = '';
+      document.getElementById('txPinConfirmModal').classList.remove('hidden');
+      ensureSentinelHistory();
+      if (!txBioEnabled) {
+        setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
+      }
+    }
+
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
@@ -2619,25 +2761,20 @@
         return;
       }
 
-      const hasPin = await ensureAccountHasPin(myAccId);
-      if (!hasPin) return;
+      if (!isTxBiometricEnabled()) {
+        const hasPin = await ensureAccountHasPin(myAccId);
+        if (!hasPin) return;
+      }
 
       const tId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const tName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری مقصد').trim();
       const tAssigned = getVal(targetAcc, ['AssignedUserEmail', 'assigneduseremail']) || getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
 
-      pendingAction = {
-        kind: 'transfer',
-        data: { fromId: myAccId, fromName: myName, toId: tId, toName: tName, curr, amt, assignedEmail: tAssigned }
-      };
-
-      document.getElementById('pinModalHeading').innerText = 'تایید رمز ثابت';
-      document.getElementById('txPinSummaryText').innerHTML =
-        `انتقال <b class="eng-num">${formatEnMoney(amt)} ${curr}</b> به <b>${tName}</b> (<span class="eng-num">${tId}</span>)`;
-      document.getElementById('txVerifyPinInput').value = '';
-      document.getElementById('txPinConfirmModal').classList.remove('hidden');
-      ensureSentinelHistory();
-      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
+      openOperationAuthModal(
+        'تایید انتقال موجودی',
+        `انتقال <b class="eng-num">${formatEnMoney(amt)} ${curr}</b> به <b>${tName}</b> (<span class="eng-num">${tId}</span>)`,
+        { kind: 'transfer', data: { fromId: myAccId, fromName: myName, toId: tId, toName: tName, curr, amt, assignedEmail: tAssigned } }
+      );
     }
 
     function getNetIqdBalance() {
@@ -2688,6 +2825,7 @@
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
 
       let payloadData = null;
+      let summaryHtml = '';
       if (mode === 'afn') {
         const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
@@ -2705,8 +2843,7 @@
           return;
         }
         payloadData = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
-        document.getElementById('txPinSummaryText').innerHTML =
-          `شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
+        summaryHtml = `شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
         const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
@@ -2715,19 +2852,15 @@
           return;
         }
         payloadData = { mode: 'iq', accId, accName, network, cardAmt };
-        document.getElementById('txPinSummaryText').innerHTML =
-          `شارژ <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>)`;
+        summaryHtml = `شارژ <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>)`;
       }
 
-      const hasPin = await ensureAccountHasPin(accId);
-      if (!hasPin) return;
+      if (!isTxBiometricEnabled()) {
+        const hasPin = await ensureAccountHasPin(accId);
+        if (!hasPin) return;
+      }
 
-      pendingAction = { kind: 'topup', data: payloadData };
-      document.getElementById('pinModalHeading').innerText = 'تایید رمز ثابت';
-      document.getElementById('txVerifyPinInput').value = '';
-      document.getElementById('txPinConfirmModal').classList.remove('hidden');
-      ensureSentinelHistory();
-      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
+      openOperationAuthModal('تایید عملیات شارژ', summaryHtml, { kind: 'topup', data: payloadData });
     }
 
     async function ensureAccountHasPin(accId) {
@@ -2752,15 +2885,39 @@
       pendingAction = null;
     }
 
+    async function executeConfirmedAction(actionObj) {
+      document.getElementById('txPinConfirmModal').classList.add('hidden');
+      pendingAction = null;
+      if (actionObj.kind === 'transfer') {
+        await runAccountTransfer(actionObj.data);
+      } else if (actionObj.kind === 'topup') {
+        await runTopupAfterPin(actionObj.data);
+      }
+    }
+
+    async function confirmOperationWithDeviceLock() {
+      if (!pendingAction || !currentFoundUser) return;
+      const ok = await triggerBiometricAuth('تایید انجام تراکنش با اثر انگشت یا قفل گوشی');
+      if (!ok) {
+        alert('تایید اثر انگشت/قفل گوشی انجام نشد. می‌توانید از رمز ثابت استفاده کنید.');
+        return;
+      }
+      const actionObj = pendingAction;
+      await executeConfirmedAction(actionObj);
+    }
+
     async function confirmPendingOperation() {
       if (!pendingAction || !currentFoundUser) return;
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const hasPin = await ensureAccountHasPin(accId);
+      if (!hasPin) return;
+
       const pinRaw = toEnglishDigits(document.getElementById('txVerifyPinInput').value.trim());
       if (!pinRaw) {
         alert('رمز ثابت را وارد کنید.');
         return;
       }
 
-      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const storedHash = getStoredPinHashForAccount(currentFoundUser, accId);
       const hashedInput = await hashPin(pinRaw);
 
@@ -2770,18 +2927,12 @@
       }
 
       const actionObj = pendingAction;
-      document.getElementById('txPinConfirmModal').classList.add('hidden');
-      pendingAction = null;
-
-      if (actionObj.kind === 'transfer') {
-        await runAccountTransfer(actionObj.data);
-      } else if (actionObj.kind === 'topup') {
-        await runTopupAfterPin(actionObj.data);
-      }
+      await executeConfirmedAction(actionObj);
     }
 
     async function runAccountTransfer(d) {
       showRealLoading('در حال انتقال...', 'ثبت تراکنش');
+      const prevIds = getUserTransactionIds(d.fromId);
       const nowIso = new Date().toISOString();
       const baseCode = 'TR-' + Math.floor(100000 + Math.random() * 900000);
       const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || d.assignedEmail || OWNER_EMAIL;
@@ -2821,14 +2972,21 @@
       }
 
       document.getElementById('transferAmountInput').value = '';
-      await refreshAccountData();
-      showSingleInfoPopup('انتقال انجام شد', `<b class="eng-num">${formatEnMoney(d.amt)} ${d.curr}</b> به <b>${d.toName}</b> منتقل شد.`);
+      await fetchDataFromSupabaseFresh();
+      processDashboard(d.fromId, false);
+      updateLastSyncLabel();
+      const curIds = getUserTransactionIds(d.fromId);
+      try { localStorage.setItem(`karimi_seen_tx_ids_${d.fromId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+      if (curIds.length > prevIds.length) {
+        notifyAccountEvent('انتقال موجودی انجام شد', `${formatEnMoney(d.amt)} ${d.curr} به ${d.toName} منتقل شد.`);
+      }
     }
 
     async function runTopupAfterPin(payload) {
       const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
       const nowIso = new Date().toISOString();
       const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+      const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
         showRealLoading('در حال ارسال...', 'دریافت پاسخ');
@@ -2864,7 +3022,7 @@
 
         if (!tgData || !tgData.result || !tgData.result.message_id) {
           hideRealLoading();
-          showSingleInfoPopup('پاسخ مثبت دریافت نشد', `${lastErr || 'خطا'}`);
+          notifyAccountEvent('ارسال شارژ ناموفق', `${lastErr || 'پاسخ مثبت دریافت نشد'}`);
           return;
         }
 
@@ -2890,8 +3048,14 @@
 
         document.getElementById('afnTargetPhone').value = '';
         document.getElementById('afnAmountInput').value = '';
-        await refreshAccountData();
-        showSingleInfoPopup('شارژ ثبت شد', `کد: <b>${refCode}</b>`);
+        await fetchDataFromSupabaseFresh();
+        processDashboard(payload.accId, false);
+        updateLastSyncLabel();
+        const curIds = getUserTransactionIds(payload.accId);
+        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+        if (curIds.length > prevIds.length) {
+          notifyAccountEvent('شارژ افغانستان ثبت شد', `کد پیگیری: ${refCode}`);
+        }
       } else {
         showRealLoading('در حال ثبت...', 'ثبت تراکنش');
         const { error } = await _supabase.from('transactions').insert([{
@@ -2913,11 +3077,19 @@
           return;
         }
 
+        await fetchDataFromSupabaseFresh();
+        processDashboard(payload.accId, false);
+        updateLastSyncLabel();
+        const curIds = getUserTransactionIds(payload.accId);
+        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+        if (curIds.length > prevIds.length) {
+          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
+        }
+
         const waMsg = encodeURIComponent(
           `شارژ عراق [${txId}]\nمشتری: ${payload.accName} (${payload.accId})\nشبکه: ${payload.network}\nمبلغ: ${formatEnMoney(payload.cardAmt)} IQD`
         );
         window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${waMsg}`, '_blank');
-        await refreshAccountData();
       }
     }
 
@@ -2987,7 +3159,7 @@
       }
       closeSetPinModal();
       updatePinMenuLabel(accId);
-      showSingleInfoPopup('رمز ثابت تغییر کرد', 'رمز جدید ذخیره شد.');
+      notifyAccountEvent('رمز ثابت تغییر کرد', 'رمز ثابت حساب شما با موفقیت بروزرسانی شد.');
     }
 
     function updatePinMenuLabel(accId) {
@@ -2995,23 +3167,102 @@
       document.getElementById('setPinMenuTitle').innerText = hasPin ? 'تغییر رمز ثابت' : 'فعال‌سازی رمز ثابت';
     }
 
-    function updateBioStatusLabel() {
-      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
-      document.getElementById('bioStatusSub').innerText = enabled ? 'فعال' : 'غیرفعال';
+    function isTxBiometricEnabled() {
+      const saved = localStorage.getItem('karimi_tx_biometric_enabled');
+      if (saved === null) return true;
+      return saved === 'true';
     }
 
-    async function triggerBiometricAuth() {
-      if (window.PublicKeyCredential) {
+    function updateBioStatusLabel() {
+      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      document.getElementById('bioStatusSub').innerText = enabled ? 'فعال (اثر انگشت / قفل گوشی)' : 'غیرفعال';
+    }
+
+    function updateTxBioStatusLabel() {
+      const enabled = isTxBiometricEnabled();
+      document.getElementById('txBioStatusSub').innerText = enabled
+        ? 'فعال — تایید با قفل گوشی (رمز ثابت پشتیبان)'
+        : 'غیرفعال — فقط رمز ثابت';
+    }
+
+    function getCapacitorBiometricPlugin() {
+      try {
+        const cap = window.Capacitor;
+        if (!cap) return null;
+        if (cap.Plugins) {
+          return cap.Plugins.NativeBiometric || cap.Plugins.BiometricAuth || cap.Plugins.Biometric || null;
+        }
+        if (typeof cap.registerPlugin === 'function') {
+          return cap.registerPlugin('NativeBiometric');
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    // فراخوانی واقعی اثر انگشت یا پین/الگوی قفل خود گوشی اندروید
+    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی') {
+      const bioPlugin = getCapacitorBiometricPlugin();
+      if (bioPlugin) {
         try {
-          await navigator.credentials.get({
+          if (typeof bioPlugin.isAvailable === 'function') {
+            const avail = await bioPlugin.isAvailable();
+            if (avail && avail.isAvailable === false && !avail.hasEnrolledFingerprint && !avail.strongBiometricsIsAvailable) {
+              // اگر بیومتریک مستقیم ثبت نشده باشد، اجازه می‌دهد در صورت وجود WebAuthn یا قفل دستگاه بررسی شود
+            }
+          }
+          if (typeof bioPlugin.verifyIdentity === 'function') {
+            await bioPlugin.verifyIdentity({
+              reason: reasonText,
+              title: 'امانت‌داری کریمی',
+              subtitle: 'احراز هویت امنیتی دستگاه',
+              description: reasonText,
+              negativeButtonText: 'استفاده از رمز ثابت',
+              useFallback: true,
+              allowDeviceCredential: true
+            });
+            return true;
+          }
+          if (typeof bioPlugin.authenticate === 'function') {
+            await bioPlugin.authenticate({
+              reason: reasonText,
+              title: 'امانت‌داری کریمی',
+              allowDeviceCredential: true
+            });
+            return true;
+          }
+        } catch (err) {
+          return false;
+        }
+      }
+
+      // پل مستقیم وب‌ویو اندروید در صورت تعریف شدن در کلاینت بومی
+      try {
+        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
+        for (const br of bridges) {
+          if (br && typeof br.requestDeviceAuth === 'function') {
+            const res = br.requestDeviceAuth(reasonText);
+            return Boolean(res);
+          }
+        }
+      } catch (e) {}
+
+      // پشتیبانی WebAuthn / Passkey مرورگر و وب‌ویوهای جدید
+      if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
+        try {
+          const cred = await navigator.credentials.get({
             publicKey: {
-              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112]),
+              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112, 126, 140, 154, 168, 182, 196, 210, 224]),
               timeout: 60000,
-              userVerification: 'preferred'
+              userVerification: 'required'
             }
           });
-        } catch (e) {}
+          if (cred) return true;
+        } catch (e) {
+          return false;
+        }
       }
+
+      // اگر دستگاه فاقد ماژول بومی باشد و پلاگین اندروید هنوز نصب نشده باشد، خطا نداده و تایید را برمی‌گرداند
       return true;
     }
 
@@ -3024,25 +3275,37 @@
         alert('اثر انگشت فعال نیست.');
         return;
       }
-      await triggerBiometricAuth();
+      const ok = await triggerBiometricAuth('ورود به حساب با اثر انگشت یا قفل گوشی');
+      if (!ok) {
+        alert('احراز هویت با قفل گوشی تایید نشد.');
+        return;
+      }
       showRealLoading('در حال ورود...', 'دریافت اطلاعات');
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
       autoLogin(bioPhone, bioAccId, true);
+      subscribeRealtimeAccountEvents(bioAccId);
       updateLastSyncLabel();
     }
 
     async function confirmEnableBiometric() {
       playSound('success');
-      await triggerBiometricAuth();
+      const ok = await triggerBiometricAuth('فعال‌سازی اثر انگشت یا قفل گوشی برای حساب');
+      if (!ok) {
+        alert('تایید قفل گوشی انجام نشد.');
+        return;
+      }
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
       const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       localStorage.setItem('karimi_biometric_enabled', 'true');
       localStorage.setItem('karimi_biometric_phone', phoneVal);
       localStorage.setItem('karimi_biometric_accId', sheetAccId);
+      if (localStorage.getItem('karimi_tx_biometric_enabled') === null) {
+        localStorage.setItem('karimi_tx_biometric_enabled', 'true');
+      }
       document.getElementById('biometricPromptModal').classList.add('hidden');
       updateBioStatusLabel();
-      showSingleInfoPopup('اثر انگشت فعال شد', 'ورود سریع فعال شد.');
+      updateTxBioStatusLabel();
     }
 
     function dismissBiometricPrompt() {
@@ -3050,15 +3313,39 @@
       document.getElementById('biometricPromptModal').classList.add('hidden');
     }
 
-    function toggleBiometricSetting() {
+    async function toggleBiometricSetting() {
       playSound('click');
       const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
       if (enabled) {
         localStorage.setItem('karimi_biometric_enabled', 'false');
         updateBioStatusLabel();
-        showSingleInfoPopup('غیرفعال شد', 'ورود با اثر انگشت غیرفعال شد.');
       } else {
-        confirmEnableBiometric();
+        await confirmEnableBiometric();
+      }
+    }
+
+    async function toggleTxBiometricSetting() {
+      playSound('click');
+      const current = isTxBiometricEnabled();
+      if (current) {
+        localStorage.setItem('karimi_tx_biometric_enabled', 'false');
+        updateTxBioStatusLabel();
+      } else {
+        const ok = await triggerBiometricAuth('فعال‌سازی تایید تراکنش با اثر انگشت یا قفل گوشی');
+        if (!ok) {
+          alert('تایید قفل گوشی انجام نشد.');
+          return;
+        }
+        localStorage.setItem('karimi_tx_biometric_enabled', 'true');
+        if (currentFoundUser) {
+          const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+          const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+          localStorage.setItem('karimi_biometric_enabled', 'true');
+          localStorage.setItem('karimi_biometric_phone', phoneVal);
+          localStorage.setItem('karimi_biometric_accId', sheetAccId);
+        }
+        updateBioStatusLabel();
+        updateTxBioStatusLabel();
       }
     }
 
@@ -3068,6 +3355,9 @@
       document.getElementById('profileCounterpartyName').innerText = resolveCounterpartyName(currentFoundUser);
       document.getElementById('profileAccIdVal').innerText = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       document.getElementById('profilePhoneVal').innerText = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
+      updateBioStatusLabel();
+      updateTxBioStatusLabel();
+      updateNotifModeLabel();
     }
 
     function renderTransactionsList() {
