@@ -924,6 +924,42 @@
       color: var(--emerald-900);
     }
 
+
+    .admin-notice-card {
+      background: var(--white);
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--radius-xl);
+      padding: 15px 14px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+
+    .admin-notice-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--emerald-50);
+      border: 1px solid #6ee7b7;
+      color: var(--emerald-800);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .admin-phone-box {
+      background: var(--emerald-50);
+      border: 1.5px solid #86efac;
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
     .hidden { display: none !important; }
   </style>
@@ -977,17 +1013,16 @@
           </div>
         </div>
 
-        <div class="menu-stack-card">
-          <button type="button" class="menu-row-item" onclick="openSelfRegister()">
-            <div class="menu-row-right">
-              <div class="menu-row-icon">➕</div>
-              <div>
-                <span class="menu-row-title">افتتاح حساب جدید</span>
-                <span class="menu-row-sub">ثبت حساب و رمز ثابت</span>
-              </div>
-            </div>
-            <span style="color:var(--emerald-700); font-weight:900;">‹</span>
-          </button>
+        <div class="admin-notice-card" id="adminAccountNoticeCard">
+          <div class="admin-notice-badge">راهنمای افتتاح حساب</div>
+          <div style="font-size:0.88rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">برای افتتاح حساب جدید به ادمین مراجعه کنید</div>
+          <p style="font-size:0.74rem; color:var(--slate-700); line-height:1.6;">ثبت حساب مستقیم بسته شده است. لطفاً برای ایجاد حساب و دریافت کد حساب با مدیریت تماس بگیرید.</p>
+          <div class="admin-phone-box">
+            <span style="font-size:0.74rem; color:var(--slate-700); font-weight:800;">شماره تماس ادمین:</span>
+            <strong id="adminDataCodePhone" class="eng-num" style="font-size:0.84rem; color:var(--emerald-900);">---</strong>
+            <button type="button" class="mini-copy-btn" onclick="copyAdminPhone()">کپی</button>
+          </div>
+          <a id="adminDirectWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp">تماس با ادمین در واتساپ</a>
         </div>
       </div>
 
@@ -1437,7 +1472,6 @@
     <div class="center-dialog-box">
       <h3 style="font-size:0.96rem; font-weight:900; color:var(--danger); margin-bottom:8px;">شماره یافت نشد</h3>
       <p style="font-size:0.76rem; color:var(--slate-700); margin-bottom:12px;">این شماره در سیستم ثبت نشده است.</p>
-      <button type="button" class="btn btn-primary" onclick="closeErrorModal(); openSelfRegister();" style="margin-bottom:6px;">افتتاح حساب جدید</button>
       <a id="modalWhatsAppErrorBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:6px;">واتساپ</a>
       <button type="button" class="btn btn-outline" onclick="closeErrorModal()">بستن</button>
     </div>
@@ -1447,7 +1481,7 @@
   <div id="txDetailModal" class="fullscreen-modal">
     <div class="modal-header">
       <h3 style="font-size:0.94rem; font-weight:900;">رسید تراکنش</h3>
-      <button type="button" id="receiptConfirmCloseBtn" class="icon-circle-btn" style="width:auto; padding:0 12px; font-size:0.76rem;" onclick="confirmAndCloseReceiptModal()">تایید و بستن</button>
+      <button type="button" class="icon-circle-btn" style="width:auto; padding:0 12px; font-size:0.76rem;" onclick="closeTxDetailModal()">بازگشت</button>
     </div>
     <div class="modal-scroll-body">
       <div class="receipt-box">
@@ -1457,12 +1491,128 @@
         </div>
         <div id="modalBody" style="display:flex; flex-direction:column; gap:9px;"></div>
       </div>
-      <button type="button" class="btn btn-primary" onclick="confirmAndCloseReceiptModal()">تایید و بستن رسید</button>
       <button type="button" class="btn btn-whatsapp" onclick="shareReceiptToWhatsApp()">ارسال در واتساپ</button>
+      <button type="button" class="btn btn-primary" onclick="closeTxDetailModal()">تایید و بستن رسید</button>
     </div>
   </div>
 
   <script>
+
+    function showReceiptForTransactionData(txData) {
+      if (!txData || !currentFoundUser) return;
+      selectedTxItem = txData;
+      const dir = String(getVal(txData, ['Direction', 'direction'])).trim();
+      const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
+      const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
+      const amountVal = parseFloat(getVal(txData, ['Amount', 'amount', 'value'])) || 0;
+      const transId = String(getVal(txData, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
+      const opType = getVal(txData, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+      const dateStr = getVal(txData, ['Date', 'date', 'created_at']) || new Date().toISOString();
+      const dateOnly = extractDateOnly(dateStr);
+      const timeStr = extractTimeOnly(dateStr) || '---';
+      const currStr = getVal(txData, ['Currency', 'currency']) || 'IQD';
+      const statusStr = getVal(txData, ['Status', 'status']) || 'ثبت شده';
+      const descStr = String(getVal(txData, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
+      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
+      const cpName = resolveCounterpartyName(currentFoundUser);
+
+      document.getElementById('receiptDateStr').innerText = dateOnly;
+
+      const txCurr = currStr.toUpperCase();
+      const allChron = sortChronologically(customerTransactions, true);
+      let runningBalance = 0, balBefore = 0, balAfter = 0;
+
+      allChron.forEach(t => {
+        const c = String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase();
+        const tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+        if (c === txCurr) {
+          const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
+          const d = String(getVal(t, ['Direction', 'direction'])).trim();
+          if (tidItem === transId || t === txData) {
+            balBefore = runningBalance;
+            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
+            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+            balAfter = runningBalance;
+          } else {
+            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
+            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+          }
+        }
+      });
+
+      document.getElementById('modalBody').innerHTML = `
+        <div class="receipt-row"><span class="receipt-label">صاحب حساب</span><span class="receipt-val">${nameVal}</span></div>
+        <div class="receipt-row"><span class="receipt-label">طرف حساب</span><span class="receipt-val">${cpName}</span></div>
+        <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت</span><span class="receipt-val eng-num">${dateOnly} ${timeStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">عملیات</span><span class="receipt-val">${opType}</span></div>
+        <div class="receipt-row"><span class="receipt-label">کد سند</span><span class="receipt-val eng-num">${transId}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">شرح</span><span class="receipt-val">${descStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
+      `;
+      document.getElementById('txDetailModal').classList.add('open');
+      ensureSentinelHistory();
+    }
+
+    function initAdminContactFromDataCode() {
+      const phoneEl = document.getElementById('adminDataCodePhone');
+      const waBtn = document.getElementById('adminDirectWhatsAppBtn');
+      const adminPhone = String(OWNER_WHATSAPP || '').trim();
+      if (phoneEl) phoneEl.innerText = adminPhone || '---';
+      if (waBtn && adminPhone) {
+        const msg = encodeURIComponent('سلام، لطفاً جهت افتتاح حساب جدید در امانت‌داری کریمی راهنمایی بفرمایید.');
+        waBtn.href = `https://wa.me/${adminPhone}?text=${msg}`;
+      }
+    }
+
+    function copyAdminPhone() {
+      copyTextValue(String(OWNER_WHATSAPP || '').trim(), 'شماره تماس ادمین');
+    }
+
+    // Hook for external top-up API integration
+    const TOPUP_API_CONFIG = {
+      enabled: false,
+      endpoint: '',
+      apiKey: '',
+      timeoutMs: 15000
+    };
+
+    async function callExternalTopupApi(payload) {
+      if (!TOPUP_API_CONFIG.enabled || !TOPUP_API_CONFIG.endpoint) {
+        return { handledByExternalApi: false, ok: false };
+      }
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), TOPUP_API_CONFIG.timeoutMs);
+      try {
+        const resp = await fetch(TOPUP_API_CONFIG.endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(TOPUP_API_CONFIG.apiKey ? { 'Authorization': `Bearer ${TOPUP_API_CONFIG.apiKey}` } : {})
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        const data = await resp.json().catch(() => ({}));
+        return {
+          handledByExternalApi: true,
+          ok: resp.ok && (data.success !== false),
+          referenceId: data.referenceId || data.ref || data.id || null,
+          raw: data
+        };
+      } catch (err) {
+        return {
+          handledByExternalApi: true,
+          ok: false,
+          error: err && err.message ? err.message : 'خطای اتصال به API شارژ'
+        };
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
     let _supabase = null;
     let runtimeConfigLoaded = false;
 
@@ -1507,9 +1657,6 @@
     let isHandlingBack = false;
     let exitDialogOpen = false;
     let realtimeTxChannel = null;
-    let realtimeAccChannel = null;
-    let realtimePollTimer = null;
-    let activeRealtimeAccId = null;
 
     function loadCachedData() {
       try {
@@ -1625,56 +1772,8 @@
       } catch (e) { return ''; }
     }
 
-    // ================= خالی شدن خودکار فرم‌ها و رسید =================
-    function resetTransferFormFields() {
-      const accEl = document.getElementById('transferTargetAccIdInput');
-      const phEl = document.getElementById('transferTargetPhoneInput');
-      const amtEl = document.getElementById('transferAmountInput');
-      if (accEl) accEl.value = '';
-      if (phEl) phEl.value = '';
-      if (amtEl) amtEl.value = '';
-      previewTransferRecipient();
-      recalcTransferBox();
-    }
-
-    function resetTopupFormFields(mode = 'all') {
-      if (mode === 'all' || mode === 'afn') {
-        const afnPhone = document.getElementById('afnTargetPhone');
-        const afnAmt = document.getElementById('afnAmountInput');
-        if (afnPhone) afnPhone.value = '';
-        if (afnAmt) afnAmt.value = '';
-      }
-      if (mode === 'all' || mode === 'iq') {
-        const iqNet = document.getElementById('iqNetworkSelect');
-        const iqCard = document.getElementById('iqCardSelect');
-        if (iqNet && iqNet.options.length > 0) iqNet.selectedIndex = 0;
-        if (iqCard && iqCard.options.length > 0) iqCard.selectedIndex = 0;
-      }
-      recalcTopupCost();
-    }
-
-    function openReceiptForTxObject(txObj) {
-      if (!txObj) return;
-      const tid = String(getVal(txObj, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-      let idx = -1;
-      if (tid) {
-        idx = customerTransactions.findIndex(item => String(getVal(item, ['TransID', 'transid', 'id', 'transaction_id'])) === tid);
-      }
-      if (idx < 0) {
-        customerTransactions = sortChronologically([txObj, ...customerTransactions], false);
-        idx = 0;
-      }
-      openDetailModal(idx);
-    }
-
-    function confirmAndCloseReceiptModal() {
-      playSound('click');
-      closeTxDetailModal();
-      resetTransferFormFields();
-      resetTopupFormFields('all');
-    }
-
     // ================= تنظیمات اعلان‌ها و صدا/لرزش =================
+    // حالات مجاز: 'sound_vibration' | 'vibration_only' | 'silent' | 'off'
     function getNotificationMode() {
       const m = localStorage.getItem('karimi_notif_mode') || 'sound_vibration';
       if (['sound_vibration', 'vibration_only', 'silent', 'off'].includes(m)) return m;
@@ -1799,6 +1898,7 @@
       document.getElementById('realLoadingOverlay').classList.add('hidden');
     }
 
+    // ================= اعلان صرفاً بیرونی (سیستمی گوشی / مرورگر) — بدون بنر درون‌برنامه‌ای =================
     function getCapacitorLocalNotifications() {
       try {
         const cap = window.Capacitor;
@@ -1895,16 +1995,11 @@
 
     function stripHtmlToPlain(htmlStr) {
       return String(htmlStr || '')
-        .replace(/<br\s*\/?>/gi, '
-')
-        .replace(/<\/div>|<\/p>|<\/li>/gi, '
-')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/div>|<\/p>|<\/li>/gi, '\n')
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
-        .replace(/
-{3,}/g, '
-
-')
+        .replace(/\n{3,}/g, '\n\n')
         .trim();
     }
 
@@ -1945,7 +2040,7 @@
               body: body,
               channelId: channelId,
               sound: mode === 'sound_vibration' ? 'default' : undefined,
-              schedule: { at: new Date(Date.now() + 150), allowWhileIdle: true }
+              schedule: { at: new Date(Date.now() + 200), allowWhileIdle: true }
             }]
           });
           return;
@@ -1991,6 +2086,7 @@
       } catch (e) {}
     }
 
+    // هیچ بنر درون‌برنامه‌ای نمایش داده نمی‌شود؛ پیام‌ها فقط به صورت اعلان بیرونی سیستم ارسال می‌شوند
     function notifyAccountEvent(titleText, descText) {
       sendExternalSystemNotification(titleText, descText);
     }
@@ -2008,7 +2104,8 @@
     function closeAnyOpenModal() {
       const txModal = document.getElementById('txDetailModal');
       if (txModal && txModal.classList.contains('open')) {
-        confirmAndCloseReceiptModal();
+        txModal.classList.remove('open');
+        selectedTxItem = null;
         return true;
       }
       const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal'];
@@ -2112,28 +2209,13 @@
             capApp.addListener('backButton', () => {
               handleBackNavigation();
             });
-            capApp.removeAllListeners?.('appStateChange').catch(() => {});
-            capApp.addListener('appStateChange', (state) => {
-              if (state && state.isActive && activeRealtimeAccId) {
-                syncRealtimeWakePulse(activeRealtimeAccId);
-              }
-            });
           } catch (e) {}
         }
       };
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && activeRealtimeAccId) {
-          syncRealtimeWakePulse(activeRealtimeAccId);
-        }
-      });
-      window.addEventListener('focus', () => {
-        if (activeRealtimeAccId) {
-          syncRealtimeWakePulse(activeRealtimeAccId);
-        }
-      });
       document.addEventListener('deviceready', bindCap, { once: true });
       window.addEventListener('DOMContentLoaded', () => {
         ensureSentinelHistory();
+        initAdminContactFromDataCode();
         updateNotifModeLabel();
         requestExternalNotificationPermission();
         setTimeout(bindCap, 300);
@@ -2157,27 +2239,18 @@
       });
     }
 
-    function getUserTransactionSnapshots(accId) {
-      return getUserVisibleTransactions(accId).map(tx => {
-        const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
-        const amt = String(getVal(tx, ['Amount', 'amount', 'value']) || '');
-        const status = String(getVal(tx, ['Status', 'status']) || '');
-        const desc = String(getVal(tx, ['Description', 'description', 'desc']) || '');
-        return { key: tid, sig: `${tid}|${amt}|${status}|${desc}`, tx };
-      });
-    }
-
     function getUserTransactionIds(accId) {
-      return getUserTransactionSnapshots(accId).map(s => s.key);
+      return getUserVisibleTransactions(accId).map(tx =>
+        String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
+      );
     }
 
-    // بیدار شدن فوری حساب هنگام ثبت، ویرایش، حذف یا هر تغییر جدید در دیتابیس بدون نیاز به رفرش دستی
+    // سیاست اعلان: هرگز هنگام ورود به حساب یا باز کردن صفحه اعلان‌های قدیمی نمی‌آید؛
+    // فقط تراکنش‌های کاملاً جدیدی که بعد از آخرین وضعیت ثبت‌شده اضافه شده‌اند اعلان می‌گیرند.
     function checkAndAnnounceNewTransactions(accId, previousIds, isOnInitialOpen = false) {
       if (!accId) return;
-      const snapshots = getUserTransactionSnapshots(accId);
-      const currentTxs = snapshots.map(s => s.tx);
+      const currentTxs = getUserVisibleTransactions(accId);
       const seenKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
-      const sigKey = `karimi_seen_tx_sigs_${String(accId).trim().toLowerCase()}`;
 
       let baselineIds = Array.isArray(previousIds) ? previousIds : [];
       if (baselineIds.length === 0) {
@@ -2188,37 +2261,26 @@
         }
       }
 
-      let baselineSigs = [];
-      try {
-        baselineSigs = JSON.parse(localStorage.getItem(sigKey) || '[]');
-      } catch (e) {
-        baselineSigs = [];
-      }
+      const allCurrentIds = currentTxs.map(tx =>
+        String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
+      );
 
-      const allCurrentIds = snapshots.map(s => s.key);
-      const allCurrentSigs = snapshots.map(s => s.sig);
-
-      if (isOnInitialOpen && baselineIds.length === 0 && baselineSigs.length === 0) {
-        try {
-          localStorage.setItem(seenKey, JSON.stringify(allCurrentIds));
-          localStorage.setItem(sigKey, JSON.stringify(allCurrentSigs));
-        } catch (e) {}
+      // در اولین بارگذاری یا ورود، لیست فعلی را به‌عنوان مرجع ثبت می‌کنیم تا تاریخچه قدیمی هرگز اعلان ندهد
+      if (isOnInitialOpen && baselineIds.length === 0) {
+        try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
         return;
       }
 
-      const knownIdSet = new Set(baselineIds);
-      const knownSigSet = new Set(baselineSigs);
+      const knownSet = new Set(baselineIds);
+      const newlyAdded = currentTxs.filter(tx => {
+        const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
+        return !knownSet.has(tid);
+      });
 
-      const newlyAddedOrChanged = snapshots.filter(s => !knownIdSet.has(s.key) || !knownSigSet.has(s.sig)).map(s => s.tx);
-      const deletedIds = baselineIds.filter(oldId => !allCurrentIds.includes(oldId));
+      try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
 
-      try {
-        localStorage.setItem(seenKey, JSON.stringify(allCurrentIds));
-        localStorage.setItem(sigKey, JSON.stringify(allCurrentSigs));
-      } catch (e) {}
-
-      if (newlyAddedOrChanged.length > 0) {
-        newlyAddedOrChanged.forEach(tx => {
+      if (newlyAdded.length > 0) {
+        newlyAdded.forEach(tx => {
           const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
           const amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
           const curr = getVal(tx, ['Currency', 'currency']) || 'IQD';
@@ -2226,87 +2288,56 @@
           const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
           const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
           notifyAccountEvent(
-            'حساب بیدار شد — تغییر جدید ثبت شد',
+            'اعلان جدید — امانت‌داری کریمی',
             `${op}: ${amt} ${curr} (${isCredit ? 'واریز +' : 'برداشت -'}) — تاریخ ${date}`
           );
         });
-      } else if (deletedIds.length > 0) {
-        notifyAccountEvent(
-          'حساب بیدار شد — تغییر در تراکنش‌ها',
-          `یک تراکنش در حساب شما حذف یا اصلاح شد.`
-        );
       }
     }
 
-    async function syncRealtimeWakePulse(accId) {
-      if (!accId || !currentFoundUser) return;
-      const cleanId = String(accId).trim();
-      const prevIds = getUserTransactionIds(cleanId);
-      const fetched = await fetchDataFromSupabaseFresh();
-      if (fetched) {
-        const found = accountsList.find(u =>
-          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === cleanId.toLowerCase()
-        );
-        if (found) currentFoundUser = found;
-        processDashboard(cleanId, false);
-        updateLastSyncLabel();
-        checkAndAnnounceNewTransactions(cleanId, prevIds, false);
-      }
-    }
-
-    function stopRealtimeAccountEvents() {
-      activeRealtimeAccId = null;
-      if (realtimePollTimer) {
-        clearInterval(realtimePollTimer);
-        realtimePollTimer = null;
-      }
-      if (realtimeTxChannel && _supabase) {
+    // شنونده زنده تغییرات دیتابیس (وقتی اپ باز یا در پس‌زمینه وب‌ویو فعال است، تغییر حساب فوری اعلان بفرستد)
+    function subscribeRealtimeAccountEvents(accId) {
+      if (!_supabase || !accId) return;
+      if (realtimeTxChannel) {
         try { _supabase.removeChannel(realtimeTxChannel); } catch (e) {}
         realtimeTxChannel = null;
       }
-      if (realtimeAccChannel && _supabase) {
-        try { _supabase.removeChannel(realtimeAccChannel); } catch (e) {}
-        realtimeAccChannel = null;
-      }
-    }
-
-    // شنونده زنده تغییرات دیتابیس + پالس بیدارباش سریع بدون نیاز به رفرش دستی
-    function subscribeRealtimeAccountEvents(accId) {
-      if (!_supabase || !accId) return;
-      stopRealtimeAccountEvents();
       const cleanId = String(accId).trim();
-      activeRealtimeAccId = cleanId;
-
       try {
         realtimeTxChannel = _supabase
           .channel('karimi-tx-live-' + cleanId)
           .on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'transactions' },
-            async () => {
-              await syncRealtimeWakePulse(cleanId);
-            }
-          )
-          .subscribe();
+            async (payload) => {
+              const prevIds = getUserTransactionIds(cleanId);
+              const evType = payload && payload.eventType ? String(payload.eventType).toUpperCase() : '';
+              const rec = (payload && (payload.new || payload.old)) || {};
+              const recAccId = String(getVal(rec, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
+              const belongsToUser = !recAccId || recAccId === cleanId.toLowerCase();
 
-        realtimeAccChannel = _supabase
-          .channel('karimi-acc-live-' + cleanId)
-          .on(
-            'postgres_changes',
-            { event: '*', schema: 'public', table: 'accounts' },
-            async () => {
-              await syncRealtimeWakePulse(cleanId);
+              await fetchDataFromSupabaseFresh();
+              if (currentFoundUser) {
+                processDashboard(cleanId, false);
+                updateLastSyncLabel();
+                if (belongsToUser && evType === 'UPDATE') {
+                  const op = getVal(rec, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+                  const amt = formatEnMoney(getVal(rec, ['Amount', 'amount', 'value']) || 0);
+                  const curr = getVal(rec, ['Currency', 'currency']) || 'IQD';
+                  notifyAccountEvent('تغییر تراکنش — امانت‌داری کریمی', `${op}: ${amt} ${curr} ویرایش شد.`);
+                } else if (belongsToUser && evType === 'DELETE') {
+                  const op = getVal(rec, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+                  const amt = formatEnMoney(getVal(rec, ['Amount', 'amount', 'value']) || 0);
+                  const curr = getVal(rec, ['Currency', 'currency']) || 'IQD';
+                  notifyAccountEvent('حذف تراکنش — امانت‌داری کریمی', `${op}: ${amt} ${curr} حذف شد.`);
+                } else {
+                  checkAndAnnounceNewTransactions(cleanId, prevIds, false);
+                }
+              }
             }
           )
           .subscribe();
       } catch (e) {}
-
-      // پالس بیدارباش سبک هر ۴ ثانیه برای دستگاه‌هایی که وب‌سوکت لحظه‌ای را کند تحویل می‌دهند
-      realtimePollTimer = setInterval(() => {
-        if (!document.hidden && currentFoundUser && activeRealtimeAccId === cleanId) {
-          syncRealtimeWakePulse(cleanId);
-        }
-      }, 4000);
     }
 
     function navigateToStep(step) {
@@ -2579,13 +2610,10 @@
       localStorage.setItem('karimi_phone', phoneVal);
       localStorage.setItem('karimi_accId', sheetAccId);
 
+      // ثبت شناسه تراکنش‌های موجود در زمان ورود تا تراکنش‌های قدیمی هرگز اعلان نشوند
       const seenKey = `karimi_seen_tx_ids_${sheetAccId.trim().toLowerCase()}`;
-      const sigKey = `karimi_seen_tx_sigs_${sheetAccId.trim().toLowerCase()}`;
-      const snaps = getUserTransactionSnapshots(sheetAccId);
-      try {
-        localStorage.setItem(seenKey, JSON.stringify(snaps.map(s => s.key)));
-        localStorage.setItem(sigKey, JSON.stringify(snaps.map(s => s.sig)));
-      } catch (e) {}
+      const existingIds = getUserTransactionIds(sheetAccId);
+      try { localStorage.setItem(seenKey, JSON.stringify(existingIds)); } catch (e) {}
 
       playSound('success');
       processDashboard(sheetAccId, true);
@@ -2679,7 +2707,10 @@
       playSound('click');
       localStorage.removeItem('karimi_phone');
       localStorage.removeItem('karimi_accId');
-      stopRealtimeAccountEvents();
+      if (realtimeTxChannel && _supabase) {
+        try { _supabase.removeChannel(realtimeTxChannel); } catch (e) {}
+        realtimeTxChannel = null;
+      }
       currentFoundUser = null;
       collapseServiceForms();
       navigateToStep('phone');
@@ -3070,6 +3101,7 @@
 
     async function runAccountTransfer(d) {
       showRealLoading('در حال انتقال...', 'ثبت تراکنش');
+      const prevIds = getUserTransactionIds(d.fromId);
       const nowIso = new Date().toISOString();
       const baseCode = 'TR-' + Math.floor(100000 + Math.random() * 900000);
       const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || d.assignedEmail || OWNER_EMAIL;
@@ -3108,36 +3140,30 @@
         return;
       }
 
-      // خالی کردن فوری فرم پس از ثبت موفق و باز کردن رسید برای تایید و بستن
-      resetTransferFormFields();
+      document.getElementById('transferAmountInput').value = '';
+      document.getElementById('transferTargetAccIdInput').value = '';
+      document.getElementById('transferTargetPhoneInput').value = '';
       await fetchDataFromSupabaseFresh();
       processDashboard(d.fromId, false);
       updateLastSyncLabel();
-
-      const snaps = getUserTransactionSnapshots(d.fromId);
-      try {
-        localStorage.setItem(`karimi_seen_tx_ids_${d.fromId.trim().toLowerCase()}`, JSON.stringify(snaps.map(s => s.key)));
-        localStorage.setItem(`karimi_seen_tx_sigs_${d.fromId.trim().toLowerCase()}`, JSON.stringify(snaps.map(s => s.sig)));
-      } catch (e) {}
-
-      notifyAccountEvent('انتقال موجودی انجام شد', `${formatEnMoney(d.amt)} ${d.curr} به ${d.toName} منتقل شد.`);
-      openReceiptForTxObject(debitRow);
+      const curIds = getUserTransactionIds(d.fromId);
+      try { localStorage.setItem(`karimi_seen_tx_ids_${d.fromId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+      if (curIds.length > prevIds.length) {
+        notifyAccountEvent('انتقال موجودی انجام شد', `${formatEnMoney(d.amt)} ${d.curr} به ${d.toName} منتقل شد.`);
+      }
+      showReceiptForTransactionData(debitRow);
     }
 
     async function runTopupAfterPin(payload) {
       const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
       const nowIso = new Date().toISOString();
       const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+      const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
         showRealLoading('در حال ارسال...', 'دریافت پاسخ');
         const tgText =
-          `شارژ افغانستان
-کد: ${txId}
-مشتری: ${payload.accName} (${payload.accId})
-شماره: ${payload.targetPhone}
-مبلغ: ${formatEnMoney(payload.afnAmt)} AFN
-کسر: ${formatEnMoney(payload.requiredIqd)} IQD`;
+          `شارژ افغانستان\nکد: ${txId}\nمشتری: ${payload.accName} (${payload.accId})\nشماره: ${payload.targetPhone}\nمبلغ: ${formatEnMoney(payload.afnAmt)} AFN\nکسر: ${formatEnMoney(payload.requiredIqd)} IQD`;
 
         let tgData = null;
         let lastErr = null;
@@ -3173,7 +3199,7 @@
         }
 
         const refCode = `SIM-${tgData.result.message_id}`;
-        const txRow = {
+        const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
@@ -3185,8 +3211,7 @@
           AssignedUserEmail: assigned,
           Status: 'تایید شده'
         };
-
-        const { error } = await _supabase.from('transactions').insert([txRow]);
+        const { error } = await _supabase.from('transactions').insert([afnTxRow]);
         hideRealLoading();
 
         if (error) {
@@ -3194,22 +3219,28 @@
           return;
         }
 
-        resetTopupFormFields('afn');
+        document.getElementById('afnTargetPhone').value = '';
+        document.getElementById('afnAmountInput').value = '';
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         updateLastSyncLabel();
-
-        const snaps = getUserTransactionSnapshots(payload.accId);
-        try {
-          localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(snaps.map(s => s.key)));
-          localStorage.setItem(`karimi_seen_tx_sigs_${payload.accId.trim().toLowerCase()}`, JSON.stringify(snaps.map(s => s.sig)));
-        } catch (e) {}
-
-        notifyAccountEvent('شارژ افغانستان ثبت شد', `کد پیگیری: ${refCode}`);
-        openReceiptForTxObject(txRow);
+        const curIds = getUserTransactionIds(payload.accId);
+        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+        if (curIds.length > prevIds.length) {
+          notifyAccountEvent('شارژ افغانستان ثبت شد', `کد پیگیری: ${refCode}`);
+        }
+        showReceiptForTransactionData(afnTxRow);
       } else {
         showRealLoading('در حال ثبت...', 'ثبت تراکنش');
-        const txRow = {
+        const apiResult = await callExternalTopupApi({
+          txId,
+          accountId: payload.accId,
+          accountName: payload.accName,
+          network: payload.network,
+          amount: Number(payload.cardAmt),
+          currency: 'IQD'
+        });
+        const iqTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
@@ -3217,12 +3248,13 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
-          Description: `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
+          Description: apiResult.handledByExternalApi && apiResult.referenceId
+            ? `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD) - ${apiResult.referenceId}`
+            : `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
           AssignedUserEmail: assigned,
-          Status: 'ثبت شده'
+          Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
         };
-
-        const { error } = await _supabase.from('transactions').insert([txRow]);
+        const { error } = await _supabase.from('transactions').insert([iqTxRow]);
         hideRealLoading();
 
         if (error) {
@@ -3230,30 +3262,25 @@
           return;
         }
 
-        // خالی کردن فوری فرم شارژ عراق و نمایش رسید تا پس از تایید و بستن مخفی شود
-        resetTopupFormFields('iq');
+        const iqSel = document.getElementById('iqCardSelect');
+        if (iqSel && iqSel.options.length > 0) iqSel.selectedIndex = 0;
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         updateLastSyncLabel();
+        const curIds = getUserTransactionIds(payload.accId);
+        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+        if (curIds.length > prevIds.length) {
+          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
+        }
 
-        const snaps = getUserTransactionSnapshots(payload.accId);
-        try {
-          localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(snaps.map(s => s.key)));
-          localStorage.setItem(`karimi_seen_tx_sigs_${payload.accId.trim().toLowerCase()}`, JSON.stringify(snaps.map(s => s.sig)));
-        } catch (e) {}
-
-        notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
-        openReceiptForTxObject(txRow);
+        showReceiptForTransactionData(iqTxRow);
       }
     }
 
     function openLegacyPinActivationModal(accId) {
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
-      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت
-نام: ${nameVal}
-کد حساب: ${accId}
-شماره: ${phoneVal}`);
+      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت\nنام: ${nameVal}\nکد حساب: ${accId}\nشماره: ${phoneVal}`);
       document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
       document.getElementById('legacyPinActivationModal').classList.remove('hidden');
       ensureSentinelHistory();
@@ -3356,25 +3383,25 @@
       return null;
     }
 
-    // فراخوانی اثر انگشت یا PIN، الگو و رمز قفل خود گوشی اندروید
-    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی') {
+    // فراخوانی واقعی اثر انگشت یا PIN، الگو و رمز عبور قفل خود گوشی اندروید
+    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
       const bioPlugin = getCapacitorBiometricPlugin();
       if (bioPlugin) {
         try {
           if (typeof bioPlugin.isAvailable === 'function') {
-            await bioPlugin.isAvailable({ useFallback: true, allowDeviceCredential: true }).catch(() => null);
+            await bioPlugin.isAvailable().catch(() => null);
           }
           if (typeof bioPlugin.verifyIdentity === 'function') {
             await bioPlugin.verifyIdentity({
               reason: reasonText,
               title: 'امانت‌داری کریمی',
-              subtitle: 'احراز هویت امنیتی دستگاه (اثر انگشت / پین / الگو / رمز)',
+              subtitle: 'قفل گوشی (اثر انگشت، PIN، الگو یا رمز عبور)',
               description: reasonText,
-              negativeButtonText: 'استفاده از رمز ثابت',
+              negativeButtonText: 'رمز ثابت برنامه',
               useFallback: true,
               allowDeviceCredential: true,
-              deviceCredentialTitle: 'رمز قفل دستگاه',
-              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور گوشی را وارد کنید'
+              deviceCredentialTitle: 'قفل صفحه گوشی',
+              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور دستگاه را وارد کنید'
             });
             return true;
           }
@@ -3382,8 +3409,8 @@
             await bioPlugin.authenticate({
               reason: reasonText,
               title: 'امانت‌داری کریمی',
-              useFallback: true,
-              allowDeviceCredential: true
+              allowDeviceCredential: true,
+              fallbackTitle: 'استفاده از قفل گوشی'
             });
             return true;
           }
@@ -3392,6 +3419,7 @@
         }
       }
 
+      // پل مستقیم وب‌ویو اندروید در صورت تعریف شدن در کلاینت بومی
       try {
         const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
         for (const br of bridges) {
@@ -3402,6 +3430,7 @@
         }
       } catch (e) {}
 
+      // پشتیبانی WebAuthn / Passkey مرورگر و وب‌ویوهای جدید
       if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
         try {
           const cred = await navigator.credentials.get({
@@ -3417,6 +3446,7 @@
         }
       }
 
+      // اگر دستگاه فاقد ماژول بومی باشد و پلاگین اندروید هنوز نصب نشده باشد، خطا نداده و تایید را برمی‌گرداند
       return true;
     }
 
@@ -3426,10 +3456,10 @@
       const bioPhone = localStorage.getItem('karimi_biometric_phone');
       const bioAccId = localStorage.getItem('karimi_biometric_accId');
       if (localStorage.getItem('karimi_biometric_enabled') !== 'true' || !bioPhone || !bioAccId) {
-        alert('اثر انگشت / قفل گوشی فعال نیست.');
+        alert('اثر انگشت فعال نیست.');
         return;
       }
-      const ok = await triggerBiometricAuth('ورود به حساب با اثر انگشت، پین، الگو یا رمز گوشی');
+      const ok = await triggerBiometricAuth('ورود به حساب با اثر انگشت یا قفل گوشی');
       if (!ok) {
         alert('احراز هویت با قفل گوشی تایید نشد.');
         return;
@@ -3444,7 +3474,7 @@
 
     async function confirmEnableBiometric() {
       playSound('success');
-      const ok = await triggerBiometricAuth('فعال‌سازی اثر انگشت یا پین/الگوی گوشی برای حساب');
+      const ok = await triggerBiometricAuth('فعال‌سازی اثر انگشت یا قفل گوشی برای حساب');
       if (!ok) {
         alert('تایید قفل گوشی انجام نشد.');
         return;
@@ -3485,7 +3515,7 @@
         localStorage.setItem('karimi_tx_biometric_enabled', 'false');
         updateTxBioStatusLabel();
       } else {
-        const ok = await triggerBiometricAuth('فعال‌سازی تایید تراکنش با اثر انگشت یا پین/الگوی گوشی');
+        const ok = await triggerBiometricAuth('فعال‌سازی تایید تراکنش با اثر انگشت یا قفل گوشی');
         if (!ok) {
           alert('تایید قفل گوشی انجام نشد.');
           return;
@@ -3637,7 +3667,6 @@
 
     function closeTxDetailModal() {
       playSound('click');
-      selectedTxItem = null;
       document.getElementById('txDetailModal').classList.remove('open');
     }
 
@@ -3652,12 +3681,7 @@
       const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
       const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
-      const msg = `امانت‌داری کریمی
-نام: ${name}
-عملیات: ${op}
-مبلغ: ${amt} ${curr}
-سند: ${tid}
-تاریخ: ${date}`;
+      const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
   </script>
