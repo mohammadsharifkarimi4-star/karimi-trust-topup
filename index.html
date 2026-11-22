@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>امانت‌داری کریمی - سامانه ویژه مشتریان</title>
+  <title>امانت‌داری کریمی — سامانه ویژه مشتریان</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,24 +13,37 @@
 
   <style>
     :root {
-      --primary: #0f172a;
-      --primary-light: #1e293b;
-      --accent: #0284c7;
-      --accent-soft: #e0f2fe;
-      --success: #059669;
-      --success-soft: #ecfdf5;
+      --emerald-950: #06281e;
+      --emerald-900: #064e3b;
+      --emerald-800: #065f46;
+      --emerald-700: #047857;
+      --emerald-600: #059669;
+      --emerald-500: #10b981;
+      --emerald-100: #d1fae5;
+      --emerald-50: #ecfdf5;
+      --teal-700: #0f766e;
+      --teal-600: #0d9488;
+      --teal-50: #f0fdfa;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-500: #64748b;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --white: #ffffff;
       --danger: #dc2626;
       --danger-soft: #fef2f2;
       --warning: #d97706;
-      --bg-body: #eef2f6;
-      --card-bg: #ffffff;
-      --border-color: #cbd5e1;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --radius-lg: 16px;
-      --radius-md: 12px;
-      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --warning-soft: #fffbeb;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow-card: 0 6px 24px rgba(6, 78, 59, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+      --shadow-wallet: 0 14px 32px rgba(5, 150, 105, 0.14);
+      --shadow-nav: 0 -6px 24px rgba(15, 23, 42, 0.08);
     }
 
     * {
@@ -45,416 +58,850 @@
     }
 
     body {
-      background: var(--bg-body);
-      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-      background-size: 18px 18px;
-      color: var(--text-main);
+      background: #e6f0ec;
+      background-image:
+        radial-gradient(at 15% 10%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
+        radial-gradient(at 85% 90%, rgba(13, 148, 136, 0.12) 0px, transparent 50%),
+        radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 20px 20px;
+      color: var(--slate-900);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0;
       overflow-x: hidden;
     }
 
     .app-viewport {
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       min-height: 100vh;
-      background: #f8fafc;
+      background: #f4f8f6;
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: var(--shadow-md);
-      padding-bottom: 75px;
+      overflow: hidden;
     }
 
     @media (min-width: 540px) {
-      body { padding: 14px; }
+      body { padding: 16px; }
       .app-viewport {
         min-height: 92vh;
         max-height: 94vh;
-        border-radius: 22px;
-        border: 1.5px solid var(--border-color);
-        overflow: hidden;
+        border-radius: 28px;
+        border: 1.5px solid rgba(16, 185, 129, 0.25);
+        box-shadow: 0 24px 60px rgba(6, 40, 30, 0.16);
       }
     }
 
-    .app-header {
-      padding: 14px 16px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #ffffff;
+    /* Top Header inspired by modern wallet & credit screens */
+    .top-bar {
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--emerald-800) 0%, var(--teal-700) 100%);
+      color: var(--white);
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
-      border-bottom: 3px solid #38bdf8;
-      z-index: 10;
+      z-index: 20;
+      box-shadow: 0 4px 18px rgba(6, 95, 70, 0.22);
     }
 
-    .header-title {
-      font-size: 1.05rem;
-      font-weight: 900;
+    .top-bar-brand {
       display: flex;
       align-items: center;
-      gap: 6px;
-      color: #ffffff;
+      gap: 10px;
     }
+
+    .brand-shield {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .brand-texts h1 {
+      font-size: 0.98rem;
+      font-weight: 900;
+      line-height: 1.25;
+      color: var(--white);
+    }
+
+    .brand-texts span {
+      font-size: 0.7rem;
+      color: var(--emerald-100);
+      font-weight: 600;
+      display: block;
+    }
+
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-circle-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: var(--white);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 800;
+      transition: transform 0.15s ease, background 0.15s ease;
+      text-decoration: none;
+    }
+    .icon-circle-btn:active { transform: scale(0.94); background: rgba(255, 255, 255, 0.26); }
 
     .app-body {
       flex: 1;
-      padding: 12px;
+      padding: 14px 16px 92px 16px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      gap: 14px;
     }
 
-    .floating-back-btn {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #ffffff;
-      border: 2px solid #38bdf8;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-size: 0.85rem;
+    /* Greeting & Manager Context Strip */
+    .greeting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--white);
+      border: 1px solid rgba(16, 185, 129, 0.18);
+      border-radius: var(--radius-lg);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .greeting-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar-monogram {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--emerald-600) 0%, var(--teal-700) 100%);
+      color: var(--white);
+      font-size: 1.1rem;
       font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.3);
-      z-index: 2500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    }
+
+    .greeting-sub {
+      font-size: 0.72rem;
+      color: var(--slate-500);
+      font-weight: 700;
+    }
+
+    .greeting-name {
+      font-size: 0.96rem;
+      font-weight: 900;
+      color: var(--slate-900);
+    }
+
+    .counterparty-pill {
+      background: var(--emerald-50);
+      border: 1px solid #a7f3d0;
+      color: var(--emerald-800);
+      border-radius: 12px;
+      padding: 6px 10px;
+      text-align: left;
+      max-width: 175px;
+    }
+
+    .counterparty-pill small {
+      display: block;
+      font-size: 0.64rem;
+      color: var(--emerald-700);
+      font-weight: 700;
+    }
+
+    .counterparty-pill strong {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 900;
+      color: var(--emerald-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Wallet Hero Card (Inspired by image 1 & 3) */
+    .wallet-hero-card {
+      position: relative;
+      background: linear-gradient(145deg, #ffffff 0%, #e9f9f1 65%, #dcf5ea 100%);
+      border: 1.5px solid #86efac;
+      border-radius: var(--radius-xl);
+      padding: 18px 18px 16px 18px;
+      box-shadow: var(--shadow-wallet);
+      overflow: hidden;
+    }
+
+    .wallet-watermark {
+      position: absolute;
+      left: -18px;
+      bottom: -24px;
+      font-size: 6.5rem;
+      font-weight: 900;
+      color: rgba(16, 185, 129, 0.09);
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .wallet-top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wallet-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      background: var(--white);
+      border: 1px solid #a7f3d0;
+      color: var(--emerald-800);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    .eye-toggle-btn {
+      background: var(--white);
+      border: 1px solid #cbd5e1;
+      color: var(--slate-700);
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .wallet-balance-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 10px;
+      margin: 8px 0 12px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wallet-balance-label {
+      font-size: 0.76rem;
+      color: var(--slate-500);
+      font-weight: 800;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .wallet-main-amount {
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: var(--emerald-950);
+      line-height: 1.15;
+    }
+
+    .wallet-currency-chip {
+      background: var(--emerald-700);
+      color: var(--white);
+      padding: 5px 11px;
+      border-radius: 11px;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .wallet-id-strip {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wallet-id-text {
+      font-size: 0.78rem;
+      color: var(--slate-700);
+      font-weight: 800;
+    }
+
+    .wallet-id-text b {
+      color: var(--emerald-900);
+      font-size: 0.88rem;
+    }
+
+    .mini-copy-btn {
+      background: var(--emerald-50);
+      border: 1px solid #6ee7b7;
+      color: var(--emerald-800);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .mini-copy-btn:active { transform: scale(0.95); }
+
+    .wallet-sub-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wallet-stat-box {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid #d1fae5;
+      border-radius: 12px;
+      padding: 7px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .currency-switcher {
+      display: flex;
+      gap: 6px;
+      background: var(--slate-100);
+      padding: 4px;
+      border-radius: 13px;
+      border: 1px solid var(--slate-200);
+    }
+
+    .curr-pill-btn {
+      flex: 1;
+      padding: 7px 6px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--slate-500);
+      font-size: 0.8rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .curr-pill-btn.active {
+      background: var(--white);
+      color: var(--emerald-800);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Quick Action Grid (Inspired by image 1 & 3) */
+    .quick-grid-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-xl);
+      padding: 14px 12px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .section-heading-row h3 {
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: var(--slate-900);
+    }
+
+    .section-heading-row span {
+      font-size: 0.7rem;
+      color: var(--slate-500);
+      font-weight: 700;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px 8px;
+    }
+
+    .quick-tile {
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 2px;
+      border-radius: 14px;
       transition: transform 0.15s ease;
     }
-    .floating-back-btn:active { transform: scale(0.95); }
+    .quick-tile:active { transform: scale(0.95); }
 
-    .clean-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow-sm);
+    .quick-icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: var(--emerald-50);
+      border: 1px solid #bbf7d0;
+      color: var(--emerald-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.1);
     }
 
-    .form-group { margin-bottom: 12px; }
-    label {
-      display: block;
-      font-size: 0.82rem;
+    .quick-tile.active-mode .quick-icon-box {
+      background: linear-gradient(135deg, var(--emerald-600) 0%, var(--teal-700) 100%);
+      color: var(--white);
+      border-color: var(--emerald-700);
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.28);
+    }
+
+    .quick-label {
+      font-size: 0.72rem;
       font-weight: 800;
-      margin-bottom: 6px;
-      color: var(--primary-light);
+      color: var(--slate-700);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* Action Drawer / Forms (Inspired by image 5 credit screen) */
+    .action-panel {
+      background: var(--white);
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .panel-banner-header {
+      background: linear-gradient(135deg, var(--emerald-800) 0%, var(--teal-700) 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-banner-header h4 {
+      font-size: 0.96rem;
+      font-weight: 900;
+    }
+
+    .panel-banner-header p {
+      font-size: 0.72rem;
+      color: var(--emerald-100);
+      margin-top: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--slate-800);
+      margin-bottom: 5px;
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix-badge {
+      position: absolute;
+      right: 12px;
+      background: var(--emerald-50);
+      border: 1px solid #a7f3d0;
+      color: var(--emerald-800);
+      border-radius: 9px;
+      padding: 4px 8px;
+      font-size: 0.76rem;
+      font-weight: 900;
+      pointer-events: none;
     }
 
     input, select {
       width: 100%;
-      padding: 13px 14px;
-      border: 1.5px solid var(--border-color);
+      padding: 12px 14px;
+      background: var(--slate-50);
+      border: 1.5px solid var(--slate-200);
       border-radius: var(--radius-md);
-      font-size: 0.98rem;
+      font-size: 0.94rem;
+      font-weight: 800;
+      color: var(--slate-900);
       text-align: center;
       outline: none;
-      background: #ffffff;
-      color: var(--text-main);
-      font-weight: 800;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.18s ease;
+    }
+
+    input.has-prefix {
+      padding-right: 66px;
     }
 
     input:focus, select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+      background: var(--white);
+      border-color: var(--emerald-600);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
     }
 
-    .btn {
-      width: 100%;
-      padding: 13px 16px;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 0.92rem;
-      cursor: pointer;
-      font-weight: 800;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
-      transition: transform 0.12s ease, opacity 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .btn-success { background: linear-gradient(135deg, #059669 0%, #047857 100%); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22); }
-    .btn-whatsapp { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.22); }
-    .btn-secondary { background: #64748b; box-shadow: none; }
-    .btn-danger { background: #dc2626; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
-    .btn-outline {
-      background: #f8fafc;
-      color: var(--primary);
-      border: 1.5px solid var(--border-color);
-      box-shadow: none;
-    }
-
-    .login-hero {
-      text-align: center;
-      padding: 10px 6px 14px 6px;
-    }
-    .login-badge-icon {
-      width: 56px;
-      height: 56px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.7rem;
-      margin-bottom: 10px;
-      border: 1.5px solid #bae6fd;
-    }
-    .login-hero h2 {
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: var(--primary);
-      margin-bottom: 4px;
-    }
-    .login-hero p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .about-accordion {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
+    .recipient-preview-box {
+      background: var(--teal-50);
+      border: 1.5px solid #99f6e4;
       border-radius: var(--radius-md);
       padding: 10px 12px;
-      margin-top: 10px;
-      font-size: 0.78rem;
-      color: #475569;
-      line-height: 1.7;
-    }
-
-    .profile-summary-card {
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      color: var(--text-main);
       margin-bottom: 12px;
-      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
-      border: 1.5px solid #bae6fd;
-    }
-
-    .currency-tabs {
-      display: flex;
-      gap: 5px;
-      background: #e2e8f0;
-      padding: 4px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-    }
-    .currency-tab {
-      flex: 1;
-      padding: 8px 6px;
-      text-align: center;
-      font-size: 0.84rem;
-      font-weight: 900;
-      cursor: pointer;
-      border-radius: 9px;
-      color: #475569;
-      background: transparent;
-      border: none;
-      transition: all 0.2s ease;
-    }
-    .currency-tab.active {
-      background: #ffffff;
-      color: var(--primary);
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
-    }
-
-    .balance-box-modern {
-      background: linear-gradient(145deg, #f8fafc 0%, #eff6ff 100%);
-      border: 1.5px solid #bfdbfe;
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .balance-label {
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: #475569;
-    }
-    .balance-main-figure {
-      font-size: 1.95rem;
-      font-weight: 900;
-      color: var(--primary);
-      margin: 6px 0;
-      letter-spacing: 0.5px;
-    }
-    .balance-sub-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      border-top: 1px solid #dbeafe;
-      padding-top: 10px;
-      margin-top: 8px;
-    }
-    .balance-sub-item {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 6px 8px;
-      border: 1px solid #e2e8f0;
-    }
-    .balance-sub-title {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 700;
-      display: block;
-    }
-    .balance-sub-val {
-      font-size: 0.88rem;
-      font-weight: 900;
-    }
-
-    .status-banner {
-      border-radius: 10px;
-      padding: 9px 12px;
       font-size: 0.78rem;
       font-weight: 800;
+      color: var(--emerald-900);
       display: flex;
+      justify-content: space-between;
       align-items: center;
       gap: 8px;
+    }
+
+    .recipient-preview-box.invalid {
+      background: var(--danger-soft);
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+
+    .calc-summary-box {
+      background: var(--emerald-50);
+      border: 1.5px dashed var(--emerald-500);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--emerald-800);
+      text-align: center;
       margin-bottom: 10px;
     }
-    .status-banner.positive { background: var(--success-soft); border: 1px solid #a7f3d0; color: #065f46; }
-    .status-banner.negative { background: var(--danger-soft); border: 1px solid #fecaca; color: #991b1b; }
-    .status-banner.neutral { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
 
-    .credit-service-drawer {
-      background: #f8fafc;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 10px;
-    }
-    .calc-box {
-      background: #ecfdf5;
-      border: 1.5px dashed #10b981;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: #047857;
-      text-align: center;
-      margin-top: 8px;
-    }
-    .calc-box.error {
-      background: #fef2f2;
+    .calc-summary-box.error {
+      background: var(--danger-soft);
       border-color: #fca5a5;
       color: #b91c1c;
     }
 
-    .day-group-bar {
-      background: #0f172a;
-      color: #ffffff;
-      padding: 8px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 4px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      border-top: 2px solid #38bdf8;
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-
-    .tx-card-container {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 0;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-    }
-
-    .tx-card-header {
-      padding: 12px 14px;
-      background: #f1f5f9;
-      border-bottom: 1.5px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .tx-table-wrapper {
+    .btn {
       width: 100%;
-      overflow-x: auto;
-      margin: 0;
-    }
-
-    .tx-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #ffffff;
-      font-size: 0.78rem;
-    }
-    .tx-table th {
-      background: #e2e8f0;
-      color: #1e293b;
-      font-weight: 900;
-      padding: 8px 10px;
-      text-align: right;
-      font-size: 0.74rem;
-      border-bottom: 1.5px solid #cbd5e1;
-    }
-    .tx-table td {
-      padding: 9px 10px;
-      border-bottom: 1px solid #e2e8f0;
-      vertical-align: middle;
-    }
-    .tx-table tr {
-      cursor: pointer;
-      transition: background 0.12s;
-    }
-    .tx-table tr:active { background: #e0f2fe; }
-    .tx-row-credit { background: #f8fffb; }
-    .tx-row-debit { background: #fff9f9; }
-
-    .tx-detail-btn-shake {
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-      color: #ffffff;
+      padding: 12px 16px;
       border: none;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.74rem;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
       font-weight: 900;
       cursor: pointer;
-      display: inline-block;
-      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
-      animation: detailShakeAnim 1.4s ease-in-out infinite;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: transform 0.12s ease, opacity 0.15s ease;
     }
-    @keyframes detailShakeAnim {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); background-color: #38bdf8; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--emerald-600) 0%, var(--teal-700) 100%);
+      color: var(--white);
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.25);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      color: var(--white);
+      box-shadow: 0 6px 16px rgba(22, 163, 74, 0.22);
+    }
+
+    .btn-outline {
+      background: var(--white);
+      color: var(--slate-800);
+      border: 1.5px solid var(--slate-200);
+    }
+
+    .btn-soft-emerald {
+      background: var(--emerald-50);
+      color: var(--emerald-800);
+      border: 1px solid #a7f3d0;
+    }
+
+    /* Profile List Rows (Inspired by image 2 & 4) */
+    .menu-stack-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .menu-row-item {
+      width: 100%;
+      background: var(--white);
+      border: none;
+      border-bottom: 1px solid var(--slate-100);
+      padding: 13px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      text-align: right;
+      transition: background 0.15s ease;
+    }
+    .menu-row-item:last-child { border-bottom: none; }
+    .menu-row-item:active { background: var(--emerald-50); }
+
+    .menu-row-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-row-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--emerald-50);
+      color: var(--emerald-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .menu-row-icon.danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .menu-row-title {
+      font-size: 0.86rem;
+      font-weight: 900;
+      color: var(--slate-900);
+      display: block;
+    }
+
+    .menu-row-sub {
+      font-size: 0.72rem;
+      color: var(--slate-500);
+      font-weight: 700;
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* Transactions Feed */
+    .tx-feed-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .tx-feed-head {
+      padding: 12px 14px;
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .day-divider {
+      background: var(--emerald-900);
+      color: var(--white);
+      padding: 7px 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tx-item-row {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--slate-100);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    .tx-item-row:last-child { border-bottom: none; }
+    .tx-item-row:active { background: var(--emerald-50); }
+
+    .tx-badge-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .tx-badge-icon.credit { background: var(--emerald-50); color: var(--emerald-700); border: 1px solid #a7f3d0; }
+    .tx-badge-icon.debit { background: var(--danger-soft); color: var(--danger); border: 1px solid #fecaca; }
+
+    .tx-main-info { flex: 1; min-width: 0; }
+    .tx-op-title { font-size: 0.84rem; font-weight: 900; color: var(--slate-900); }
+    .tx-desc-sub {
+      font-size: 0.7rem;
+      color: var(--slate-500);
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .tx-amount-col { text-align: left; flex-shrink: 0; }
+    .tx-amt-val { font-size: 0.88rem; font-weight: 900; display: block; }
+    .tx-amt-val.credit { color: var(--emerald-700); }
+    .tx-amt-val.debit { color: var(--danger); }
+    .tx-time-meta { font-size: 0.68rem; color: var(--slate-500); font-weight: 700; }
+
+    .empty-state-box {
+      padding: 30px 18px;
+      text-align: center;
+    }
+    .empty-state-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 10px auto;
+      border-radius: 18px;
+      background: var(--emerald-50);
+      color: var(--emerald-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    /* Bottom Navigation Bar (Inspired by images 1-4) */
+    .bottom-nav-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--slate-200);
+      padding: 7px 10px 9px 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      z-index: 30;
+      box-shadow: var(--shadow-nav);
+    }
+
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      border-radius: 14px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab-btn .nav-icon {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .nav-tab-btn .nav-text {
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+
+    .nav-tab-btn.active {
+      background: var(--emerald-50);
+      color: var(--emerald-800);
+    }
+
+    /* Modals & Overlays */
+    .center-dialog-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(6, 40, 30, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 3000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .center-dialog-box {
+      background: var(--white);
+      width: 100%;
+      max-width: 380px;
+      border-radius: var(--radius-xl);
+      padding: 22px 18px;
+      text-align: center;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+      border: 1.5px solid #bbf7d0;
     }
 
     .fullscreen-modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: #f8fafc;
-      z-index: 2000;
+      background: var(--slate-50);
+      z-index: 2500;
       display: flex;
       flex-direction: column;
       transform: translateY(100%);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
       visibility: hidden;
     }
     .fullscreen-modal.open {
@@ -463,170 +910,122 @@
     }
 
     .modal-header {
-      padding: 13px 16px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #ffffff;
-      border-bottom: 3px solid #38bdf8;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, var(--emerald-800) 0%, var(--teal-700) 100%);
+      color: var(--white);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-shrink: 0;
     }
 
     .modal-scroll-body {
       flex: 1;
-      padding: 14px;
+      padding: 16px;
       overflow-y: auto;
-      background: #f1f5f9;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
-    .center-dialog-backdrop {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.72);
-      backdrop-filter: blur(4px);
-      z-index: 3000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .receipt-box {
+      background: var(--white);
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-lg);
       padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      box-shadow: var(--shadow-card);
     }
-    .center-dialog-box {
-      background: #ffffff;
-      width: 100%;
-      max-width: 380px;
-      border-radius: 20px;
-      padding: 22px 18px;
-      text-align: center;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
-      border: 1.5px solid var(--border-color);
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--slate-100);
+      padding-bottom: 9px;
+      gap: 12px;
     }
+    .receipt-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .receipt-label { font-size: 0.78rem; color: var(--slate-500); font-weight: 800; }
+    .receipt-val { font-size: 0.86rem; color: var(--slate-900); font-weight: 900; text-align: left; word-break: break-word; }
 
     .loading-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.62);
-      backdrop-filter: blur(5px);
+      background: rgba(6, 40, 30, 0.58);
+      backdrop-filter: blur(4px);
       z-index: 3800;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 16px;
-      transition: opacity 0.22s ease;
     }
 
-    .loading-card-box {
-      background: #ffffff;
+    .loading-card {
+      background: var(--white);
       border-radius: 22px;
-      padding: 26px 28px;
+      padding: 24px 26px;
       text-align: center;
-      max-width: 320px;
+      max-width: 310px;
       width: 100%;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
-      border: 2px solid #bae6fd;
+      border: 2px solid #a7f3d0;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .real-spinner-ring {
-      width: 48px; height: 48px;
-      border: 4.5px solid #e0f2fe;
-      border-top: 4.5px solid #0284c7;
-      border-right: 4.5px solid #38bdf8;
+    .spinner-ring {
+      width: 44px;
+      height: 44px;
+      border: 4px solid var(--emerald-100);
+      border-top: 4px solid var(--emerald-600);
       border-radius: 50%;
-      animation: realSpinAnim 0.75s linear infinite;
+      animation: spinAnim 0.75s linear infinite;
     }
-    @keyframes realSpinAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes spinAnim { to { transform: rotate(360deg); } }
 
-    .loading-title-text { font-size: 0.96rem; font-weight: 900; color: var(--primary); }
-    .loading-sub-text { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; line-height: 1.5; }
-
-    .single-alert-popup {
+    .toast-banner {
       position: fixed;
-      top: 16px; left: 50%;
+      top: 14px;
+      left: 50%;
       transform: translateX(-50%) translateY(-180%);
       width: calc(100% - 24px);
-      max-width: 480px;
-      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-      color: #ffffff;
-      border-radius: 16px;
+      max-width: 460px;
+      background: linear-gradient(135deg, var(--emerald-800) 0%, var(--emerald-700) 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
       padding: 14px 16px;
-      box-shadow: 0 16px 40px rgba(6, 95, 70, 0.42);
+      box-shadow: 0 16px 36px rgba(6, 78, 59, 0.35);
       border: 1.5px solid #6ee7b7;
       z-index: 4300;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .single-alert-popup.visible { transform: translateX(-50%) translateY(0); }
+    .toast-banner.visible { transform: translateX(-50%) translateY(0); }
 
-    .alert-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-      padding-bottom: 8px;
-      font-size: 0.9rem;
-      font-weight: 900;
-    }
-    .alert-content-box {
-      font-size: 0.82rem;
-      line-height: 1.6;
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
+    .toast-body-box {
+      background: rgba(255, 255, 255, 0.13);
+      border-radius: 12px;
       padding: 10px 12px;
+      font-size: 0.8rem;
+      line-height: 1.6;
     }
-    .alert-dismiss-btn {
-      background: #ffffff;
-      color: #047857;
+
+    .toast-close-btn {
+      background: var(--white);
+      color: var(--emerald-800);
       border: none;
-      padding: 8px 14px;
       border-radius: 10px;
-      font-size: 0.82rem;
+      padding: 8px 12px;
+      font-size: 0.8rem;
       font-weight: 900;
       cursor: pointer;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-
-    .header-action-btn {
-      background: rgba(255, 255, 255, 0.16);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .receipt-section-box {
-      background: #ffffff;
-      border: 1.5px solid #cbd5e1;
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .receipt-row-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #f1f5f9;
-      padding-bottom: 10px;
-      gap: 12px;
-    }
-    .receipt-row-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .receipt-row-label { color: #64748b; font-weight: 800; font-size: 0.82rem; }
-    .receipt-row-val { color: #0f172a; font-weight: 900; font-size: 0.88rem; text-align: left; word-break: break-word; }
 
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
     .hidden { display: none !important; }
@@ -634,262 +1033,515 @@
 </head>
 <body>
 
-  <div id="singleAlertPopup" class="single-alert-popup hidden" role="alert">
-    <div class="alert-top-row">
-      <span id="alertTitleText">🔔 اعلان تراکنش جدید</span>
+  <!-- اعلان تراکنش یا پیام سیستمی -->
+  <div id="singleAlertPopup" class="toast-banner hidden" role="alert">
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.88rem; font-weight:900;">
+      <span id="alertTitleText">🔔 اعلان حساب</span>
     </div>
-    <div class="alert-content-box" id="alertBodyContent"></div>
-    <button type="button" class="alert-dismiss-btn" onclick="dismissCurrentAlertPopup()">متوجه شدم، بستن اعلان ✓</button>
+    <div class="toast-body-box" id="alertBodyContent"></div>
+    <button type="button" class="toast-close-btn" onclick="dismissCurrentAlertPopup()">متوجه شدم ✓</button>
   </div>
 
+  <!-- لودینگ واقعی -->
   <div id="realLoadingOverlay" class="loading-overlay hidden">
-    <div class="loading-card-box">
-      <div class="real-spinner-ring"></div>
-      <div id="loadingOverlayTitle" class="loading-title-text">در حال دریافت آخرین اطلاعات از سرور...</div>
-      <div id="loadingOverlaySub" class="loading-sub-text">لطفاً چند لحظه صبر کنید تا تراکنش‌ها و مانده حساب شما به‌روز شوند</div>
+    <div class="loading-card">
+      <div class="spinner-ring"></div>
+      <div id="loadingOverlayTitle" style="font-size:0.94rem; font-weight:900; color:var(--slate-900);">در حال همگام‌سازی...</div>
+      <div id="loadingOverlaySub" style="font-size:0.76rem; color:var(--slate-500); font-weight:700; line-height:1.5;">لطفاً صبر کنید</div>
     </div>
   </div>
 
   <div class="app-viewport">
-    <header class="app-header">
-      <div class="header-title">🛡️ امانت‌داری کریمی</div>
+    <!-- نوار بالایی ثابت -->
+    <header class="top-bar">
+      <div class="top-bar-brand">
+        <div class="brand-shield">🛡️</div>
+        <div class="brand-texts">
+          <h1>امانت‌داری کریمی</h1>
+          <span id="headerSubtitleText">سامانه مالی و شارژ مشتریان</span>
+        </div>
+      </div>
+      <div class="top-bar-actions">
+        <button type="button" id="headerRefreshBtn" class="icon-circle-btn hidden" title="بروزرسانی" onclick="refreshAccountData()">🔄</button>
+        <a id="headerSupportWaBtn" href="https://wa.me/9647721878997" target="_blank" class="icon-circle-btn" title="پشتیبانی واتساپ">💬</a>
+      </div>
     </header>
 
-    <main class="app-body">
+    <!-- بدنه اصلی -->
+    <main id="appBody" class="app-body">
+
       <!-- ================= گام ۱: ورود با شماره تماس ================= -->
-      <div id="phoneSection" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
-        <div>
-          <div class="clean-card">
-            <div class="login-hero">
-              <div class="login-badge-icon">🔐</div>
-              <h2>ورود به حساب مشتریان</h2>
-              <p>برای مشاهده موجودی و سابقه تراکنش‌ها، شماره تماس ثبت‌شده خود را وارد کنید</p>
-            </div>
+      <div id="phoneSection">
+        <div class="wallet-hero-card" style="margin-bottom:14px;">
+          <div class="wallet-watermark">ک</div>
+          <div class="wallet-top-meta">
+            <span class="wallet-badge">✨ کیف پول و حساب امانت</span>
+          </div>
+          <h2 style="font-size:1.15rem; font-weight:900; color:var(--emerald-950); margin-bottom:6px; position:relative; z-index:2;">
+            ورود به حساب مشتریان
+          </h2>
+          <p style="font-size:0.8rem; color:var(--slate-700); line-height:1.65; position:relative; z-index:2;">
+            شماره تماس ثبت‌شده خود را وارد کنید تا حساب شما و طرف حساب مربوطه نمایش داده شود.
+          </p>
+        </div>
 
-            <div class="form-group">
-              <label for="phoneInput">شماره تماس مشتری:</label>
-              <input type="tel" inputmode="numeric" id="phoneInput" placeholder="شماره تماس" dir="ltr" onkeydown="if(event.key==='Enter') checkPhone()">
-            </div>
+        <div class="quick-grid-card" style="margin-bottom:14px;">
+          <div class="form-group">
+            <label for="phoneInput">شماره تماس مشتری:</label>
+            <input type="tel" inputmode="numeric" id="phoneInput" placeholder="مثلاً 077xxxxxxxx" dir="ltr" onkeydown="if(event.key==='Enter') checkPhone()">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="checkPhone()">ادامه و شناسایی حساب ←</button>
 
-            <button type="button" class="btn" id="btnCheckPhone" onclick="checkPhone()">ادامه و شناسایی حساب ←</button>
+          <div id="biometricBtnWrapper" class="hidden" style="margin-top:10px;">
+            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">🔑 ورود سریع با اثر انگشت</button>
+          </div>
+        </div>
 
-            <div id="biometricBtnWrapper" class="hidden" style="margin-top: 10px;">
-              <button type="button" class="btn btn-success" onclick="loginWithBiometric()">🔑 ورود سریع با اثر انگشت</button>
+        <div class="menu-stack-card">
+          <button type="button" class="menu-row-item" onclick="toggleAboutInfo()">
+            <div class="menu-row-right">
+              <div class="menu-row-icon">ℹ️</div>
+              <div>
+                <span class="menu-row-title">درباره خدمات امانت‌داری کریمی</span>
+                <span class="menu-row-sub">نگهداری موجودی، انتقال بین حساب‌ها و ارسال شارژ</span>
+              </div>
             </div>
+            <span style="color:var(--slate-500); font-weight:900;">▾</span>
+          </button>
+          <div id="aboutServicesBox" class="hidden" style="padding:10px 14px; background:var(--slate-50); font-size:0.76rem; color:var(--slate-700); line-height:1.7; border-bottom:1px solid var(--slate-100);">
+            امکان مشاهده مانده حساب‌های ارزی، انتقال موجودی بین حساب مشتریان از طریق شناسه حساب یا شماره تماس، و ارسال شارژ/کردیت با تایید رمز ثابت فراهم است.
           </div>
 
-          <div class="clean-card" style="padding:12px 14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:0.84rem; font-weight:900; color:var(--primary);">✨ هنوز حساب ندارید؟</span>
-              <button type="button" onclick="toggleAboutInfo()" style="background:none; border:none; color:var(--accent); font-size:0.78rem; font-weight:800; cursor:pointer; width:auto; padding:2px 4px;">درباره خدمات ما ▾</button>
+          <button type="button" class="menu-row-item" onclick="openSelfRegister()">
+            <div class="menu-row-right">
+              <div class="menu-row-icon">➕</div>
+              <div>
+                <span class="menu-row-title">افتتاح حساب جدید</span>
+                <span class="menu-row-sub">ساخت حساب جدید و تعیین رمز ثابت</span>
+              </div>
             </div>
-            <div id="aboutServicesBox" class="about-accordion hidden">
-              دریافت امانت‌های نقدی، نگهداری امن، انجام معاملات و حواله‌جات سریع با حساب‌رسانی دقیق و شفاف. می‌توانید همین حالا به‌صورت آنلاین حساب افتتاح کنید یا از طریق واتساپ با ما در ارتباط باشید.
-            </div>
-            <button type="button" class="btn btn-success" style="margin-top:10px; padding:11px; font-size:0.86rem;" onclick="openSelfRegister()">
-              ➕ افتتاح حساب جدید (توسط مشتری)
-            </button>
-            <a href="https://wa.me/9647721878997" target="_blank" class="btn btn-whatsapp" style="margin-top:8px; padding:10px; font-size:0.82rem;">
-              💬 پشتیبانی واتساپ
-            </a>
-          </div>
+            <span style="color:var(--emerald-700); font-weight:900;">‹</span>
+          </button>
         </div>
       </div>
 
-      <!-- ================= گام ۲: ورود سریع با کد حساب (مشاهده حساب بدون نیاز به رمز عبور) ================= -->
-      <div id="accountSection" class="hidden" style="margin: auto 0;">
-        <div class="clean-card" style="text-align:center; padding:20px 16px;">
-          <div class="login-badge-icon" style="background:var(--success-soft); color:var(--success); border-color:#a7f3d0;">👤</div>
-          <div id="greetingMsg" style="font-weight:900; color:var(--primary); margin-bottom:4px; font-size:1.05rem;"></div>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">لطفاً کد اختصاصی حساب (Account ID) خود را وارد نمایید:</p>
+      <!-- ================= گام ۲: تایید کد حساب (Account ID) ================= -->
+      <div id="accountSection" class="hidden" style="margin:auto 0;">
+        <div class="quick-grid-card" style="text-align:center; padding:22px 16px;">
+          <div class="avatar-monogram" style="width:54px; height:54px; margin:0 auto 10px auto; font-size:1.35rem;">👤</div>
+          <div id="greetingMsg" style="font-size:1.05rem; font-weight:900; color:var(--slate-900); margin-bottom:4px;"></div>
+          <div id="candidateManagerHint" style="font-size:0.74rem; color:var(--emerald-700); font-weight:800; margin-bottom:12px;"></div>
+          <p style="font-size:0.78rem; color:var(--slate-500); margin-bottom:14px;">کد اختصاصی حساب (Account ID) خود را وارد کنید:</p>
 
           <div class="form-group">
             <input type="text" id="accountIdInput" placeholder="کد حساب (Account ID)" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
 
-          <button type="button" class="btn btn-success" id="btnVerifyAcc" onclick="verifyAccount()">ورود به حساب 🚀</button>
-          <button type="button" class="btn btn-outline" onclick="navigateToStep('phone')" style="margin-top:8px;">← تغییر شماره تماس</button>
+          <button type="button" class="btn btn-primary" onclick="verifyAccount()">ورود به کیف پول 🚀</button>
+          <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">← تغییر شماره تماس</button>
         </div>
       </div>
 
-      <!-- ================= گام ۳: افتتاح حساب واقعی توسط مشتری (ذخیره در accounts به همراه ستون PinHash) ================= -->
+      <!-- ================= گام ۳: افتتاح حساب جدید ================= -->
       <div id="registerSection" class="hidden">
-        <div class="clean-card">
-          <div class="login-hero">
-            <div class="login-badge-icon" style="background:var(--success-soft); color:var(--success); border-color:#a7f3d0;">🆕</div>
-            <h2>افتتاح حساب جدید (نقدی)</h2>
-            <p>اطلاعات زیر را تکمیل کنید تا حساب شما در سامانه ثبت شود</p>
+        <div class="quick-grid-card">
+          <div class="panel-banner-header">
+            <div>
+              <h4>افتتاح حساب جدید</h4>
+              <p>ثبت حساب و رمز ثابت در سامانه</p>
+            </div>
+            <span style="font-size:1.4rem;">🆕</span>
           </div>
 
-          <div class="form-group" style="background:#fffbeb; border:1.5px dashed #f59e0b; padding:10px; border-radius:12px;">
+          <div class="form-group" style="background:var(--warning-soft); border:1.5px dashed #f59e0b; padding:10px; border-radius:14px;">
             <label style="color:#b45309;">شناسه اختصاصی حساب (Account ID):</label>
             <div style="display:flex; gap:8px; align-items:center;">
-              <input type="text" id="regAccId" dir="ltr" readonly style="background:#fff; font-weight:900; font-size:1.05rem;">
-              <button type="button" class="btn btn-outline" style="width:auto; padding:10px 12px; font-size:0.8rem;" onclick="copyRegAccId()">📋 کپی</button>
+              <input type="text" id="regAccId" dir="ltr" readonly style="background:#fff; font-weight:900;">
+              <button type="button" class="mini-copy-btn" style="padding:10px 12px;" onclick="copyTextValue(document.getElementById('regAccId').value, 'شناسه حساب')">کپی</button>
             </div>
           </div>
 
           <div class="form-group">
             <label for="regFullName">نام و نام خانوادگی کامل:</label>
-            <input type="text" id="regFullName" placeholder="نام و نام خانوادگی خود را بنویسید">
+            <input type="text" id="regFullName" placeholder="نام و نام خانوادگی">
           </div>
 
           <div class="form-group">
-            <label for="regPhone">شماره همراه (واتساپ):</label>
+            <label for="regPhone">شماره همراه:</label>
             <input type="tel" id="regPhone" placeholder="+96477xxxxxxxx" dir="ltr">
           </div>
 
           <div class="form-group">
-            <label for="regPin">تعیین رمز ارسال شارژ (حداقل ۴ کاراکتر):</label>
-            <input type="password" id="regPin" placeholder="یک رمز امن برای ارسال شارژ انتخاب کنید" dir="ltr">
+            <label for="regPin">رمز ثابت (حداقل ۴ کاراکتر):</label>
+            <input type="password" id="regPin" placeholder="رمز ثابت برای انتقال و شارژ" dir="ltr">
           </div>
 
           <div class="form-group">
-            <label for="regPinConfirm">تکرار رمز ارسال شارژ:</label>
-            <input type="password" id="regPinConfirm" placeholder="رمز را مجدداً وارد کنید" dir="ltr">
+            <label for="regPinConfirm">تکرار رمز ثابت:</label>
+            <input type="password" id="regPinConfirm" placeholder="تکرار رمز ثابت" dir="ltr">
           </div>
 
-          <button type="button" class="btn btn-success" id="btnCreateAccount" onclick="submitRealAccountCreation()">✅ ثبت و افتتاح قطعی حساب</button>
-          <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">← بازگشت به صفحه ورود</button>
+          <button type="button" class="btn btn-primary" onclick="submitRealAccountCreation()">✅ ثبت قطعی حساب</button>
+          <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">← بازگشت به ورود</button>
         </div>
       </div>
 
-      <!-- ================= گام ۴: داشبورد اصلی امانت‌داری کریمی + ارسال شارژ با تأیید رمز PinHash ================= -->
-      <div id="dashboardSection" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
-        <div class="profile-summary-card" style="margin-bottom: 0;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span id="dashName" style="font-size: 1.05rem; font-weight: 900; color: var(--primary);">---</span>
-            <span style="font-size: 0.72rem; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 2px 10px; border-radius: 20px; font-weight: 800;">● حساب فعال</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); padding-top: 6px; border-top: 1px dashed #e2e8f0; margin-bottom: 10px;">
-            <span>تلفن: <b id="dashPhone" class="eng-num" style="color: var(--primary);">---</b></span>
-            <span>کد حساب: <b id="dashAccountId" class="eng-num" style="color: var(--accent);">---</b></span>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-            <button type="button" onclick="toggleBiometricSetting()" id="bioToggleBtn" style="padding: 8px 4px; border-radius: 10px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: var(--primary); font-size: 0.72rem; font-weight: 800; cursor: pointer; text-align: center;">🔑 اثرانگشت</button>
-            <button type="button" onclick="openSetPinModal()" id="setPinBtn" style="padding: 8px 4px; border-radius: 10px; border: 1.5px solid #a7f3d0; background: #ecfdf5; color: #065f46; font-size: 0.72rem; font-weight: 800; cursor: pointer; text-align: center;">🔒 رمز شارژ</button>
-            <button type="button" onclick="logout()" style="padding: 8px 4px; border-radius: 10px; border: 1.5px solid #fca5a5; background: #fef2f2; color: #991b1b; font-size: 0.72rem; font-weight: 800; cursor: pointer; text-align: center;">🚪 خروج</button>
-          </div>
-        </div>
+      <!-- ================= گام ۴: محیط اصلی حساب مشتری (۴ تب پایین) ================= -->
+      <div id="dashboardSection" class="hidden" style="display:flex; flex-direction:column; gap:14px;">
 
-        <div class="clean-card" style="margin-bottom: 0;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+        <!-- هدر نام کاربر + طرف حساب (نام مالک مثل محمد شریف یا ادمین مربوطه) -->
+        <div class="greeting-row">
+          <div class="greeting-user">
+            <div id="userAvatarLetter" class="avatar-monogram">م</div>
             <div>
-              <span style="font-size:0.9rem; font-weight:900; color:var(--primary); display:block;">📊 موجودی و مانده حساب:</span>
-              <span id="lastSyncTimeText" style="font-size:0.68rem; color:var(--text-muted); font-weight:700;">آخرین همگام‌سازی: اکنون</span>
+              <span class="greeting-sub">خوش آمدید</span>
+              <div id="dashName" class="greeting-name">---</div>
             </div>
-            <button type="button" id="refreshAccountBtn" onclick="refreshAccountData()" class="btn btn-outline" style="width:auto; padding:6px 12px; font-size:0.76rem; border-radius:9px; border-color:#7dd3fc; background:#f0f9ff; color:#0369a1;">
-              🔄 بروزرسانی حساب
+          </div>
+          <div class="counterparty-pill" title="طرف حساب / مسئول حساب">
+            <small>حساب نزد</small>
+            <strong id="dashCounterpartyName">محمد شریف</strong>
+          </div>
+        </div>
+
+        <!-- تب ۱: صفحه اصلی (کیف پول + دسترسی سریع + فرم‌ها + تراکنش‌ها) -->
+        <div id="tabHomeView" style="display:flex; flex-direction:column; gap:14px;">
+
+          <!-- کارت کیف پول و مانده -->
+          <div class="wallet-hero-card">
+            <div class="wallet-watermark">ک</div>
+            <div class="wallet-top-meta">
+              <span class="wallet-badge">💼 حساب فعال مشتری</span>
+              <button type="button" class="eye-toggle-btn" onclick="toggleBalanceVisibility()">
+                <span id="eyeToggleIcon">👁️</span>
+                <span id="eyeToggleText">مخفی/نمایش</span>
+              </button>
+            </div>
+
+            <div class="wallet-balance-row">
+              <div>
+                <span class="wallet-balance-label">مانده خالص (<span id="odometerCurrencyLabel">IQD</span>)</span>
+                <div id="odometerValue" class="wallet-main-amount eng-num">0</div>
+              </div>
+              <span id="walletCurrBadge" class="wallet-currency-chip eng-num">IQD</span>
+            </div>
+
+            <div class="wallet-id-strip">
+              <div class="wallet-id-text">
+                کد حساب: <b id="dashAccountId" class="eng-num">---</b>
+              </div>
+              <button type="button" class="mini-copy-btn" onclick="copyAccountId()">📋 کپی کد حساب</button>
+            </div>
+
+            <div class="wallet-sub-stats">
+              <div class="wallet-stat-box">
+                <span style="color:var(--slate-500);">بستانکار (+)</span>
+                <span id="odometerCredit" class="eng-num" style="color:var(--emerald-700);">0</span>
+              </div>
+              <div class="wallet-stat-box">
+                <span style="color:var(--slate-500);">بدهکار (-)</span>
+                <span id="odometerDebit" class="eng-num" style="color:var(--danger);">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- سوییچ ارزهای حساب -->
+          <div class="currency-switcher" id="currencyTabs"></div>
+
+          <!-- وضعیت حساب -->
+          <div id="accountPsychologyMsg" class="calc-summary-box" style="margin-bottom:0; text-align:right;"></div>
+
+          <!-- منوی دسترسی سریع (الهام گرفته از شبکه آیکون‌های برنامه مرجع) -->
+          <div class="quick-grid-card">
+            <div class="section-heading-row">
+              <h3>دسترسی سریع</h3>
+              <span id="lastSyncTimeText">همگام‌سازی آماده</span>
+            </div>
+            <div class="quick-grid">
+              <button type="button" class="quick-tile active-mode" id="qTileTransfer" onclick="selectActionMode('transfer')">
+                <div class="quick-icon-box">⇄</div>
+                <span class="quick-label">انتقال حساب به حساب</span>
+              </button>
+              <button type="button" class="quick-tile" id="qTileAfn" onclick="selectActionMode('afn')">
+                <div class="quick-icon-box">📲</div>
+                <span class="quick-label">شارژ افغانستان</span>
+              </button>
+              <button type="button" class="quick-tile" id="qTileIq" onclick="selectActionMode('iq')">
+                <div class="quick-icon-box">🇮🇶</div>
+                <span class="quick-label">شارژ عراق</span>
+              </button>
+              <button type="button" class="quick-tile" id="qTileProfile" onclick="switchBottomTab('profile')">
+                <div class="quick-icon-box">👤</div>
+                <span class="quick-label">پروفایل و کدها</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- پنل ۱: انتقال موجودی از حساب به حساب دیگر (با کد حساب یا شماره تلفن + رمز ثابت) -->
+          <div id="panelTransfer" class="action-panel">
+            <div class="panel-banner-header">
+              <div>
+                <h4>انتقال موجودی حساب به حساب</h4>
+                <p>از طریق کد حساب (Account ID) یا شماره تماس مقصد</p>
+              </div>
+              <span style="font-size:1.35rem;">⇄</span>
+            </div>
+
+            <div class="form-group">
+              <label for="transferTargetInput">کد حساب (Account ID) یا شماره تماس مقصد:</label>
+              <input type="text" id="transferTargetInput" placeholder="مثلاً ACC-12345 یا 077xxxxxxxx" dir="ltr" oninput="previewTransferRecipient()">
+            </div>
+
+            <div id="transferRecipientPreview" class="recipient-preview-box invalid">
+              <span>مقصد:</span>
+              <span>کد حساب یا شماره مقصد را وارد کنید</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:10px;" class="form-group">
+              <div>
+                <label for="transferCurrencySelect">ارز انتقال:</label>
+                <select id="transferCurrencySelect" onchange="recalcTransferBox()"></select>
+              </div>
+              <div>
+                <label for="transferAmountInput">مبلغ انتقال:</label>
+                <input type="number" id="transferAmountInput" placeholder="مبلغ" dir="ltr" oninput="recalcTransferBox()">
+              </div>
+            </div>
+
+            <div id="transferCalcBox" class="calc-summary-box">
+              موجودی قابل انتقال برای ارز انتخابی: <b id="transferAvailBalance" class="eng-num">0</b>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="btnExecuteTransfer" onclick="prepareTransferWithPin()">
+              🔒 تایید رمز و انتقال موجودی
             </button>
           </div>
 
-          <div class="currency-tabs" id="currencyTabs"></div>
+          <!-- پنل ۲: ارسال شارژ افغانستان (شبیه‌ساز تلگرام + رمز ثابت) -->
+          <div id="panelTopupAfn" class="action-panel hidden">
+            <div class="panel-banner-header">
+              <div>
+                <h4>ارسال شارژ افغانستان</h4>
+                <p>کسر از موجودی دینار (IQD) با تایید رمز ثابت</p>
+              </div>
+              <span style="font-size:1.35rem;">🇦🇫</span>
+            </div>
 
-          <div class="balance-box-modern">
-            <div class="balance-label">مانده خالص حساب (<span id="odometerCurrencyLabel">AFN</span>)</div>
-            <div id="odometerValue" class="balance-main-figure eng-num">0</div>
-            <div class="balance-sub-grid">
-              <div class="balance-sub-item">
-                <span class="balance-sub-title">مجموع بستانکار (+)</span>
-                <span id="odometerCredit" class="balance-sub-val eng-num" style="color:var(--success);">0</span>
+            <div class="form-group">
+              <label for="afnTargetPhone">شماره موبایل مقصد (۱۰ رقم با ۰۷):</label>
+              <div class="input-with-icon">
+                <span class="input-prefix-badge" dir="ltr">AFN</span>
+                <input type="tel" class="has-prefix" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
               </div>
-              <div class="balance-sub-item">
-                <span class="balance-sub-title">مجموع بدهکار (-)</span>
-                <span id="odometerDebit" class="balance-sub-val eng-num" style="color:var(--danger);">0</span>
+            </div>
+
+            <div class="form-group">
+              <label for="afnAmountInput">مبلغ شارژ به افغانی (AFN):</label>
+              <input type="number" id="afnAmountInput" placeholder="مثلاً 100" dir="ltr" oninput="recalcTopupCost()">
+            </div>
+
+            <div id="afnCalcBox" class="calc-summary-box">
+              معادل کسر از موجودی دینار (IQD): <b id="afnCalculatedIqd" class="eng-num">0</b> IQD
+            </div>
+
+            <div id="topupAfnEligibilityMsg" style="font-size:0.74rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:8px;"></div>
+
+            <button type="button" class="btn btn-primary" id="btnExecuteTopupAfn" onclick="executeCustomerTopup('afn')">
+              🔒 تایید رمز و ارسال شارژ افغانستان
+            </button>
+          </div>
+
+          <!-- پنل ۳: ارسال شارژ عراق (کسر دینار + رمز ثابت + واتساپ) -->
+          <div id="panelTopupIq" class="action-panel hidden">
+            <div class="panel-banner-header">
+              <div>
+                <h4>ارسال شارژ عراق</h4>
+                <p>کسر از موجودی دینار (IQD) با تایید رمز ثابت</p>
               </div>
+              <span style="font-size:1.35rem;">🇮🇶</span>
+            </div>
+
+            <div class="form-group">
+              <label for="iqNetworkSelect">شبکه همراه عراق:</label>
+              <select id="iqNetworkSelect">
+                <option value="Zain (زین عراق)">Zain (زین عراق)</option>
+                <option value="AsiaCell (آسیاسل)">AsiaCell (آسیاسل)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="iqCardSelect">مبلغ شارژ عراق (IQD):</label>
+              <select id="iqCardSelect" onchange="recalcTopupCost()">
+                <option value="1000">1,000 دینار</option>
+                <option value="2000">2,000 دینار</option>
+                <option value="3000">3,000 دینار</option>
+                <option value="5000">5,000 دینار</option>
+                <option value="10000">10,000 دینار</option>
+                <option value="15000">15,000 دینار</option>
+                <option value="25000">25,000 دینار</option>
+              </select>
+            </div>
+
+            <div id="iqCalcBox" class="calc-summary-box">
+              مبلغ کسر از موجودی دینار (IQD): <b id="iqCalculatedIqd" class="eng-num">1,000</b> IQD
+            </div>
+
+            <div id="topupIqEligibilityMsg" style="font-size:0.74rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:8px;"></div>
+
+            <button type="button" class="btn btn-primary" id="btnExecuteTopupIq" onclick="executeCustomerTopup('iq')">
+              🔒 تایید رمز و ثبت شارژ عراق
+            </button>
+          </div>
+
+          <!-- لیست تراکنش‌ها -->
+          <div class="tx-feed-card">
+            <div class="tx-feed-head">
+              <span style="font-size:0.88rem; font-weight:900; color:var(--slate-900);">📋 تراکنش‌ها</span>
+              <span id="txCountBadge" class="eng-num" style="font-size:0.74rem; background:var(--emerald-50); color:var(--emerald-800); border:1px solid #a7f3d0; padding:3px 9px; border-radius:8px; font-weight:800;">0 تراکنش</span>
+            </div>
+            <div id="transactionsContainer"></div>
+          </div>
+        </div>
+
+        <!-- تب ۲: تراکنش‌ها (نمای کامل دفتر تراکنش‌ها) -->
+        <div id="tabTxView" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="tx-feed-card">
+            <div class="tx-feed-head">
+              <span style="font-size:0.9rem; font-weight:900; color:var(--slate-900);">🧾 دفتر کامل تراکنش‌ها</span>
+              <button type="button" class="mini-copy-btn" onclick="refreshAccountData()">🔄 بروزرسانی</button>
+            </div>
+            <div id="transactionsFullContainer"></div>
+          </div>
+        </div>
+
+        <!-- تب ۳: انتقال و شارژ (دسترسی سریع به فرم انتقال و شارژ) -->
+        <div id="tabServicesView" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="currency-switcher">
+            <button type="button" class="curr-pill-btn active" id="srvSubTransfer" onclick="switchServiceSubTab('transfer')">⇄ انتقال موجودی</button>
+            <button type="button" class="curr-pill-btn" id="srvSubAfn" onclick="switchServiceSubTab('afn')">🇦🇫 شارژ افغانستان</button>
+            <button type="button" class="curr-pill-btn" id="srvSubIq" onclick="switchServiceSubTab('iq')">🇮🇶 شارژ عراق</button>
+          </div>
+          <div id="serviceSubTabMount"></div>
+        </div>
+
+        <!-- تب ۴: حساب کاربری / پروفایل (الهام گرفته از تصاویر ۲ و ۴: کپی کد حساب و شماره + تنظیمات) -->
+        <div id="tabProfileView" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="wallet-hero-card">
+            <div class="wallet-watermark">پ</div>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px; position:relative; z-index:2;">
+              <div id="profileAvatarLetter" class="avatar-monogram" style="width:48px; height:48px; font-size:1.2rem;">م</div>
+              <div>
+                <div id="profileFullName" style="font-size:1rem; font-weight:900; color:var(--emerald-950);">---</div>
+                <div style="font-size:0.74rem; color:var(--emerald-800); font-weight:800;">طرف حساب: <span id="profileCounterpartyName">محمد شریف</span></div>
+              </div>
+            </div>
+
+            <div class="wallet-id-strip" style="margin-bottom:8px;">
+              <div class="wallet-id-text">کد حساب (Account ID): <b id="profileAccIdVal" class="eng-num">---</b></div>
+              <button type="button" class="mini-copy-btn" onclick="copyAccountId()">📋 کپی کد حساب</button>
+            </div>
+
+            <div class="wallet-id-strip">
+              <div class="wallet-id-text">شماره تماس: <b id="profilePhoneVal" class="eng-num">---</b></div>
+              <button type="button" class="mini-copy-btn" onclick="copyPhoneNumber()">📋 کپی شماره</button>
             </div>
           </div>
 
-          <div id="accountPsychologyMsg"></div>
-
-          <button type="button" class="btn btn-success" id="toggleCreditDrawerBtn" onclick="toggleCreditDrawer()" style="margin-top:4px;">
-            📲 ارسال کردیت و شارژ (کسر از موجودی دینار) ▾
-          </button>
-
-          <div id="creditServiceDrawer" class="credit-service-drawer hidden">
-            <div class="currency-tabs" style="margin-bottom:10px;">
-              <button type="button" class="currency-tab active" id="tabAfnBtn" onclick="switchTopupMode('afn')">🇦🇫 شارژ افغانستان</button>
-              <button type="button" class="currency-tab" id="tabIqBtn" onclick="switchTopupMode('iq')">🇮🇶 شارژ عراق (واتساپ)</button>
-            </div>
-
-            <div id="topupAfnForm">
-              <div class="form-group">
-                <label for="afnTargetPhone">شماره موبایل مقصد در افغانستان (۱۰ رقم با صفر):</label>
-                <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+          <div class="menu-stack-card">
+            <button type="button" class="menu-row-item" onclick="openSetPinModal()">
+              <div class="menu-row-right">
+                <div class="menu-row-icon">🔒</div>
+                <div>
+                  <span id="setPinMenuTitle" class="menu-row-title">تغییر رمز ثابت</span>
+                  <span class="menu-row-sub">الزامی برای انتقال موجودی و ارسال شارژ</span>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="afnAmountInput">مبلغ شارژ به افغانی (AFN):</label>
-                <input type="number" id="afnAmountInput" placeholder="مثلاً 100" dir="ltr" oninput="recalcTopupCost()">
-              </div>
-              <div class="calc-box" id="afnCalcBox">
-                معادل کسر از موجودی دینار (IQD): <b id="afnCalculatedIqd" class="eng-num">0</b> IQD
-              </div>
-            </div>
+              <span style="color:var(--slate-500); font-weight:900;">‹</span>
+            </button>
 
-            <div id="topupIqForm" class="hidden">
-              <div class="form-group">
-                <label for="iqNetworkSelect">شبکه همراه عراق:</label>
-                <select id="iqNetworkSelect">
-                  <option value="Zain (زین عراق)">Zain (زین عراق)</option>
-                  <option value="AsiaCell (آسیاسل)">AsiaCell (آسیاسل)</option>
-                </select>
+            <button type="button" class="menu-row-item" onclick="toggleBiometricSetting()">
+              <div class="menu-row-right">
+                <div class="menu-row-icon">🔑</div>
+                <div>
+                  <span class="menu-row-title">ورود سریع با اثر انگشت</span>
+                  <span id="bioStatusSub" class="menu-row-sub">غیرفعال</span>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="iqCardSelect">مبلغ کارت شارژ عراق (IQD):</label>
-                <select id="iqCardSelect" onchange="recalcTopupCost()">
-                  <option value="1000">1,000 دینار</option>
-                  <option value="2000">2,000 دینار</option>
-                  <option value="3000">3,000 دینار</option>
-                  <option value="5000">5,000 دینار</option>
-                  <option value="10000">10,000 دینار</option>
-                  <option value="15000">15,000 دینار</option>
-                  <option value="25000">25,000 دینار</option>
-                </select>
-              </div>
-              <div class="calc-box" id="iqCalcBox">
-                مبلغ کسر از موجودی دینار (IQD): <b id="iqCalculatedIqd" class="eng-num">1,000</b> IQD
-              </div>
-            </div>
+              <span style="color:var(--emerald-700); font-weight:900;">تغییر</span>
+            </button>
 
-            <div id="topupEligibilityMsg" style="font-size:0.76rem; font-weight:800; color:#b91c1c; margin-top:8px; text-align:center;"></div>
+            <a id="directWhatsAppMsg" href="https://wa.me/9647721878997" target="_blank" class="menu-row-item">
+              <div class="menu-row-right">
+                <div class="menu-row-icon">💬</div>
+                <div>
+                  <span class="menu-row-title">ارتباط در واتساپ</span>
+                  <span class="menu-row-sub">پیگیری حساب و پشتیبانی</span>
+                </div>
+              </div>
+              <span style="color:var(--emerald-700); font-weight:900;">‹</span>
+            </a>
 
-            <button type="button" class="btn" id="btnExecuteTopup" style="margin-top:10px;" onclick="executeCustomerTopup()">
-              ⚡ ثبت تراکنش، کسر دینار و ارسال شارژ
+            <button type="button" class="menu-row-item" onclick="logout()">
+              <div class="menu-row-right">
+                <div class="menu-row-icon danger">🚪</div>
+                <div>
+                  <span class="menu-row-title" style="color:var(--danger);">خروج از حساب</span>
+                  <span class="menu-row-sub">خروج از حساب فعلی در این دستگاه</span>
+                </div>
+              </div>
+              <span style="color:var(--danger); font-weight:900;">‹</span>
             </button>
           </div>
         </div>
 
-        <div class="tx-card-container">
-          <div class="tx-card-header">
-            <span style="font-size: 0.9rem; font-weight: 900; color: var(--primary);">📋 دفتر سابقه تراکنش‌ها</span>
-            <span id="txCountBadge" class="eng-num" style="font-size: 0.78rem; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px; font-weight: 800;">0 تراکنش</span>
-          </div>
-          <div class="tx-table-wrapper" id="transactionsContainer"></div>
-        </div>
-
-        <div>
-          <a id="directWhatsAppMsg" href="https://wa.me/9647721878997" target="_blank" class="btn btn-whatsapp" style="padding: 12px; font-size: 0.88rem; border-radius: 14px;">
-            💬 ارسال پیام به امانت‌داری کریمی در واتساپ
-          </a>
-        </div>
       </div>
     </main>
 
-    <button type="button" id="floatingBackBtn" class="floating-back-btn" onclick="handleFloatingBack()">
-      ← بازگشت
-    </button>
+    <!-- نوار ناوبری پایین -->
+    <nav id="bottomNavBar" class="bottom-nav-bar hidden">
+      <button type="button" class="nav-tab-btn active" id="navHomeBtn" onclick="switchBottomTab('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">صفحه اصلی</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navTxBtn" onclick="switchBottomTab('tx')">
+        <span class="nav-icon">🧾</span>
+        <span class="nav-text">تراکنش‌ها</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navServicesBtn" onclick="switchBottomTab('services')">
+        <span class="nav-icon">⇄</span>
+        <span class="nav-text">انتقال و شارژ</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navProfileBtn" onclick="switchBottomTab('profile')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-text">حساب کاربری</span>
+      </button>
+    </nav>
   </div>
 
-  <!-- مودال تغییر رمز ارسال شارژ (نیازمند وارد کردن رمز فعلی) -->
+  <!-- مودال تایید رمز ثابت برای انتقال موجودی یا ارسال شارژ -->
+  <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box">
+      <div style="font-size:2.1rem; margin-bottom:6px;">🛡️</div>
+      <h3 id="pinModalHeading" style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:6px;">تایید رمز ثابت</h3>
+      <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--slate-700); line-height:1.65; margin-bottom:12px;"></p>
+      <div class="form-group">
+        <input type="password" id="txVerifyPinInput" placeholder="رمز ثابت خود را وارد کنید" dir="ltr" onkeydown="if(event.key==='Enter') confirmPendingOperation()">
+      </div>
+      <button type="button" class="btn btn-primary" onclick="confirmPendingOperation()" style="margin-bottom:8px;">✅ تایید رمز و انجام عملیات</button>
+      <button type="button" class="btn btn-outline" onclick="closeTxPinConfirmModal()">انصراف</button>
+    </div>
+  </div>
+
+  <!-- مودال تغییر رمز ثابت -->
   <div id="setPinModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
       <div style="font-size:2rem; margin-bottom:6px;">🔒</div>
-      <h3 style="font-size:1.02rem; font-weight:900; color:var(--primary); margin-bottom:6px;">تغییر رمز ارسال شارژ</h3>
-      <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
-        برای تغییر رمز، ابتدا رمز فعلی ارسال شارژ را وارد کنید و سپس رمز جدید را ثبت نمایید.
+      <h3 style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:6px;">تغییر رمز ثابت</h3>
+      <p style="font-size:0.76rem; color:var(--slate-500); line-height:1.6; margin-bottom:12px;">
+        رمز فعلی را وارد کنید و سپس رمز جدید را ثبت نمایید.
       </p>
       <div class="form-group">
-        <input type="password" id="oldAccountPinInput" placeholder="رمز فعلی ارسال شارژ" dir="ltr">
+        <input type="password" id="oldAccountPinInput" placeholder="رمز ثابت فعلی" dir="ltr">
       </div>
       <div class="form-group">
         <input type="password" id="newAccountPinInput" placeholder="رمز جدید (حداقل ۴ کاراکتر)" dir="ltr">
@@ -897,93 +1549,95 @@
       <div class="form-group">
         <input type="password" id="confirmAccountPinInput" placeholder="تکرار رمز جدید" dir="ltr">
       </div>
-      <button type="button" class="btn btn-success" onclick="saveAccountPassword()" style="margin-bottom:8px;">💾 ذخیره رمز جدید</button>
+      <button type="button" class="btn btn-primary" onclick="saveAccountPassword()" style="margin-bottom:8px;">💾 ذخیره رمز جدید</button>
       <button type="button" class="btn btn-outline" onclick="closeSetPinModal()">انصراف</button>
     </div>
   </div>
 
-  <!-- مودال تأیید رمز تراکنش در لحظه ارسال شارژ -->
-  <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
-    <div class="center-dialog-box" style="border-color:#7dd3fc;">
-      <div style="font-size:2rem; margin-bottom:6px;">🛡️</div>
-      <h3 style="font-size:1.02rem; font-weight:900; color:var(--primary); margin-bottom:6px;">تأیید رمز ارسال شارژ</h3>
-      <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
-        برای کسر از موجودی دینار و ارسال شارژ، رمز تراکنش خود را وارد کنید:
-      </p>
-      <div class="form-group">
-        <input type="password" id="txVerifyPinInput" placeholder="رمز عبور ارسال شارژ" dir="ltr" onkeydown="if(event.key==='Enter') confirmAndRunTopup()">
-      </div>
-      <button type="button" class="btn btn-success" id="btnConfirmTopupWithPin" onclick="confirmAndRunTopup()" style="margin-bottom:8px;">✅ تأیید رمز و ارسال قطعی شارژ</button>
-      <button type="button" class="btn btn-outline" onclick="closeTxPinConfirmModal()">انصراف</button>
-    </div>
-  </div>
-
-  <!-- مودال فعال‌سازی رمز برای حساب‌های قدیمی (PinHash خالی در جدول accounts) -->
+  <!-- مودال فعال‌سازی رمز برای حساب‌های بدون رمز -->
   <div id="legacyPinActivationModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box" style="border-color:#fcd34d;">
       <div style="font-size:2.1rem; margin-bottom:6px;">🔐</div>
-      <h3 style="font-size:1.02rem; font-weight:900; color:var(--primary); margin-bottom:6px;">فعال‌سازی رمز ارسال شارژ</h3>
-      <p style="font-size:0.8rem; color:#475569; line-height:1.65; margin-bottom:14px;">
-        حساب شما از قبل ثبت شده و هنوز <b>رمز ارسال شارژ</b> ندارد. برای امنیت موجودی شما، تعیین رمز اولیه فقط با تأیید مدیریت در واتساپ انجام می‌شود:
+      <h3 style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:6px;">رمز ثابت برای این حساب فعال نیست</h3>
+      <p style="font-size:0.78rem; color:var(--slate-700); line-height:1.65; margin-bottom:14px;">
+        برای انتقال موجودی یا ارسال شارژ، رمز ثابت این حساب باید در سیستم ثبت شده باشد. می‌توانید از طریق واتساپ درخواست فعال‌سازی دهید:
       </p>
-      <a id="legacyActivateWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:8px; font-size:0.86rem;">
-        💬 درخواست فعال‌سازی رمز در واتساپ
-      </a>
-      <button type="button" class="btn btn-outline" onclick="closeLegacyPinActivationModal()">متوجه شدم، بازگشت</button>
+      <a id="legacyActivateWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:8px;">💬 درخواست فعال‌سازی در واتساپ</a>
+      <button type="button" class="btn btn-outline" onclick="closeLegacyPinActivationModal()">بستن</button>
     </div>
   </div>
 
+  <!-- مودال اثر انگشت -->
   <div id="biometricPromptModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
-      <div style="width:58px; height:58px; background:var(--success-soft); color:var(--success); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:1.8rem; margin-bottom:10px; border:1.5px solid #a7f3d0;">🔑</div>
-      <h3 style="font-size:1.05rem; font-weight:900; color:var(--primary); margin-bottom:6px;">فعال‌سازی ورود با اثر انگشت</h3>
-      <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.65; margin-bottom:16px;">
-        برای امنیت بیشتر و ورود سریع بدون نیاز به وارد کردن مجدد شماره و کد حساب، اثر انگشت خود را فعال کنید.
+      <div style="font-size:2.1rem; margin-bottom:6px;">🔑</div>
+      <h3 style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:6px;">فعال‌سازی ورود با اثر انگشت</h3>
+      <p style="font-size:0.78rem; color:var(--slate-500); line-height:1.65; margin-bottom:14px;">
+        آیا می‌خواهید ورود سریع به حساب خود را در این دستگاه فعال کنید؟
       </p>
-      <button type="button" class="btn btn-success" onclick="confirmEnableBiometric()" style="margin-bottom:8px;">✅ فعال‌سازی اثر انگشت</button>
-      <button type="button" class="btn btn-outline" onclick="dismissBiometricPrompt()" style="font-size:0.82rem; padding:10px;">فعلاً نیاز نیست</button>
+      <button type="button" class="btn btn-primary" onclick="confirmEnableBiometric()" style="margin-bottom:8px;">✅ بله، فعال شود</button>
+      <button type="button" class="btn btn-outline" onclick="dismissBiometricPrompt()">فعلاً نه</button>
     </div>
   </div>
 
+  <!-- مودال شماره یافت نشد -->
   <div id="errorModal" class="center-dialog-backdrop hidden">
-    <div class="center-dialog-box" style="border-color:#fca5a5;">
-      <div style="font-size:2.4rem; margin-bottom:6px;">⚠️</div>
-      <h3 style="font-size:1.05rem; font-weight:900; color:var(--danger); margin-bottom:8px;">شماره تماس یافت نشد</h3>
-      <p style="font-size:0.82rem; color:#475569; line-height:1.65; margin-bottom:16px;">
-        شماره واردشده در سیستم ثبت نشده است. می‌توانید همین حالا به‌صورت آنلاین حساب بسازید یا با پشتیبانی در ارتباط باشید:
+    <div class="center-dialog-box" style="border-color:#fecaca;">
+      <div style="font-size:2.2rem; margin-bottom:6px;">⚠️</div>
+      <h3 style="font-size:1rem; font-weight:900; color:var(--danger); margin-bottom:6px;">شماره تماس یافت نشد</h3>
+      <p style="font-size:0.78rem; color:var(--slate-700); line-height:1.65; margin-bottom:14px;">
+        این شماره در فهرست حساب‌ها ثبت نشده است. می‌توانید حساب جدید باز کنید یا با پشتیبانی پیام دهید:
       </p>
-      <button type="button" class="btn btn-success" onclick="closeErrorModal(); openSelfRegister();" style="margin-bottom:8px;">➕ افتتاح حساب جدید</button>
-      <a id="modalWhatsAppErrorBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:8px; font-size:0.86rem;">
-        💬 پیام به واتساپ پشتیبانی
-      </a>
-      <button type="button" class="btn btn-secondary" onclick="closeErrorModal()">بازگشت و اصلاح شماره</button>
+      <button type="button" class="btn btn-primary" onclick="closeErrorModal(); openSelfRegister();" style="margin-bottom:8px;">➕ افتتاح حساب جدید</button>
+      <a id="modalWhatsAppErrorBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:8px;">💬 پیام در واتساپ</a>
+      <button type="button" class="btn btn-outline" onclick="closeErrorModal()">اصلاح شماره</button>
     </div>
   </div>
 
-  <div id="txDetailModal" class="fullscreen-modal" style="z-index:2100;">
+  <!-- مودال رسید تراکنش -->
+  <div id="txDetailModal" class="fullscreen-modal">
     <div class="modal-header">
-      <h3 style="font-size:0.98rem; font-weight:900;">🧾 رسید تراکنش</h3>
-      <button type="button" class="header-action-btn" onclick="handleModalBackClick('txDetailModal')">← بستن</button>
+      <h3 style="font-size:0.96rem; font-weight:900;">🧾 رسید تراکنش</h3>
+      <button type="button" class="icon-circle-btn" style="width:auto; padding:0 12px; font-size:0.78rem;" onclick="closeTxDetailModal()">← بستن</button>
     </div>
     <div class="modal-scroll-body">
-      <div id="receiptToCapture" class="receipt-section-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px dashed #cbd5e1; padding-bottom:10px;">
-          <span style="font-size:0.92rem; font-weight:900; color:var(--primary);">🛡️ امانت‌داری کریمی</span>
-          <span style="font-size:0.76rem; color:var(--text-muted); font-weight:800;" class="eng-num" id="receiptDateStr">---</span>
+      <div class="receipt-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px dashed var(--slate-200); padding-bottom:10px;">
+          <span style="font-size:0.9rem; font-weight:900; color:var(--emerald-900);">🛡️ امانت‌داری کریمی</span>
+          <span id="receiptDateStr" class="eng-num" style="font-size:0.74rem; color:var(--slate-500); font-weight:800;">---</span>
         </div>
-        <div id="modalBody" style="display:flex; flex-direction:column; gap:12px;"></div>
+        <div id="modalBody" style="display:flex; flex-direction:column; gap:10px;"></div>
       </div>
-      <button type="button" id="shareReceiptBtn" class="btn btn-whatsapp" onclick="shareReceiptToWhatsApp()">📤 اشتراک‌گذاری رسید (انتخاب مخاطب واتساپ)</button>
+      <button type="button" class="btn btn-whatsapp" onclick="shareReceiptToWhatsApp()">📤 اشتراک‌گذاری رسید در واتساپ</button>
     </div>
   </div>
 
   <script>
-    const SUPABASE_URL = "https://zpehwkvtbiceurfpafiw.supabase.co";
-    const SUPABASE_KEY = "sb_publishable__ZK44kWZES328UQJ7P_zzw_tZoc465D";
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let _supabase = null;
+    let runtimeConfigLoaded = false;
 
+    async function initSupabaseFromEnv() {
+      if (_supabase && runtimeConfigLoaded) return true;
+      try {
+        const resp = await fetch('/api/config', { cache: 'no-store' });
+        if (resp.ok) {
+          const cfg = await resp.json();
+          if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
+            _supabase = supabase.createClient(String(cfg.supabaseUrl).trim(), String(cfg.supabaseKey).trim());
+            runtimeConfigLoaded = true;
+            return true;
+          }
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    const OWNER_NAME_DISPLAY = "محمد شریف";
+    const OWNER_EMAIL = "mohammadsharifkarimi4@gmail.com";
     const OWNER_WHATSAPP = "9647721878997";
     const AFN_TO_IQD_RATE = 26.5;
+
+    // شبیه‌ساز موقت تلگرام برای تست پاسخ قبل از اتصال نهایی به API شرکت شارژ
     const TELEGRAM_BOT_TOKEN = "8900776593:AAH0BPYT34-GlJ_00fUN0b56mUpz4s2k6SA";
     const TELEGRAM_CHAT_ID = "-1003555048687";
     const TELEGRAM_SEND_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -995,35 +1649,89 @@
     let customerBalances = {};
     let currencyList = [];
     let activeCurrencyIndex = 0;
+    let balanceHidden = false;
+    let activeBottomTab = 'home';
+    let activeActionMode = 'transfer';
     let selectedTxItem = null;
     let currentStep = 'phone';
-    let isHandlingPopState = false;
-    let isInitialFetchDone = false;
     let pendingAlertQueue = [];
-    let topupMode = 'afn';
-    let pendingTopupPayload = null;
+    let pendingAction = null; // { kind: 'transfer' | 'topup', data: {...} }
 
     function loadCachedData() {
       try {
-        const cachedAcc = localStorage.getItem('karimi_cache_accounts');
-        const cachedTx = localStorage.getItem('karimi_cache_transactions');
-        if (cachedAcc) accountsList = JSON.parse(cachedAcc);
-        if (cachedTx) transactionsList = JSON.parse(cachedTx);
-      } catch(e) {}
+        const cAcc = localStorage.getItem('karimi_cache_accounts');
+        const cTx = localStorage.getItem('karimi_cache_transactions');
+        if (cAcc) accountsList = JSON.parse(cAcc);
+        if (cTx) transactionsList = JSON.parse(cTx);
+      } catch (e) {}
     }
-
     loadCachedData();
 
     function toEnglishDigits(str) {
       if (str === null || str === undefined) return '';
-      return String(str).replace(/[۰-۹٠-٩]/g, function (d) {
-        return d.charCodeAt(0) >= 1776 ? d.charCodeAt(0) - 1776 : d.charCodeAt(0) - 1632;
-      });
+      return String(str).replace(/[۰-۹٠-٩]/g, d =>
+        d.charCodeAt(0) >= 1776 ? d.charCodeAt(0) - 1776 : d.charCodeAt(0) - 1632
+      );
+    }
+
+    function getLast9Digits(str) {
+      if (!str) return '';
+      return toEnglishDigits(String(str)).replace(/\D/g, '').slice(-9);
+    }
+
+    function formatEnMoney(amount) {
+      const num = parseFloat(amount);
+      if (isNaN(num)) return '0';
+      return num.toLocaleString('en-US');
+    }
+
+    function formatBalanceDisplay(amount) {
+      if (balanceHidden) return '••••••';
+      return formatEnMoney(amount);
+    }
+
+    function getVal(obj, keys) {
+      if (!obj) return '';
+      for (let k of keys) {
+        if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return obj[k];
+        const lower = k.toLowerCase();
+        for (let prop in obj) {
+          if (prop.toLowerCase() === lower && obj[prop] !== undefined && obj[prop] !== null && obj[prop] !== '') {
+            return obj[prop];
+          }
+        }
+      }
+      return '';
+    }
+
+    // تشخیص نام طرف حساب (مالک -> محمد شریف، یا ادمین مربوطه)
+    function resolveCounterpartyName(accObj) {
+      const rawRef = String(
+        getVal(accObj, ['AssignedUserEmail', 'assigneduseremail', 'CreatedBy', 'createdby']) || ''
+      ).trim();
+
+      if (!rawRef) return OWNER_NAME_DISPLAY;
+      const lower = rawRef.toLowerCase();
+      if (
+        lower === OWNER_EMAIL.toLowerCase() ||
+        lower.includes('mohammadsharif') ||
+        lower.includes('karimi') ||
+        rawRef === 'مالک' ||
+        lower === 'owner'
+      ) {
+        return OWNER_NAME_DISPLAY;
+      }
+
+      if (rawRef.includes('@')) {
+        const localPart = rawRef.split('@')[0].replace(/[._-]+/g, ' ').trim();
+        return localPart || rawRef;
+      }
+      return rawRef;
     }
 
     function extractDateOnly(rawDate) {
       if (!rawDate) return 'بدون تاریخ';
-      let s = toEnglishDigits(String(rawDate)).trim();
+      const s = toEnglishDigits(String(rawDate)).trim();
       if (s.includes('T')) return s.split('T')[0];
       if (s.includes(' ')) return s.split(' ')[0];
       return s.slice(0, 10);
@@ -1031,42 +1739,42 @@
 
     function extractTimeOnly(rawDate) {
       if (!rawDate) return '';
-      let s = String(rawDate).trim();
+      const s = String(rawDate).trim();
       if (!s.includes('T') && !s.includes(' ')) return '';
-      let d = new Date(s);
+      const d = new Date(s);
       if (isNaN(d.getTime())) return '';
-      let hh = String(d.getHours()).padStart(2, '0');
-      let mm = String(d.getMinutes()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
       if (hh === '00' && mm === '00') return '';
       return `${hh}:${mm}`;
     }
 
     function getTxTimestamp(tx) {
-      let raw = getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']);
+      const raw = getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']);
       if (!raw) return 0;
-      let s = toEnglishDigits(String(raw)).trim();
+      const s = toEnglishDigits(String(raw)).trim();
       if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-        let t = new Date(s + 'T00:00:00').getTime();
+        const t = new Date(s + 'T00:00:00').getTime();
         return isNaN(t) ? 0 : t;
       }
-      let t = new Date(s).getTime();
+      const t = new Date(s).getTime();
       return isNaN(t) ? 0 : t;
     }
 
     function sortChronologically(list, ascending = false) {
       return list.slice().sort((a, b) => {
-        let ta = getTxTimestamp(a);
-        let tb = getTxTimestamp(b);
+        const ta = getTxTimestamp(a);
+        const tb = getTxTimestamp(b);
         if (ta !== tb) return ascending ? (ta - tb) : (tb - ta);
-        let ida = String(getVal(a, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-        let idb = String(getVal(b, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+        const ida = String(getVal(a, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+        const idb = String(getVal(b, ['TransID', 'transid', 'id', 'transaction_id']) || '');
         return ascending ? ida.localeCompare(idb) : idb.localeCompare(ida);
       });
     }
 
     function getPersianDayName(dateStr) {
       try {
-        let d = new Date(dateStr + 'T12:00:00');
+        const d = new Date(dateStr + 'T12:00:00');
         if (isNaN(d.getTime())) return '';
         const days = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
         return days[d.getDay()];
@@ -1078,47 +1786,23 @@
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
         if (type === 'click') {
-          osc.frequency.setValueAtTime(520, ctx.currentTime);
-          gain.gain.setValueAtTime(0.03, ctx.currentTime);
-          osc.start(); osc.stop(ctx.currentTime + 0.035);
-        } else if (type === 'success') {
           osc.frequency.setValueAtTime(540, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(860, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.03, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.035);
+        } else if (type === 'success') {
+          osc.frequency.setValueAtTime(560, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
           gain.gain.setValueAtTime(0.05, ctx.currentTime);
-          osc.start(); osc.stop(ctx.currentTime + 0.1);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.1);
         }
       } catch (e) {}
     }
 
-    function getVal(obj, keys) {
-      if (!obj) return '';
-      for (let k of keys) {
-        if (obj[k] !== undefined && obj[k] !== null && obj[k] !== "") return obj[k];
-        let lower = k.toLowerCase();
-        for (let prop in obj) {
-          if (prop.toLowerCase() === lower && obj[prop] !== undefined && obj[prop] !== null && obj[prop] !== "") {
-            return obj[prop];
-          }
-        }
-      }
-      return '';
-    }
-
-    function getLast9Digits(str) {
-      if (!str) return '';
-      let cleaned = toEnglishDigits(String(str)).replace(/\D/g, '');
-      return cleaned.slice(-9);
-    }
-
-    function formatEnMoney(amount) {
-      let num = parseFloat(amount);
-      if (isNaN(num)) return '0';
-      return num.toLocaleString('en-US');
-    }
-
-    // هش SHA-256 برای ذخیره و بررسی رمز ارسال شارژ در ستون PinHash
     async function hashPin(plain) {
       const clean = String(plain || '').trim();
       if (!window.crypto || !window.crypto.subtle) return clean;
@@ -1127,7 +1811,6 @@
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // خواندن مستقیم رمز هش‌شده از ستون PinHash جدول accounts
     function getStoredPinHashForAccount(accObj, accId) {
       if (accObj) {
         const colPin = getVal(accObj, ['PinHash', 'pinhash', 'pin_hash']);
@@ -1143,7 +1826,6 @@
       return '';
     }
 
-    // ذخیره مستقیم هش SHA-256 در ستون PinHash جدول accounts در Supabase
     async function persistPinHashInSupabase(accId, pinHash) {
       const cleanId = String(accId || '').trim();
       const { error } = await _supabase
@@ -1153,35 +1835,28 @@
       return !error;
     }
 
-    function toggleAboutInfo() {
-      playSound('click');
-      document.getElementById('aboutServicesBox').classList.toggle('hidden');
-    }
-
-    function showRealLoading(titleText = "در حال دریافت آخرین تراکنش‌ها...", subText = "لطفاً چند لحظه صبر کنید تا اطلاعات حساب به‌روز شود") {
-      const overlay = document.getElementById('realLoadingOverlay');
-      if (document.getElementById('loadingOverlayTitle')) document.getElementById('loadingOverlayTitle').innerText = titleText;
-      if (document.getElementById('loadingOverlaySub')) document.getElementById('loadingOverlaySub').innerText = subText;
-      if (overlay) overlay.classList.remove('hidden');
+    function showRealLoading(titleText = 'در حال دریافت اطلاعات...', subText = 'لطفاً صبر کنید') {
+      document.getElementById('loadingOverlayTitle').innerText = titleText;
+      document.getElementById('loadingOverlaySub').innerText = subText;
+      document.getElementById('realLoadingOverlay').classList.remove('hidden');
     }
 
     function hideRealLoading() {
-      const overlay = document.getElementById('realLoadingOverlay');
-      if (overlay) overlay.classList.add('hidden');
+      document.getElementById('realLoadingOverlay').classList.add('hidden');
     }
 
     function processAlertQueue() {
       if (pendingAlertQueue.length === 0) {
         document.getElementById('singleAlertPopup').classList.remove('visible');
-        setTimeout(() => document.getElementById('singleAlertPopup').classList.add('hidden'), 380);
+        setTimeout(() => document.getElementById('singleAlertPopup').classList.add('hidden'), 350);
         return;
       }
-      const nextItem = pendingAlertQueue.shift();
+      const item = pendingAlertQueue.shift();
       const popup = document.getElementById('singleAlertPopup');
-      document.getElementById('alertTitleText').innerText = nextItem.title;
-      document.getElementById('alertBodyContent').innerHTML = nextItem.body;
+      document.getElementById('alertTitleText').innerText = item.title;
+      document.getElementById('alertBodyContent').innerHTML = item.body;
       popup.classList.remove('hidden');
-      setTimeout(() => popup.classList.add('visible'), 50);
+      setTimeout(() => popup.classList.add('visible'), 40);
       playSound('success');
     }
 
@@ -1192,7 +1867,7 @@
       setTimeout(() => {
         popup.classList.add('hidden');
         processAlertQueue();
-      }, 380);
+      }, 350);
     }
 
     function showSingleInfoPopup(titleText, descText) {
@@ -1206,7 +1881,7 @@
       const el = document.getElementById('lastSyncTimeText');
       if (!el) return;
       const now = new Date();
-      el.innerText = `آخرین بروزرسانی: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      el.innerText = `بروزرسانی: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
     }
 
     function getUserVisibleTransactions(accId) {
@@ -1219,7 +1894,9 @@
     }
 
     function getUserTransactionIds(accId) {
-      return getUserVisibleTransactions(accId).map(tx => String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx)));
+      return getUserVisibleTransactions(accId).map(tx =>
+        String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
+      );
     }
 
     function checkAndAnnounceNewTransactions(accId, previousIds, isOnInitialOpen = false) {
@@ -1231,9 +1908,9 @@
         return !prevSet.has(tid);
       });
 
-      const seenStorageKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
+      const seenKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
       let storedSeenIds = [];
-      try { storedSeenIds = JSON.parse(localStorage.getItem(seenStorageKey) || '[]'); } catch (e) {}
+      try { storedSeenIds = JSON.parse(localStorage.getItem(seenKey) || '[]'); } catch (e) {}
       const storedSeenSet = new Set(storedSeenIds);
 
       const unseenSinceLastVisit = currentTxs.filter(tx => {
@@ -1241,77 +1918,197 @@
         return !storedSeenSet.has(tid);
       });
 
-      const targetNewList = newlyAdded.length > 0 ? newlyAdded : (isOnInitialOpen ? unseenSinceLastVisit : []);
+      const targetList = newlyAdded.length > 0 ? newlyAdded : (isOnInitialOpen ? unseenSinceLastVisit : []);
       const nowTs = Date.now();
       const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-      const recentValidList = targetNewList.filter(tx => {
-        let ts = getTxTimestamp(tx);
+      const recentValid = targetList.filter(tx => {
+        const ts = getTxTimestamp(tx);
         return !ts || (nowTs - ts) <= ONE_DAY_MS;
       });
 
-      if (recentValidList.length > 0) {
-        recentValidList.forEach(tx => {
-          let op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-          let amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
-          let curr = getVal(tx, ['Currency', 'currency']) || 'AFN';
-          let dir = String(getVal(tx, ['Direction', 'direction']));
-          let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
-          let labelDir = isCredit ? 'واریز (بستانکار +)' : 'برداشت (بدهکار -)';
-          let date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
-          let time = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at']));
+      if (recentValid.length > 0) {
+        recentValid.forEach(tx => {
+          const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+          const amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
+          const curr = getVal(tx, ['Currency', 'currency']) || 'IQD';
+          const dir = String(getVal(tx, ['Direction', 'direction']));
+          const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
+          const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
+          const time = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at']));
 
           pendingAlertQueue.push({
-            title: "🔔 تراکنش جدید در غیاب شما",
-            body: `نوع عملیات: <b>${op}</b><br>مبلغ: <span class="eng-num" style="color:#6ee7b7; font-weight:900;">${amt} ${curr}</span><br>جهت: ${labelDir}<br>تاریخ ثبت: <span class="eng-num">${date} ${time}</span>`
+            title: '🔔 تراکنش جدید در حساب',
+            body: `عملیات: <b>${op}</b><br>مبلغ: <span class="eng-num" style="color:#a7f3d0; font-weight:900;">${amt} ${curr}</span><br>جهت: ${isCredit ? 'واریز (بستانکار +)' : 'برداشت (بدهکار -)'}<br>زمان: <span class="eng-num">${date} ${time}</span>`
           });
         });
         processAlertQueue();
       } else if (!isOnInitialOpen) {
-        showSingleInfoPopup("✅ حساب شما به‌روز است", "تمامی تراکنش‌ها بررسی شد؛ مورد جدیدی در ۲۴ ساعت گذشته وجود ندارد.");
+        showSingleInfoPopup('✅ حساب به‌روز است', 'تراکنش جدیدی در ۲۴ ساعت گذشته ثبت نشده است.');
       }
 
-      const allCurrentIds = currentTxs.map(tx => String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx)));
-      try { localStorage.setItem(seenStorageKey, JSON.stringify(allCurrentIds)); } catch (e) {}
+      const allCurrentIds = currentTxs.map(tx =>
+        String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
+      );
+      try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
     }
 
-    function handleModalBackClick(modalId) {
-      playSound('click');
-      const modalEl = document.getElementById(modalId);
-      if (modalEl) modalEl.classList.remove('open');
-    }
-
-    function navigateToStep(step, pushHist = true) {
+    function navigateToStep(step) {
       currentStep = step;
       document.getElementById('phoneSection').classList.add('hidden');
       document.getElementById('accountSection').classList.add('hidden');
       document.getElementById('registerSection').classList.add('hidden');
       document.getElementById('dashboardSection').classList.add('hidden');
+      document.getElementById('bottomNavBar').classList.add('hidden');
+      document.getElementById('headerRefreshBtn').classList.add('hidden');
 
-      if (step === 'phone') document.getElementById('phoneSection').classList.remove('hidden');
-      else if (step === 'account') document.getElementById('accountSection').classList.remove('hidden');
-      else if (step === 'register') document.getElementById('registerSection').classList.remove('hidden');
-      else if (step === 'dashboard') document.getElementById('dashboardSection').classList.remove('hidden');
-
-      if (pushHist && !isHandlingPopState) {
-        window.history.pushState({ appState: step }, '');
+      if (step === 'phone') {
+        document.getElementById('phoneSection').classList.remove('hidden');
+        document.getElementById('headerSubtitleText').innerText = 'ورود به سامانه مشتریان';
+      } else if (step === 'account') {
+        document.getElementById('accountSection').classList.remove('hidden');
+        document.getElementById('headerSubtitleText').innerText = 'تایید کد حساب';
+      } else if (step === 'register') {
+        document.getElementById('registerSection').classList.remove('hidden');
+        document.getElementById('headerSubtitleText').innerText = 'افتتاح حساب جدید';
+      } else if (step === 'dashboard') {
+        document.getElementById('dashboardSection').classList.remove('hidden');
+        document.getElementById('bottomNavBar').classList.remove('hidden');
+        document.getElementById('headerRefreshBtn').classList.remove('hidden');
       }
     }
 
-    function handleFloatingBack() {
+    function switchBottomTab(tab) {
       playSound('click');
-      const detailModal = document.getElementById('txDetailModal');
-      if (detailModal.classList.contains('open')) {
-        detailModal.classList.remove('open');
-        return;
+      activeBottomTab = tab;
+
+      document.getElementById('tabHomeView').classList.add('hidden');
+      document.getElementById('tabTxView').classList.add('hidden');
+      document.getElementById('tabServicesView').classList.add('hidden');
+      document.getElementById('tabProfileView').classList.add('hidden');
+
+      document.getElementById('navHomeBtn').classList.remove('active');
+      document.getElementById('navTxBtn').classList.remove('active');
+      document.getElementById('navServicesBtn').classList.remove('active');
+      document.getElementById('navProfileBtn').classList.remove('active');
+
+      if (tab === 'home') {
+        document.getElementById('tabHomeView').classList.remove('hidden');
+        document.getElementById('navHomeBtn').classList.add('active');
+        document.getElementById('headerSubtitleText').innerText = 'کیف پول و حساب مشتری';
+        mountActionPanelsInto('home');
+      } else if (tab === 'tx') {
+        document.getElementById('tabTxView').classList.remove('hidden');
+        document.getElementById('navTxBtn').classList.add('active');
+        document.getElementById('headerSubtitleText').innerText = 'سابقه و دفتر تراکنش‌ها';
+        renderTransactionsList();
+      } else if (tab === 'services') {
+        document.getElementById('tabServicesView').classList.remove('hidden');
+        document.getElementById('navServicesBtn').classList.add('active');
+        document.getElementById('headerSubtitleText').innerText = 'انتقال موجودی و ارسال شارژ';
+        mountActionPanelsInto('services');
+      } else if (tab === 'profile') {
+        document.getElementById('tabProfileView').classList.remove('hidden');
+        document.getElementById('navProfileBtn').classList.add('active');
+        document.getElementById('headerSubtitleText').innerText = 'حساب کاربری و کدها';
+        syncProfileTabData();
       }
-      if (currentStep === 'account' || currentStep === 'register') {
-        navigateToStep('phone');
-      } else if (currentStep === 'dashboard') {
-        if (confirm("آیا می‌خواهید از حساب خود خارج شوید؟")) {
-          logout();
+    }
+
+    // جابه‌جایی تمیز پنل‌های انتقال و شارژ بین صفحه اصلی و تب خدمات بدون از دست رفتن مقادیر فرم
+    function mountActionPanelsInto(location) {
+      const pTransfer = document.getElementById('panelTransfer');
+      const pAfn = document.getElementById('panelTopupAfn');
+      const pIq = document.getElementById('panelTopupIq');
+      const txCard = document.querySelector('#tabHomeView .tx-feed-card');
+
+      if (location === 'home') {
+        if (txCard && pTransfer.nextElementSibling !== pAfn) {
+          txCard.parentNode.insertBefore(pTransfer, txCard);
+          txCard.parentNode.insertBefore(pAfn, txCard);
+          txCard.parentNode.insertBefore(pIq, txCard);
         }
+        selectActionMode(activeActionMode, false);
+      } else {
+        const mount = document.getElementById('serviceSubTabMount');
+        mount.appendChild(pTransfer);
+        mount.appendChild(pAfn);
+        mount.appendChild(pIq);
+        switchServiceSubTab(activeActionMode);
       }
+    }
+
+    function selectActionMode(mode, switchTabIfNeeded = false) {
+      playSound('click');
+      activeActionMode = mode;
+
+      document.getElementById('qTileTransfer').classList.toggle('active-mode', mode === 'transfer');
+      document.getElementById('qTileAfn').classList.toggle('active-mode', mode === 'afn');
+      document.getElementById('qTileIq').classList.toggle('active-mode', mode === 'iq');
+
+      document.getElementById('panelTransfer').classList.toggle('hidden', mode !== 'transfer');
+      document.getElementById('panelTopupAfn').classList.toggle('hidden', mode !== 'afn');
+      document.getElementById('panelTopupIq').classList.toggle('hidden', mode !== 'iq');
+
+      if (mode === 'transfer') {
+        populateTransferCurrencies();
+        previewTransferRecipient();
+        recalcTransferBox();
+      } else {
+        recalcTopupCost();
+      }
+
+      if (switchTabIfNeeded && activeBottomTab !== 'home') {
+        switchBottomTab('home');
+      }
+    }
+
+    function switchServiceSubTab(mode) {
+      activeActionMode = mode;
+      document.getElementById('srvSubTransfer').classList.toggle('active', mode === 'transfer');
+      document.getElementById('srvSubAfn').classList.toggle('active', mode === 'afn');
+      document.getElementById('srvSubIq').classList.toggle('active', mode === 'iq');
+
+      document.getElementById('panelTransfer').classList.toggle('hidden', mode !== 'transfer');
+      document.getElementById('panelTopupAfn').classList.toggle('hidden', mode !== 'afn');
+      document.getElementById('panelTopupIq').classList.toggle('hidden', mode !== 'iq');
+
+      if (mode === 'transfer') {
+        populateTransferCurrencies();
+        previewTransferRecipient();
+        recalcTransferBox();
+      } else {
+        recalcTopupCost();
+      }
+    }
+
+    function toggleAboutInfo() {
+      playSound('click');
+      document.getElementById('aboutServicesBox').classList.toggle('hidden');
+    }
+
+    function toggleBalanceVisibility() {
+      playSound('click');
+      balanceHidden = !balanceHidden;
+      document.getElementById('eyeToggleIcon').innerText = balanceHidden ? '🙈' : '👁️';
+      updateBalanceDisplay();
+    }
+
+    function copyTextValue(val, label) {
+      if (!val || val === '---') return;
+      navigator.clipboard?.writeText(String(val));
+      playSound('success');
+      showSingleInfoPopup('📋 کپی شد', `${label}: <b class="eng-num">${val}</b>`);
+    }
+
+    function copyAccountId() {
+      const idVal = document.getElementById('dashAccountId').innerText.trim();
+      copyTextValue(idVal, 'کد حساب (Account ID)');
+    }
+
+    function copyPhoneNumber() {
+      const phVal = document.getElementById('dashPhone').innerText.trim();
+      copyTextValue(phVal, 'شماره تماس');
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -1322,23 +2119,27 @@
         if (accountsList.length > 0) {
           autoLogin(savedPhone, savedAccId, false);
         }
-        showRealLoading("در حال همگام‌سازی و دریافت تراکنش‌های جدید...", "اتصال مستقیم به سرور امانت‌داری کریمی");
+        showRealLoading('در حال همگام‌سازی حساب...', 'دریافت آخرین اطلاعات از سرور');
         const prevIds = getUserTransactionIds(savedAccId);
+        await initSupabaseFromEnv();
         await fetchDataFromSupabaseFresh();
         autoLogin(savedPhone, savedAccId, false);
         hideRealLoading();
         updateLastSyncLabel();
         checkAndAnnounceNewTransactions(savedAccId, prevIds, true);
       } else {
-        navigateToStep('phone', false);
+        navigateToStep('phone');
         if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
           document.getElementById('biometricBtnWrapper').classList.remove('hidden');
         }
+        await initSupabaseFromEnv();
         fetchDataFromSupabaseFresh();
       }
     });
 
     async function fetchDataFromSupabaseFresh() {
+      const ready = await initSupabaseFromEnv();
+      if (!ready || !_supabase) return false;
       try {
         const [accRes, txRes] = await Promise.all([
           _supabase.from('accounts').select('*'),
@@ -1352,33 +2153,30 @@
           transactionsList = txRes.data;
           localStorage.setItem('karimi_cache_transactions', JSON.stringify(txRes.data));
         }
-        isInitialFetchDone = true;
         return true;
-      } catch (err) {
+      } catch (e) {
         return false;
       }
     }
 
     async function refreshAccountData() {
       playSound('click');
-      const btn = document.getElementById('refreshAccountBtn');
-      if (btn) { btn.disabled = true; btn.innerText = '⏳ در حال اتصال...'; }
-
-      const savedAccId = localStorage.getItem('karimi_accId') || (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
+      const savedAccId = localStorage.getItem('karimi_accId') ||
+        (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
       const prevIds = getUserTransactionIds(savedAccId);
 
-      showRealLoading("در حال بروزرسانی واقعی حساب...", "دریافت آخرین تراکنش‌ها و محاسبه مجدد مانده از سرور");
+      showRealLoading('در حال بروزرسانی حساب...', 'دریافت آخرین تراکنش‌ها و مانده');
       await fetchDataFromSupabaseFresh();
 
       if (savedAccId) {
-        let found = accountsList.find(u => String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase());
+        const found = accountsList.find(u =>
+          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase()
+        );
         if (found) currentFoundUser = found;
         processDashboard(savedAccId, false);
       }
-
       hideRealLoading();
       updateLastSyncLabel();
-      if (btn) { btn.disabled = false; btn.innerText = '🔄 بروزرسانی حساب'; }
       checkAndAnnounceNewTransactions(savedAccId, prevIds, false);
     }
 
@@ -1389,31 +2187,30 @@
 
       const userLast9 = getLast9Digits(rawInput);
       if (userLast9.length < 9) {
-        alert("لطفاً شماره تلفن خود را کامل وارد کنید.");
+        alert('لطفاً شماره تماس را کامل وارد کنید.');
         return;
       }
 
-      showRealLoading("در حال جستجوی شماره تماس...", "بررسی اطلاعات حساب در سامانه");
+      showRealLoading('در حال جستجوی شماره...', 'بررسی حساب در سامانه');
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
-      const found = accountsList.find(u => {
-        let phoneVal = getVal(u, ['Phone', 'phone', 'تلفن', 'mobile']);
-        return getLast9Digits(phoneVal) === userLast9;
-      });
+      const found = accountsList.find(u =>
+        getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
+      );
 
       if (found) {
         currentFoundUser = found;
-        let nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری گرامی';
-
+        const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری گرامی';
+        const cpName = resolveCounterpartyName(currentFoundUser);
         document.getElementById('greetingMsg').innerText = `خوش آمدید، ${nameVal}`;
+        document.getElementById('candidateManagerHint').innerText = `حساب نزد: ${cpName}`;
         document.getElementById('accountIdInput').value = '';
-
         navigateToStep('account');
-        setTimeout(() => document.getElementById('accountIdInput').focus(), 150);
+        setTimeout(() => document.getElementById('accountIdInput').focus(), 120);
       } else {
-        const encodedText = encodeURIComponent(`سلام کریمی عزیز، شماره تماس من ${rawInput} است. برای بررسی یا افتتاح حساب پیام می‌دهم.`);
-        document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/9647721878997?text=${encodedText}`;
+        const enc = encodeURIComponent(`سلام، شماره تماس من ${rawInput} است. برای بررسی یا افتتاح حساب پیام می‌دهم.`);
+        document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${enc}`;
         document.getElementById('errorModal').classList.remove('hidden');
       }
     }
@@ -1426,18 +2223,18 @@
     async function verifyAccount() {
       playSound('click');
       const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim());
-      let sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
 
       if (sheetAccId.toLowerCase() !== accIdInput.toLowerCase()) {
-        alert("کد حساب (Account ID) واردشده صحیح نیست.");
+        alert('کد حساب (Account ID) صحیح نیست.');
         return;
       }
 
-      showRealLoading("در حال بارگذاری کامل حساب و تراکنش‌ها...", "دریافت آخرین وضعیت مالی شما");
+      showRealLoading('در حال بارگذاری حساب...', 'دریافت مانده و تراکنش‌ها');
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
-      let phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+      const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
       localStorage.setItem('karimi_phone', phoneVal);
       localStorage.setItem('karimi_accId', sheetAccId);
       playSound('success');
@@ -1448,19 +2245,12 @@
 
     function openSelfRegister() {
       playSound('click');
-      const randomId = "ACC-" + Math.floor(10000 + Math.random() * 90000);
-      document.getElementById('regAccId').value = randomId;
+      document.getElementById('regAccId').value = 'ACC-' + Math.floor(10000 + Math.random() * 90000);
       document.getElementById('regFullName').value = '';
       document.getElementById('regPhone').value = '';
       document.getElementById('regPin').value = '';
       document.getElementById('regPinConfirm').value = '';
       navigateToStep('register');
-    }
-
-    function copyRegAccId() {
-      const el = document.getElementById('regAccId');
-      navigator.clipboard?.writeText(el.value);
-      alert("✅ شناسه حساب کپی شد: " + el.value);
     }
 
     async function submitRealAccountCreation() {
@@ -1471,62 +2261,606 @@
       const pinConfirm = toEnglishDigits(document.getElementById('regPinConfirm').value.trim());
 
       if (!name || !phone || !pin) {
-        alert("لطفاً نام، شماره همراه و رمز ارسال شارژ را کامل وارد کنید.");
+        alert('لطفاً نام، شماره همراه و رمز ثابت را کامل وارد کنید.');
         return;
       }
       if (pin.length < 4) {
-        alert("رمز باید حداقل ۴ کاراکتر باشد.");
+        alert('رمز ثابت باید حداقل ۴ کاراکتر باشد.');
         return;
       }
       if (pin !== pinConfirm) {
-        alert("رمز و تکرار آن یکسان نیستند.");
+        alert('رمز و تکرار آن یکسان نیستند.');
         return;
       }
 
-      showRealLoading("در حال ثبت حساب جدید در سامانه...", "ایجاد حساب در پایگاه داده امانت‌داری کریمی");
+      showRealLoading('در حال ثبت حساب جدید...', 'ذخیره در پایگاه داده');
       await fetchDataFromSupabaseFresh();
 
       const last9 = getLast9Digits(phone);
       if (last9.length >= 9 && accountsList.some(a => getLast9Digits(getVal(a, ['Phone', 'phone'])) === last9)) {
         hideRealLoading();
-        alert("این شماره همراه قبلاً در سیستم ثبت شده است. می‌توانید از صفحه ورود وارد شوید.");
+        alert('این شماره تماس قبلاً ثبت شده است.');
         return;
       }
 
       const hashed = await hashPin(pin);
-      const newAccountObj = {
+      const { error } = await _supabase.from('accounts').insert([{
         AccountID: accId,
         Name: name,
         Phone: phone,
-        PinHash: hashed
-      };
-
-      const { error } = await _supabase.from('accounts').insert([newAccountObj]);
-      if (error) {
-        hideRealLoading();
-        alert("❌ خطا در ثبت حساب جدید: " + error.message);
-        return;
-      }
+        PinHash: hashed,
+        AssignedUserEmail: OWNER_EMAIL,
+        CreatedBy: OWNER_EMAIL
+      }]);
 
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
+      if (error) {
+        alert('❌ خطا در ثبت حساب: ' + error.message);
+        return;
+      }
+
       playSound('success');
-      alert(`✅ حساب شما با موفقیت افتتاح شد!
-شناسه حساب: ${accId}
-اکنون با شماره و کد حساب خود وارد شوید.`);
+      alert(`✅ حساب شما افتتاح شد!\nکد حساب: ${accId}`);
       document.getElementById('phoneInput').value = phone;
       navigateToStep('phone');
     }
 
+    function autoLogin(phone, accId, announce = false) {
+      const userLast9 = getLast9Digits(phone);
+      const found = accountsList.find(u => getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9);
+      if (found) {
+        const sheetAccId = String(getVal(found, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+        if (sheetAccId.toLowerCase() === accId.trim().toLowerCase()) {
+          currentFoundUser = found;
+          processDashboard(sheetAccId, false);
+          if (announce) checkAndAnnounceNewTransactions(sheetAccId, [], true);
+          return;
+        }
+      }
+      localStorage.removeItem('karimi_phone');
+      localStorage.removeItem('karimi_accId');
+      navigateToStep('phone');
+    }
+
+    function logout() {
+      playSound('click');
+      localStorage.removeItem('karimi_phone');
+      localStorage.removeItem('karimi_accId');
+      currentFoundUser = null;
+      navigateToStep('phone');
+      if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
+        document.getElementById('biometricBtnWrapper').classList.remove('hidden');
+      }
+    }
+
+    function processDashboard(sheetAccId, isFreshLogin = false) {
+      navigateToStep('dashboard');
+
+      const rawName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const phoneVal = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
+      const cpName = resolveCounterpartyName(currentFoundUser);
+      const firstChar = rawName.charAt(0) || 'م';
+
+      document.getElementById('userAvatarLetter').innerText = firstChar;
+      document.getElementById('profileAvatarLetter').innerText = firstChar;
+      document.getElementById('dashName').innerText = rawName;
+      document.getElementById('profileFullName').innerText = rawName;
+      document.getElementById('dashCounterpartyName').innerText = cpName;
+      document.getElementById('profileCounterpartyName').innerText = cpName;
+      document.getElementById('dashAccountId').innerText = sheetAccId;
+      document.getElementById('profileAccIdVal').innerText = sheetAccId;
+      document.getElementById('profilePhoneVal').innerText = phoneVal;
+
+      const rawUserTxs = getUserVisibleTransactions(sheetAccId);
+      customerTransactions = sortChronologically(rawUserTxs, false);
+
+      customerBalances = {};
+      customerTransactions.forEach(tx => {
+        const curr = String(getVal(tx, ['Currency', 'currency']) || 'IQD').toUpperCase();
+        const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
+        const dir = String(getVal(tx, ['Direction', 'direction'])).trim();
+        if (!customerBalances[curr]) customerBalances[curr] = { credit: 0, debit: 0, net: 0 };
+        if (dir.includes('بستانکار') || dir.includes('دریافت')) customerBalances[curr].credit += amt;
+        else if (dir.includes('بدهکار') || dir.includes('پرداخت')) customerBalances[curr].debit += amt;
+      });
+
+      for (let c in customerBalances) {
+        customerBalances[c].net = customerBalances[c].credit - customerBalances[c].debit;
+      }
+
+      currencyList = Object.keys(customerBalances);
+      if (currencyList.length === 0) {
+        currencyList = ['IQD'];
+        customerBalances['IQD'] = { credit: 0, debit: 0, net: 0 };
+      }
+
+      if (activeCurrencyIndex >= currencyList.length) activeCurrencyIndex = 0;
+
+      updatePinMenuLabel(sheetAccId);
+      updateBioStatusLabel();
+      renderCurrencyTabs();
+      renderTransactionsList();
+      populateTransferCurrencies();
+      previewTransferRecipient();
+      recalcTransferBox();
+      recalcTopupCost();
+      switchBottomTab(activeBottomTab);
+
+      if (isFreshLogin && localStorage.getItem('karimi_biometric_enabled') !== 'true') {
+        setTimeout(() => {
+          document.getElementById('biometricPromptModal').classList.remove('hidden');
+        }, 400);
+      }
+    }
+
+    function renderCurrencyTabs() {
+      let html = '';
+      currencyList.forEach((curr, idx) => {
+        const activeCls = idx === activeCurrencyIndex ? 'active' : '';
+        html += `<button type="button" class="curr-pill-btn ${activeCls}" onclick="switchCurrency(${idx})">${curr}</button>`;
+      });
+      document.getElementById('currencyTabs').innerHTML = html;
+      updateBalanceDisplay();
+    }
+
+    function switchCurrency(idx) {
+      playSound('click');
+      activeCurrencyIndex = idx;
+      renderCurrencyTabs();
+    }
+
+    function updateBalanceDisplay() {
+      const currName = currencyList[activeCurrencyIndex] || 'IQD';
+      const b = customerBalances[currName] || { credit: 0, debit: 0, net: 0 };
+
+      document.getElementById('odometerCurrencyLabel').innerText = currName;
+      document.getElementById('walletCurrBadge').innerText = currName;
+      document.getElementById('odometerValue').innerText = formatBalanceDisplay(b.net);
+      document.getElementById('odometerCredit').innerText = formatBalanceDisplay(b.credit);
+      document.getElementById('odometerDebit').innerText = formatBalanceDisplay(b.debit);
+
+      const statusBox = document.getElementById('accountPsychologyMsg');
+      if (b.net > 0) {
+        statusBox.className = 'calc-summary-box';
+        statusBox.style.borderStyle = 'solid';
+        statusBox.innerHTML = `✅ موجودی بستانکار شما: <b class="eng-num">${formatBalanceDisplay(b.net)} ${currName}</b>`;
+      } else if (b.net < 0) {
+        statusBox.className = 'calc-summary-box error';
+        statusBox.style.borderStyle = 'solid';
+        statusBox.innerHTML = `⚠️ مانده بدهکار شما: <b class="eng-num">${formatBalanceDisplay(Math.abs(b.net))} ${currName}</b>`;
+      } else {
+        statusBox.className = 'calc-summary-box';
+        statusBox.style.borderStyle = 'solid';
+        statusBox.innerHTML = `⚖️ مانده این ارز در حساب شما صفر است.`;
+      }
+    }
+
+    // ================= انتقال موجودی حساب به حساب دیگر =================
+    function populateTransferCurrencies() {
+      const sel = document.getElementById('transferCurrencySelect');
+      if (!sel) return;
+      const prevVal = sel.value;
+      const allCurrs = Array.from(new Set(['IQD', 'AFN', 'USD', ...currencyList]));
+      sel.innerHTML = allCurrs.map(c => `<option value="${c}">${c}</option>`).join('');
+      if (prevVal && allCurrs.includes(prevVal)) sel.value = prevVal;
+      else if (allCurrs.includes('IQD')) sel.value = 'IQD';
+    }
+
+    function findRecipientAccount(queryRaw) {
+      if (!currentFoundUser) return null;
+      const q = toEnglishDigits(String(queryRaw || '')).trim();
+      if (!q) return null;
+
+      const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase();
+      const qLast9 = getLast9Digits(q);
+
+      return accountsList.find(acc => {
+        const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase();
+        if (!accId || accId === myAccId) return false;
+        if (accId === q.toLowerCase()) return true;
+        const phone = getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']);
+        return qLast9.length >= 9 && getLast9Digits(phone) === qLast9;
+      }) || null;
+    }
+
+    function previewTransferRecipient() {
+      const q = document.getElementById('transferTargetInput').value.trim();
+      const box = document.getElementById('transferRecipientPreview');
+      if (!q) {
+        box.className = 'recipient-preview-box invalid';
+        box.innerHTML = '<span>مقصد:</span><span>کد حساب یا شماره مقصد را وارد کنید</span>';
+        return null;
+      }
+
+      const target = findRecipientAccount(q);
+      if (!target) {
+        box.className = 'recipient-preview-box invalid';
+        box.innerHTML = '<span>مقصد:</span><span>حساب مقصد یافت نشد (یا کد حساب خودتان است)</span>';
+        return null;
+      }
+
+      const tName = getVal(target, ['Name', 'name', 'fullname']) || 'حساب مقصد';
+      const tId = getVal(target, ['AccountID', 'accountid', 'ID', 'account_id']);
+      box.className = 'recipient-preview-box';
+      box.innerHTML = `<span>✅ مقصد: <b>${tName}</b></span><span class="eng-num" style="font-size:0.74rem;">${tId}</span>`;
+      return target;
+    }
+
+    function recalcTransferBox() {
+      const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
+      const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value)) || 0;
+      const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
+      const box = document.getElementById('transferCalcBox');
+      const btn = document.getElementById('btnExecuteTransfer');
+
+      if (avail <= 0) {
+        box.className = 'calc-summary-box error';
+        box.innerHTML = `❌ موجودی قابل انتقال برای ارز <b>${curr}</b> کافی نیست (موجودی: <span class="eng-num">${formatEnMoney(avail)}</span>).`;
+        btn.disabled = true;
+        return;
+      }
+
+      if (amt > avail) {
+        box.className = 'calc-summary-box error';
+        box.innerHTML = `⚠️ مبلغ درخواستی (<span class="eng-num">${formatEnMoney(amt)} ${curr}</span>) از موجودی شما (<span class="eng-num">${formatEnMoney(avail)} ${curr}</span>) بیشتر است.`;
+        btn.disabled = true;
+        return;
+      }
+
+      box.className = 'calc-summary-box';
+      box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
+      btn.disabled = false;
+    }
+
+    async function prepareTransferWithPin() {
+      if (!currentFoundUser) return;
+      const targetQuery = document.getElementById('transferTargetInput').value.trim();
+      const targetAcc = findRecipientAccount(targetQuery);
+      const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
+      const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
+      const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
+      const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+
+      if (!targetAcc) {
+        alert('لطفاً کد حساب یا شماره تماس معتبر مقصد را وارد کنید.');
+        return;
+      }
+      if (isNaN(amt) || amt <= 0) {
+        alert('مبلغ انتقال را به درستی وارد کنید.');
+        return;
+      }
+      if (avail <= 0 || amt > avail) {
+        alert('موجودی حساب برای این انتقال کافی نیست.');
+        return;
+      }
+
+      const hasPin = await ensureAccountHasPin(myAccId);
+      if (!hasPin) return;
+
+      const tId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const tName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری مقصد').trim();
+      const tAssigned = getVal(targetAcc, ['AssignedUserEmail', 'assigneduseremail']) || getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+
+      pendingAction = {
+        kind: 'transfer',
+        data: { fromId: myAccId, fromName: myName, toId: tId, toName: tName, curr, amt, assignedEmail: tAssigned }
+      };
+
+      document.getElementById('pinModalHeading').innerText = 'تایید رمز ثابت برای انتقال';
+      document.getElementById('txPinSummaryText').innerHTML =
+        `انتقال <b class="eng-num">${formatEnMoney(amt)} ${curr}</b> از حساب شما به <b>${tName}</b> (<span class="eng-num">${tId}</span>):`;
+      document.getElementById('txVerifyPinInput').value = '';
+      document.getElementById('txPinConfirmModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 120);
+    }
+
+    // ================= ارسال شارژ افغانستان و عراق =================
+    function getNetIqdBalance() {
+      return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
+    }
+
+    function recalcTopupCost() {
+      const netIqd = getNetIqdBalance();
+
+      const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
+      const reqIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+      const afnBox = document.getElementById('afnCalcBox');
+      const afnErr = document.getElementById('topupAfnEligibilityMsg');
+      const afnBtn = document.getElementById('btnExecuteTopupAfn');
+      document.getElementById('afnCalculatedIqd').innerText = formatEnMoney(reqIqd);
+
+      if (netIqd <= 0) {
+        afnErr.innerText = 'برای ارسال شارژ، موجودی دینار (IQD) مثبت لازم است.';
+        afnBtn.disabled = true;
+      } else if (reqIqd > netIqd) {
+        afnBox.classList.add('error');
+        afnErr.innerText = `مبلغ مورد نیاز (${formatEnMoney(reqIqd)} IQD) بیشتر از موجودی دینار (${formatEnMoney(netIqd)} IQD) است.`;
+        afnBtn.disabled = true;
+      } else {
+        afnBox.classList.remove('error');
+        afnErr.innerText = '';
+        afnBtn.disabled = false;
+      }
+
+      const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+      const iqBox = document.getElementById('iqCalcBox');
+      const iqErr = document.getElementById('topupIqEligibilityMsg');
+      const iqBtn = document.getElementById('btnExecuteTopupIq');
+      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
+
+      if (netIqd <= 0) {
+        iqErr.innerText = 'برای ارسال شارژ، موجودی دینار (IQD) مثبت لازم است.';
+        iqBtn.disabled = true;
+      } else if (cardAmt > netIqd) {
+        iqBox.classList.add('error');
+        iqErr.innerText = `مبلغ شارژ (${formatEnMoney(cardAmt)} IQD) بیشتر از موجودی دینار (${formatEnMoney(netIqd)} IQD) است.`;
+        iqBtn.disabled = true;
+      } else {
+        iqBox.classList.remove('error');
+        iqErr.innerText = '';
+        iqBtn.disabled = false;
+      }
+    }
+
+    async function executeCustomerTopup(mode) {
+      if (!currentFoundUser) return;
+      const netIqd = getNetIqdBalance();
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+
+      let payloadData = null;
+      if (mode === 'afn') {
+        const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
+        if (!/^07\d{8}$/.test(targetPhone)) {
+          alert('شماره مقصد افغانستان باید ۱۰ رقم و با 07 شروع شود.');
+          return;
+        }
+        if (isNaN(afnAmt) || afnAmt <= 0) {
+          alert('مبلغ افغانی را به درستی وارد کنید.');
+          return;
+        }
+        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+        if (requiredIqd > netIqd || netIqd <= 0) {
+          alert('موجودی دینار کافی نیست.');
+          return;
+        }
+        payloadData = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
+        document.getElementById('txPinSummaryText').innerHTML =
+          `ارسال شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span><br>` +
+          `کسر از موجودی دینار: <b class="eng-num" style="color:var(--danger);">${formatEnMoney(requiredIqd)} IQD</b>`;
+      } else {
+        const network = document.getElementById('iqNetworkSelect').value;
+        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+        if (cardAmt <= 0 || cardAmt > netIqd) {
+          alert('موجودی دینار کافی نیست.');
+          return;
+        }
+        payloadData = { mode: 'iq', accId, accName, network, cardAmt };
+        document.getElementById('txPinSummaryText').innerHTML =
+          `شارژ <b>${network}</b><br>` +
+          `کسر از موجودی دینار: <b class="eng-num" style="color:var(--danger);">${formatEnMoney(cardAmt)} IQD</b>`;
+      }
+
+      const hasPin = await ensureAccountHasPin(accId);
+      if (!hasPin) return;
+
+      pendingAction = { kind: 'topup', data: payloadData };
+      document.getElementById('pinModalHeading').innerText = 'تایید رمز ثابت برای ارسال شارژ';
+      document.getElementById('txVerifyPinInput').value = '';
+      document.getElementById('txPinConfirmModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 120);
+    }
+
+    async function ensureAccountHasPin(accId) {
+      showRealLoading('در حال بررسی رمز حساب...', 'کنترل امنیت تراکنش');
+      await fetchDataFromSupabaseFresh();
+      const refreshed = accountsList.find(u =>
+        String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === String(accId).toLowerCase()
+      );
+      if (refreshed) currentFoundUser = refreshed;
+      hideRealLoading();
+
+      const stored = getStoredPinHashForAccount(currentFoundUser, accId);
+      if (!stored) {
+        openLegacyPinActivationModal(accId);
+        return false;
+      }
+      return true;
+    }
+
+    function closeTxPinConfirmModal() {
+      document.getElementById('txPinConfirmModal').classList.add('hidden');
+      pendingAction = null;
+    }
+
+    async function confirmPendingOperation() {
+      if (!pendingAction || !currentFoundUser) return;
+      const pinRaw = toEnglishDigits(document.getElementById('txVerifyPinInput').value.trim());
+      if (!pinRaw) {
+        alert('لطفاً رمز ثابت خود را وارد کنید.');
+        return;
+      }
+
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const storedHash = getStoredPinHashForAccount(currentFoundUser, accId);
+      const hashedInput = await hashPin(pinRaw);
+
+      if (hashedInput !== storedHash && pinRaw !== storedHash) {
+        alert('❌ رمز ثابت واردشده اشتباه است.');
+        return;
+      }
+
+      const actionObj = pendingAction;
+      document.getElementById('txPinConfirmModal').classList.add('hidden');
+      pendingAction = null;
+
+      if (actionObj.kind === 'transfer') {
+        await runAccountTransfer(actionObj.data);
+      } else if (actionObj.kind === 'topup') {
+        await runTopupAfterPin(actionObj.data);
+      }
+    }
+
+    async function runAccountTransfer(d) {
+      showRealLoading('در حال انتقال موجودی...', 'ثبت تراکنش بدهکار و بستانکار');
+      const nowIso = new Date().toISOString();
+      const baseCode = 'TR-' + Math.floor(100000 + Math.random() * 900000);
+      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || d.assignedEmail || OWNER_EMAIL;
+
+      const debitRow = {
+        TransID: `${baseCode}-D`,
+        AccountID: d.fromId,
+        Date: nowIso,
+        Amount: Number(d.amt),
+        Currency: d.curr,
+        Direction: 'بدهکار',
+        OperationType: 'انتقال موجودی',
+        Description: `انتقال به ${d.toName} (${d.toId})`,
+        AssignedUserEmail: assigned,
+        Status: 'ثبت شده'
+      };
+
+      const creditRow = {
+        TransID: `${baseCode}-C`,
+        AccountID: d.toId,
+        Date: nowIso,
+        Amount: Number(d.amt),
+        Currency: d.curr,
+        Direction: 'بستانکار',
+        OperationType: 'دریافت انتقال',
+        Description: `دریافت از ${d.fromName} (${d.fromId})`,
+        AssignedUserEmail: d.assignedEmail || assigned,
+        Status: 'ثبت شده'
+      };
+
+      const { error } = await _supabase.from('transactions').insert([debitRow, creditRow]);
+      hideRealLoading();
+
+      if (error) {
+        alert('❌ خطا در ثبت انتقال: ' + error.message);
+        return;
+      }
+
+      document.getElementById('transferAmountInput').value = '';
+      await refreshAccountData();
+      showSingleInfoPopup(
+        '✅ انتقال با موفقیت انجام شد',
+        `مبلغ <b class="eng-num">${formatEnMoney(d.amt)} ${d.curr}</b> به حساب <b>${d.toName}</b> منتقل شد.`
+      );
+    }
+
+    async function runTopupAfterPin(payload) {
+      const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
+      const nowIso = new Date().toISOString();
+      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+
+      if (payload.mode === 'afn') {
+        showRealLoading('در حال ارسال درخواست شارژ...', 'انتظار برای پاسخ شبیه‌ساز');
+        const tgText =
+          `📲 درخواست شارژ افغانستان\n` +
+          `━━━━━━━━━━━━━━\n` +
+          `🔖 کد سند: ${txId}\n` +
+          `👤 مشتری: ${payload.accName} (${payload.accId})\n` +
+          `📱 مقصد: ${payload.targetPhone}\n` +
+          `💵 شارژ: ${formatEnMoney(payload.afnAmt)} AFN\n` +
+          `💸 کسر دینار: ${formatEnMoney(payload.requiredIqd)} IQD`;
+
+        let tgData = null;
+        let lastErr = null;
+        try {
+          const resp = await fetch(TELEGRAM_SEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgText })
+          });
+          const json = await resp.json().catch(() => null);
+          if (resp.ok && json && json.ok && json.result && json.result.message_id) tgData = json;
+          else lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
+        } catch (err) {
+          lastErr = err && err.message ? err.message : 'خطای ارتباط';
+        }
+
+        if (!tgData) {
+          try {
+            const qs = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: tgText });
+            const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: 'GET' });
+            const getJson = await getResp.json().catch(() => null);
+            if (getResp.ok && getJson && getJson.ok && getJson.result && getJson.result.message_id) {
+              tgData = getJson;
+              lastErr = null;
+            }
+          } catch (e) {}
+        }
+
+        if (!tgData || !tgData.result || !tgData.result.message_id) {
+          hideRealLoading();
+          showSingleInfoPopup('❌ پاسخ مثبت دریافت نشد', `علت: <b>${lastErr || 'عدم دریافت تاییدیه'}</b><br>موجودی کسر نشد.`);
+          return;
+        }
+
+        const refCode = `SIM-${tgData.result.message_id}`;
+        const { error } = await _supabase.from('transactions').insert([{
+          TransID: txId,
+          AccountID: payload.accId,
+          Date: nowIso,
+          Amount: Number(payload.requiredIqd),
+          Currency: 'IQD',
+          Direction: 'بدهکار',
+          OperationType: 'شارژ افغانستان',
+          Description: `مقصد ${payload.targetPhone} (${payload.afnAmt} AFN) - کد: ${refCode}`,
+          AssignedUserEmail: assigned,
+          Status: 'تایید شده'
+        }]);
+        hideRealLoading();
+
+        if (error) {
+          alert('❌ خطا در ثبت تراکنش: ' + error.message);
+          return;
+        }
+
+        document.getElementById('afnTargetPhone').value = '';
+        document.getElementById('afnAmountInput').value = '';
+        await refreshAccountData();
+        showSingleInfoPopup('✅ شارژ ثبت شد', `کد پیگیری: <b>${refCode}</b><br><b class="eng-num">${formatEnMoney(payload.requiredIqd)} IQD</b> کسر شد.`);
+      } else {
+        showRealLoading('در حال ثبت شارژ عراق...', 'ثبت تراکنش دینار');
+        const { error } = await _supabase.from('transactions').insert([{
+          TransID: txId,
+          AccountID: payload.accId,
+          Date: nowIso,
+          Amount: Number(payload.cardAmt),
+          Currency: 'IQD',
+          Direction: 'بدهکار',
+          OperationType: 'شارژ عراق',
+          Description: `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
+          AssignedUserEmail: assigned,
+          Status: 'ثبت شده'
+        }]);
+        hideRealLoading();
+
+        if (error) {
+          alert('❌ خطا در ثبت تراکنش: ' + error.message);
+          return;
+        }
+
+        const waMsg = encodeURIComponent(
+          `درخواست شارژ عراق [کد: ${txId}]\nمشتری: ${payload.accName} (${payload.accId})\nشبکه: ${payload.network}\nمبلغ: ${formatEnMoney(payload.cardAmt)} IQD`
+        );
+        window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${waMsg}`, '_blank');
+        await refreshAccountData();
+      }
+    }
+
+    // ================= مدیریت رمز ثابت و اثر انگشت =================
     function openLegacyPinActivationModal(accId) {
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
       const msg = encodeURIComponent(
-        `سلام کریمی عزیز، درخواست فعال‌سازی رمز ارسال شارژ برای حساب قدیمی خود را دارم:\n` +
-        `👤 نام: ${nameVal}\n` +
-        `🆔 کد حساب: ${accId}\n` +
-        `📱 شماره ثبت‌شده: ${phoneVal}`
+        `درخواست فعال‌سازی رمز ثابت:\nنام: ${nameVal}\nکد حساب: ${accId}\nشماره: ${phoneVal}`
       );
       document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
       document.getElementById('legacyPinActivationModal').classList.remove('hidden');
@@ -1540,8 +2874,7 @@
       playSound('click');
       if (!currentFoundUser) return;
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const existingHash = getStoredPinHashForAccount(currentFoundUser, accId);
-      if (!existingHash) {
+      if (!getStoredPinHashForAccount(currentFoundUser, accId)) {
         openLegacyPinActivationModal(accId);
         return;
       }
@@ -1559,74 +2892,47 @@
       if (!currentFoundUser) return;
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const existingHash = getStoredPinHashForAccount(currentFoundUser, accId);
-      if (!existingHash) {
-        closeSetPinModal();
-        openLegacyPinActivationModal(accId);
-        return;
-      }
-
       const oldPin = toEnglishDigits(document.getElementById('oldAccountPinInput').value.trim());
       const p1 = toEnglishDigits(document.getElementById('newAccountPinInput').value.trim());
       const p2 = toEnglishDigits(document.getElementById('confirmAccountPinInput').value.trim());
 
-      if (!oldPin) {
-        alert("لطفاً رمز فعلی ارسال شارژ را وارد کنید.");
-        return;
-      }
       const hashedOld = await hashPin(oldPin);
       if (hashedOld !== existingHash && oldPin !== existingHash) {
-        alert("❌ رمز فعلی واردشده اشتباه است.");
+        alert('❌ رمز فعلی صحیح نیست.');
         return;
       }
-      if (p1.length < 4) {
-        alert("رمز جدید باید حداقل ۴ کاراکتر باشد.");
-        return;
-      }
-      if (p1 !== p2) {
-        alert("رمز جدید و تکرار آن مطابقت ندارند.");
+      if (p1.length < 4 || p1 !== p2) {
+        alert('رمز جدید باید حداقل ۴ کاراکتر و با تکرار آن برابر باشد.');
         return;
       }
 
-      showRealLoading("در حال تغییر امن رمز ارسال شارژ...", "به‌روزرسانی ستون PinHash در سرور");
-      const hashed = await hashPin(p1);
-      const ok = await persistPinHashInSupabase(accId, hashed);
+      showRealLoading('در حال ذخیره رمز جدید...', 'به‌روزرسانی رمز ثابت');
+      const newHash = await hashPin(p1);
+      const ok = await persistPinHashInSupabase(accId, newHash);
       await fetchDataFromSupabaseFresh();
-      let refreshed = accountsList.find(u => String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase());
+      const refreshed = accountsList.find(u =>
+        String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase()
+      );
       if (refreshed) currentFoundUser = refreshed;
       hideRealLoading();
 
       if (!ok) {
-        alert("❌ خطا در ذخیره‌سازی رمز جدید در سرور.");
+        alert('❌ خطا در ذخیره‌سازی رمز.');
         return;
       }
       closeSetPinModal();
-      updatePinBtnState(accId);
-      showSingleInfoPopup("✅ رمز ارسال شارژ تغییر کرد", "رمز جدید شما با موفقیت در ستون PinHash ذخیره شد.");
+      updatePinMenuLabel(accId);
+      showSingleInfoPopup('✅ رمز ثابت تغییر کرد', 'رمز جدید با موفقیت ذخیره شد.');
     }
 
-    function updatePinBtnState(accId) {
-      const btn = document.getElementById('setPinBtn');
-      if (!btn) return;
+    function updatePinMenuLabel(accId) {
       const hasPin = Boolean(getStoredPinHashForAccount(currentFoundUser, accId));
-      btn.innerText = hasPin ? "🟢 تغییر رمز شارژ" : "🔒 فعال‌سازی رمز";
+      document.getElementById('setPinMenuTitle').innerText = hasPin ? 'تغییر رمز ثابت' : 'فعال‌سازی رمز ثابت';
     }
 
-    function autoLogin(phone, accId, announce = false) {
-      const userLast9 = getLast9Digits(phone);
-      const found = accountsList.find(u => getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9);
-
-      if (found) {
-        let sheetAccId = String(getVal(found, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-        if (sheetAccId.toLowerCase() === accId.trim().toLowerCase()) {
-          currentFoundUser = found;
-          processDashboard(sheetAccId, false);
-          if (announce) checkAndAnnounceNewTransactions(sheetAccId, [], true);
-          return;
-        }
-      }
-      localStorage.removeItem('karimi_phone');
-      localStorage.removeItem('karimi_accId');
-      navigateToStep('phone', false);
+    function updateBioStatusLabel() {
+      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      document.getElementById('bioStatusSub').innerText = enabled ? 'فعال در این دستگاه' : 'غیرفعال';
     }
 
     async function triggerBiometricAuth() {
@@ -1636,7 +2942,7 @@
             publicKey: {
               challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112]),
               timeout: 60000,
-              userVerification: "preferred"
+              userVerification: 'preferred'
             }
           });
         } catch (e) {}
@@ -1649,11 +2955,11 @@
       const bioPhone = localStorage.getItem('karimi_biometric_phone');
       const bioAccId = localStorage.getItem('karimi_biometric_accId');
       if (localStorage.getItem('karimi_biometric_enabled') !== 'true' || !bioPhone || !bioAccId) {
-        alert("ورود با اثر انگشت هنوز فعال نشده است.");
+        alert('ورود با اثر انگشت فعال نیست.');
         return;
       }
       await triggerBiometricAuth();
-      showRealLoading("در حال ورود سریع و بروزرسانی حساب...", "دریافت آخرین تراکنش‌ها از سرور");
+      showRealLoading('در حال ورود...', 'دریافت آخرین اطلاعات');
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
       autoLogin(bioPhone, bioAccId, true);
@@ -1663,14 +2969,14 @@
     async function confirmEnableBiometric() {
       playSound('success');
       await triggerBiometricAuth();
-      let phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
-      let sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+      const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       localStorage.setItem('karimi_biometric_enabled', 'true');
       localStorage.setItem('karimi_biometric_phone', phoneVal);
       localStorage.setItem('karimi_biometric_accId', sheetAccId);
       document.getElementById('biometricPromptModal').classList.add('hidden');
-      updateBioBtnText();
-      showSingleInfoPopup("✅ اثر انگشت فعال شد", "از این پس می‌توانید با یک لمس وارد حساب خود شوید.");
+      updateBioStatusLabel();
+      showSingleInfoPopup('✅ اثر انگشت فعال شد', 'ورود سریع برای این حساب فعال گردید.');
     }
 
     function dismissBiometricPrompt() {
@@ -1680,427 +2986,48 @@
 
     function toggleBiometricSetting() {
       playSound('click');
-      let currentStatus = localStorage.getItem('karimi_biometric_enabled') === 'true';
-      if (currentStatus) {
+      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      if (enabled) {
         localStorage.setItem('karimi_biometric_enabled', 'false');
-        alert("ورود با اثر انگشت غیرفعال شد.");
-        updateBioBtnText();
+        updateBioStatusLabel();
+        showSingleInfoPopup('ورود با اثر انگشت غیرفعال شد', 'تنظیمات دستگاه به‌روز شد.');
       } else {
         confirmEnableBiometric();
       }
     }
 
-    function updateBioBtnText() {
-      let isEnabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
-      const btn = document.getElementById('bioToggleBtn');
-      if (btn) btn.innerText = isEnabled ? "🟢 اثرانگشت" : "🔑 اثرانگشت";
-    }
-
-    function logout() {
-      playSound('click');
-      localStorage.removeItem('karimi_phone');
-      localStorage.removeItem('karimi_accId');
-      currentFoundUser = null;
-      navigateToStep('phone');
-      if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
-        document.getElementById('biometricBtnWrapper').classList.remove('hidden');
-      } else {
-        document.getElementById('biometricBtnWrapper').classList.add('hidden');
-      }
-    }
-
-    function processDashboard(sheetAccId, isFreshLogin = false) {
-      navigateToStep('dashboard');
-      updateBioBtnText();
-      updatePinBtnState(sheetAccId);
-
-      let rawName = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
-      let nameVal = `جناب آقای ${rawName} محترم`;
-      let phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---';
-
-      document.getElementById('dashName').innerText = nameVal;
-      document.getElementById('dashPhone').innerText = toEnglishDigits(phoneVal);
-      document.getElementById('dashAccountId').innerText = sheetAccId;
-
-      let rawUserTxs = getUserVisibleTransactions(sheetAccId);
-      customerTransactions = sortChronologically(rawUserTxs, false);
-
-      customerBalances = {};
-      customerTransactions.forEach(tx => {
-        let curr = String(getVal(tx, ['Currency', 'currency']) || 'AFN').toUpperCase();
-        let rawAmt = getVal(tx, ['Amount', 'amount', 'value']);
-        let amount = isNaN(parseFloat(rawAmt)) ? 0 : parseFloat(rawAmt);
-        let dir = String(getVal(tx, ['Direction', 'direction'])).trim();
-
-        if (!customerBalances[curr]) customerBalances[curr] = { credit: 0, debit: 0, net: 0 };
-        if (dir.includes('بستانکار') || dir.includes('دریافت')) customerBalances[curr].credit += amount;
-        else if (dir.includes('بدهکار') || dir.includes('پرداخت')) customerBalances[curr].debit += amount;
-      });
-
-      for (let c in customerBalances) {
-        customerBalances[c].net = customerBalances[c].credit - customerBalances[c].debit;
-      }
-
-      currencyList = Object.keys(customerBalances);
-      if (currencyList.length === 0) {
-        currencyList = ['AFN'];
-        customerBalances['AFN'] = { credit: 0, debit: 0, net: 0 };
-      }
-
-      if (activeCurrencyIndex >= currencyList.length) activeCurrencyIndex = 0;
-      renderCurrencyTabs();
-      renderTransactionsList();
-      recalcTopupCost();
-
-      if (isFreshLogin && localStorage.getItem('karimi_biometric_enabled') !== 'true') {
-        setTimeout(() => {
-          document.getElementById('biometricPromptModal').classList.remove('hidden');
-        }, 400);
-      }
-    }
-
-    function renderCurrencyTabs() {
-      let tabsHtml = '';
-      currencyList.forEach((curr, idx) => {
-        let activeClass = idx === activeCurrencyIndex ? 'active' : '';
-        tabsHtml += `<button type="button" class="currency-tab ${activeClass}" onclick="switchCurrency(${idx})">${curr}</button>`;
-      });
-      document.getElementById('currencyTabs').innerHTML = tabsHtml;
-      updateBalanceDisplay();
-    }
-
-    function switchCurrency(idx) {
-      playSound('click');
-      activeCurrencyIndex = idx;
-      renderCurrencyTabs();
-    }
-
-    function updateBalanceDisplay() {
-      let currName = currencyList[activeCurrencyIndex];
-      let b = customerBalances[currName] || { credit: 0, debit: 0, net: 0 };
-      document.getElementById('odometerCurrencyLabel').innerText = currName;
-
-      let psychBox = document.getElementById('accountPsychologyMsg');
-      if (b.net > 0) {
-        psychBox.className = 'status-banner positive';
-        psychBox.innerHTML = `✅ <span><b>اعتبار بستانکاری:</b> حساب شما به مبلغ ${formatEnMoney(b.net)} ${currName} بستانکار است.</span>`;
-      } else if (b.net < 0) {
-        psychBox.className = 'status-banner negative';
-        psychBox.innerHTML = `⚠️ <span><b>مانده بدهکاری:</b> حساب شما به مبلغ ${formatEnMoney(Math.abs(b.net))} ${currName} بدهکار می‌باشد.</span>`;
-      } else {
-        psychBox.className = 'status-banner neutral';
-        psychBox.innerHTML = `⚖️ <span><b>حساب تسویه است:</b> مانده این ارز صفر می‌باشد.</span>`;
-      }
-
-      document.getElementById('odometerValue').innerText = formatEnMoney(b.net);
-      document.getElementById('odometerCredit').innerText = formatEnMoney(b.credit);
-      document.getElementById('odometerDebit').innerText = formatEnMoney(b.debit);
-    }
-
-    function toggleCreditDrawer() {
-      playSound('click');
-      const drawer = document.getElementById('creditServiceDrawer');
-      const btn = document.getElementById('toggleCreditDrawerBtn');
-      const isHidden = drawer.classList.toggle('hidden');
-      btn.innerText = isHidden
-        ? '📲 ارسال کردیت و شارژ (کسر از موجودی دینار) ▾'
-        : '📲 بستن بخش ارسال کردیت و شارژ ▴';
-      if (!isHidden) recalcTopupCost();
-    }
-
-    function switchTopupMode(mode) {
-      playSound('click');
-      topupMode = mode;
-      document.getElementById('tabAfnBtn').classList.toggle('active', mode === 'afn');
-      document.getElementById('tabIqBtn').classList.toggle('active', mode === 'iq');
-      document.getElementById('topupAfnForm').classList.toggle('hidden', mode !== 'afn');
-      document.getElementById('topupIqForm').classList.toggle('hidden', mode !== 'iq');
-      recalcTopupCost();
-    }
-
-    function getNetIqdBalance() {
-      return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
-    }
-
-    function recalcTopupCost() {
-      const netIqd = getNetIqdBalance();
-      const eligMsg = document.getElementById('topupEligibilityMsg');
-      const btn = document.getElementById('btnExecuteTopup');
-
-      if (netIqd <= 0) {
-        eligMsg.innerText = "❌ برای ارسال کردیت و شارژ، باید موجودی دینار (IQD) مثبت در حساب شما وجود داشته باشد.";
-        btn.disabled = true;
-        return;
-      }
-
-      if (topupMode === 'afn') {
-        const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
-        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
-        const box = document.getElementById('afnCalcBox');
-        document.getElementById('afnCalculatedIqd').innerText = formatEnMoney(requiredIqd);
-
-        if (requiredIqd > netIqd) {
-          box.classList.add('error');
-          eligMsg.innerText = `⚠️ مبلغ دینار مورد نیاز (${formatEnMoney(requiredIqd)} IQD) از موجودی دینار شما (${formatEnMoney(netIqd)} IQD) بیشتر است.`;
-          btn.disabled = true;
-        } else {
-          box.classList.remove('error');
-          eligMsg.innerText = "";
-          btn.disabled = false;
-        }
-      } else {
-        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
-        const box = document.getElementById('iqCalcBox');
-        document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
-
-        if (cardAmt > netIqd) {
-          box.classList.add('error');
-          eligMsg.innerText = `⚠️ مبلغ کارت (${formatEnMoney(cardAmt)} IQD) از موجودی دینار شما (${formatEnMoney(netIqd)} IQD) بیشتر است.`;
-          btn.disabled = true;
-        } else {
-          box.classList.remove('error');
-          eligMsg.innerText = "";
-          btn.disabled = false;
-        }
-      }
-    }
-
-    async function executeCustomerTopup() {
+    function syncProfileTabData() {
       if (!currentFoundUser) return;
-      const netIqd = getNetIqdBalance();
-      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-
-      if (topupMode === 'afn') {
-        const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
-        const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
-
-        if (!/^07\d{8}$/.test(targetPhone)) {
-          alert("شماره مقصد افغانستان باید ۱۰ رقم و با 07 شروع شود.");
-          return;
-        }
-        if (isNaN(afnAmt) || afnAmt <= 0) {
-          alert("مبلغ افغانی را به درستی وارد کنید.");
-          return;
-        }
-        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
-        if (requiredIqd > netIqd || netIqd <= 0) {
-          alert("موجودی دینار حساب شما کافی نیست.");
-          return;
-        }
-        pendingTopupPayload = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
-        document.getElementById('txPinSummaryText').innerHTML =
-          `ارسال شارژ <b>${formatEnMoney(afnAmt)} AFN</b> به شماره <span class="eng-num">${targetPhone}</span><br>` +
-          `مبلغ کسر از موجودی دینار: <b class="eng-num" style="color:var(--danger);">${formatEnMoney(requiredIqd)} IQD</b>`;
-      } else {
-        const network = document.getElementById('iqNetworkSelect').value;
-        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
-        if (cardAmt <= 0 || cardAmt > netIqd) {
-          alert("موجودی دینار حساب شما برای این کارت شارژ کافی نیست.");
-          return;
-        }
-        pendingTopupPayload = { mode: 'iq', accId, accName, network, cardAmt };
-        document.getElementById('txPinSummaryText').innerHTML =
-          `درخواست کارت شارژ <b>${network}</b><br>` +
-          `مبلغ کسر از موجودی دینار: <b class="eng-num" style="color:var(--danger);">${formatEnMoney(cardAmt)} IQD</b>`;
-      }
-
-      // بررسی وجود رمز در ستون PinHash جدول accounts قبل از کسر موجودی
-      showRealLoading("در حال بررسی وضعیت امنیتی حساب...", "کنترل رمز ارسال شارژ");
-      await fetchDataFromSupabaseFresh();
-      let refreshed = accountsList.find(u => String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase());
-      if (refreshed) currentFoundUser = refreshed;
-      hideRealLoading();
-
-      const storedPinHash = getStoredPinHashForAccount(currentFoundUser, accId);
-      if (!storedPinHash) {
-        openLegacyPinActivationModal(accId);
-        return;
-      }
-
-      document.getElementById('txVerifyPinInput').value = '';
-      document.getElementById('txPinConfirmModal').classList.remove('hidden');
-      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 120);
+      document.getElementById('profileFullName').innerText = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
+      document.getElementById('profileCounterpartyName').innerText = resolveCounterpartyName(currentFoundUser);
+      document.getElementById('profileAccIdVal').innerText = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      document.getElementById('profilePhoneVal').innerText = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
     }
 
-    function closeTxPinConfirmModal() {
-      document.getElementById('txPinConfirmModal').classList.add('hidden');
-      pendingTopupPayload = null;
-    }
-
-    async function confirmAndRunTopup() {
-      if (!pendingTopupPayload || !currentFoundUser) return;
-      const pinInput = toEnglishDigits(document.getElementById('txVerifyPinInput').value.trim());
-      if (!pinInput) {
-        alert("لطفاً رمز ارسال شارژ را وارد کنید.");
-        return;
-      }
-
-      const storedPinHash = getStoredPinHashForAccount(currentFoundUser, pendingTopupPayload.accId);
-      const hashedInput = await hashPin(pinInput);
-      if (hashedInput !== storedPinHash && pinInput !== storedPinHash) {
-        alert("❌ رمز ارسال شارژ اشتباه است.");
-        return;
-      }
-
-      const payload = pendingTopupPayload;
-      document.getElementById('txPinConfirmModal').classList.add('hidden');
-      pendingTopupPayload = null;
-
-      const txId = "TX-" + Math.floor(100000 + Math.random() * 900000);
-      const nowIso = new Date().toISOString();
-
-      if (payload.mode === 'afn') {
-        showRealLoading("در حال ارسال به ربات تلگرام و انتظار برای پاسخ...", "تا دریافت پاسخ مثبت از تلگرام، تراکنش ثبت نخواهد شد");
-
-        const tgPlainText =
-          `📲 درخواست شارژ افغانستان\n` +
-          `━━━━━━━━━━━━━━\n` +
-          `🔖 کد سند: ${txId}\n` +
-          `👤 مشتری: ${payload.accName} (${payload.accId})\n` +
-          `📱 شماره مقصد: ${payload.targetPhone}\n` +
-          `💵 مبلغ شارژ: ${formatEnMoney(payload.afnAmt)} AFN\n` +
-          `💸 کسر از دینار: ${formatEnMoney(payload.requiredIqd)} IQD`;
-
-        let tgData = null;
-        let lastErr = null;
-
-        try {
-          const resp = await fetch(TELEGRAM_SEND_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: TELEGRAM_CHAT_ID,
-              text: tgPlainText
-            })
-          });
-          const json = await resp.json().catch(() => null);
-          if (resp.ok && json && json.ok === true && json.result && json.result.message_id) {
-            tgData = json;
-          } else {
-            lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
-          }
-        } catch (postErr) {
-          lastErr = postErr && postErr.message ? postErr.message : "Failed to fetch";
-        }
-
-        // Fallback via GET query string if POST failed (avoids preflight/protocol blocks)
-        if (!tgData) {
-          try {
-            const qs = new URLSearchParams({
-              chat_id: TELEGRAM_CHAT_ID,
-              text: tgPlainText
-            });
-            const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: "GET" });
-            const getJson = await getResp.json().catch(() => null);
-            if (getResp.ok && getJson && getJson.ok === true && getJson.result && getJson.result.message_id) {
-              tgData = getJson;
-              lastErr = null;
-            } else if (!lastErr) {
-              lastErr = (getJson && getJson.description) ? getJson.description : `HTTP ${getResp.status}`;
-            }
-          } catch (getErr) {
-            lastErr = getErr && getErr.message ? getErr.message : lastErr;
-          }
-        }
-
-        if (!tgData || tgData.ok !== true || !tgData.result || !tgData.result.message_id) {
-          hideRealLoading();
-          const originHint = (window.location.protocol === 'file:')
-            ? ' (فایل به‌صورت file:// باز است؛ در صورت مسدود بودن درخواست مستقیم از مرورگر، باید روی هاست/سرور یا پروکسی اجرا شود)'
-            : '';
-          showSingleInfoPopup(
-            "❌ پاسخ مثبت از تلگرام دریافت نشد",
-            `علت: <b>${lastErr || 'عدم دریافت تاییدیه'}</b>${originHint}<br>هیچ تراکنشی ثبت نشد و موجودی کسر نگردید.`
-          );
-          return;
-        }
-
-        const apiReference = `TG-${tgData.result.message_id}`;
-        const txRecord = {
-          TransID: txId,
-          AccountID: payload.accId,
-          Date: nowIso,
-          Amount: Number(payload.requiredIqd),
-          Currency: "IQD",
-          Direction: "بدهکار",
-          OperationType: "ارسال شارژ افغانستان",
-          Description: `شارژ ${payload.targetPhone} (${payload.afnAmt} AFN) - کد: ${apiReference}`
-        };
-
-        const { error } = await _supabase.from('transactions').insert([txRecord]);
-        hideRealLoading();
-
-        if (error) {
-          alert("❌ خطا در ثبت تراکنش در دیتابیس: " + error.message);
-          return;
-        }
-
-        document.getElementById('afnTargetPhone').value = '';
-        document.getElementById('afnAmountInput').value = '';
-        recalcTopupCost();
-        await refreshAccountData();
-        showSingleInfoPopup("✅ تاییدیه تلگرام دریافت و تراکنش ثبت شد", `کد پیام تلگرام: <b>${apiReference}</b><br>مبلغ ${formatEnMoney(payload.requiredIqd)} IQD کسر شد.`);
-      } else {
-        showRealLoading("در حال ثبت درخواست شارژ عراق...", "ثبت تراکنش دینار و انتقال به واتساپ مدیریت");
-
-        const txRecord = {
-          TransID: txId,
-          AccountID: payload.accId,
-          Date: nowIso,
-          Amount: Number(payload.cardAmt),
-          Currency: "IQD",
-          Direction: "بدهکار",
-          OperationType: "درخواست شارژ عراق",
-          Description: `رصید ${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`
-        };
-
-        const { error } = await _supabase.from('transactions').insert([txRecord]);
-        hideRealLoading();
-
-        if (error) {
-          alert("❌ خطا در ثبت تراکنش: " + error.message);
-          return;
-        }
-
-        const waMsg = encodeURIComponent(
-          `سلام کریمی عزیز، درخواست شارژ عراق دارم [کد: ${txId}]\n` +
-          `👤 مشتری: ${payload.accName} (${payload.accId})\n` +
-          `📡 شبکه: ${payload.network}\n` +
-          `💵 مبلغ کسر شده از حساب: ${formatEnMoney(payload.cardAmt)} IQD`
-        );
-        document.getElementById('iqNetworkSelect').selectedIndex = 0;
-        document.getElementById('iqCardSelect').selectedIndex = 0;
-        recalcTopupCost();
-        window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${waMsg}`, '_blank');
-        await refreshAccountData();
-      }
-    }
-
+    // ================= رندر لیست تراکنش‌ها و رسید =================
     function renderTransactionsList() {
-      const container = document.getElementById('transactionsContainer');
+      const homeContainer = document.getElementById('transactionsContainer');
+      const fullContainer = document.getElementById('transactionsFullContainer');
       document.getElementById('txCountBadge').innerText = `${toEnglishDigits(customerTransactions.length)} تراکنش`;
-      container.innerHTML = "";
 
       if (customerTransactions.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:30px 16px; color:#64748b; font-size:0.85rem; font-weight:700;">هیچ تراکنشی ثبت نشده است.</div>';
+        const emptyHtml = `
+          <div class="empty-state-box">
+            <div class="empty-state-icon">↺</div>
+            <div style="font-size:0.9rem; font-weight:900; color:var(--slate-900); margin-bottom:4px;">هنوز تراکنشی ندارید</div>
+            <div style="font-size:0.74rem; color:var(--slate-500); font-weight:700;">پس از اولین انتقال یا شارژ، سابقه اینجا نمایش داده می‌شود.</div>
+          </div>`;
+        homeContainer.innerHTML = emptyHtml;
+        fullContainer.innerHTML = emptyHtml;
         return;
       }
 
-      let chronologicalAll = sortChronologically(customerTransactions, true);
-      let rowNumMap = {};
-      chronologicalAll.forEach((t, i) => {
-        let tid = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || i);
-        rowNumMap[tid] = i + 1;
-      });
-
-      let sortedList = sortChronologically(customerTransactions, false);
-      let groups = [];
-      let groupMap = {};
+      const sortedList = sortChronologically(customerTransactions, false);
+      const groups = [];
+      const groupMap = {};
 
       sortedList.forEach(tx => {
-        let rawDate = getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '';
-        let dayKey = extractDateOnly(rawDate);
+        const dayKey = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '');
         if (!groupMap[dayKey]) {
           groupMap[dayKey] = { date: dayKey, items: [] };
           groups.push(groupMap[dayKey]);
@@ -2108,62 +3035,44 @@
         groupMap[dayKey].items.push(tx);
       });
 
-      let finalHtml = "";
+      let html = '';
       groups.forEach(group => {
-        let dayName = getPersianDayName(group.date);
-        let dayTitle = dayName ? `${dayName} — ${toEnglishDigits(group.date)}` : toEnglishDigits(group.date);
+        const dayName = getPersianDayName(group.date);
+        const dayTitle = dayName ? `${dayName} — ${toEnglishDigits(group.date)}` : toEnglishDigits(group.date);
 
-        let rowsHtml = "";
+        html += `<div class="day-divider"><span>📅 ${dayTitle}</span><span class="eng-num">${toEnglishDigits(group.items.length)} مورد</span></div>`;
+
         group.items.forEach(tx => {
-          let tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-          let txNum = rowNumMap[tid] || '-';
-          let dir = String(getVal(tx, ['Direction', 'direction']));
-          let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
-          let amtColor = isCredit ? 'var(--success)' : 'var(--danger)';
-          let rowClass = isCredit ? 'tx-row-credit' : 'tx-row-debit';
-          let rawAmt = getVal(tx, ['Amount', 'amount', 'value']);
-          let amountVal = isNaN(parseFloat(rawAmt)) ? 0 : parseFloat(rawAmt);
-          let opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'عملیات';
-          let rawDate = getVal(tx, ['Date', 'date', 'created_at']) || '';
-          let timeStr = extractTimeOnly(rawDate);
-          let descStr = (getVal(tx, ['Description', 'description', 'desc']) || '-').replaceAll('+', ' ');
-          let currStr = getVal(tx, ['Currency', 'currency']) || 'AFN';
+          const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+          const dir = String(getVal(tx, ['Direction', 'direction']));
+          const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
+          const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
+          const opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+          const timeStr = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at'])) || '';
+          const descStr = String(getVal(tx, ['Description', 'description', 'desc']) || '').replaceAll('+', ' ');
+          const currStr = getVal(tx, ['Currency', 'currency']) || 'IQD';
 
-          let originalIdx = tid
+          const origIdx = tid
             ? customerTransactions.findIndex(item => String(getVal(item, ['TransID', 'transid', 'id', 'transaction_id'])) === tid)
             : customerTransactions.indexOf(tx);
-          if (originalIdx < 0) originalIdx = customerTransactions.indexOf(tx);
 
-          rowsHtml += `
-            <tr class="${rowClass}" onclick="openDetailModal(${originalIdx})">
-              <td style="font-weight:900; color:#475569;" class="eng-num">${toEnglishDigits(txNum)}</td>
-              <td>
-                <div style="font-weight:900; color:var(--primary);">${opType}</div>
-                <div style="font-size:0.68rem; color:var(--text-muted);" class="eng-num">${timeStr}</div>
-              </td>
-              <td><span style="font-size:0.74rem; font-weight:900; color:${amtColor};">${isCredit ? 'بستانکار' : 'بدهکار'}</span></td>
-              <td>
-                <div style="font-weight:900; color:${amtColor}; font-size:0.84rem;" class="eng-num">${formatEnMoney(amountVal)}</div>
-                <div style="font-size:0.68rem; color:#475569; font-weight:800;">${currStr}</div>
-              </td>
-              <td style="text-align:left;">
-                <button type="button" class="tx-detail-btn-shake" onclick="event.stopPropagation(); openDetailModal(${originalIdx});">جزئیات</button>
-              </td>
-            </tr>
-          `;
+          html += `
+            <div class="tx-item-row" onclick="openDetailModal(${origIdx >= 0 ? origIdx : 0})">
+              <div class="tx-badge-icon ${isCredit ? 'credit' : 'debit'}">${isCredit ? '↓' : '↑'}</div>
+              <div class="tx-main-info">
+                <div class="tx-op-title">${opType}</div>
+                <div class="tx-desc-sub">${descStr || (isCredit ? 'واریز به حساب' : 'برداشت از حساب')}</div>
+              </div>
+              <div class="tx-amount-col">
+                <span class="tx-amt-val ${isCredit ? 'credit' : 'debit'} eng-num">${isCredit ? '+' : '-'}${formatEnMoney(amt)} ${currStr}</span>
+                <span class="tx-time-meta eng-num">${timeStr}</span>
+              </div>
+            </div>`;
         });
-
-        finalHtml += `
-          <div class="day-group-bar">
-            <div>📅 ${dayTitle} <span style="color:var(--accent); font-size:0.72rem;" class="eng-num">(${toEnglishDigits(group.items.length)})</span></div>
-          </div>
-          <table class="tx-table">
-            <thead><tr><th>ردیف</th><th>عملیات</th><th>جهت</th><th>مبلغ</th><th style="text-align:left;">جزئیات</th></tr></thead>
-            <tbody>${rowsHtml}</tbody>
-          </table>
-        `;
       });
-      container.innerHTML = finalHtml;
+
+      homeContainer.innerHTML = html;
+      fullContainer.innerHTML = html;
     }
 
     function openDetailModal(idx) {
@@ -2171,37 +3080,34 @@
       selectedTxItem = customerTransactions[idx];
       if (!selectedTxItem) return;
 
-      let tx = selectedTxItem;
-      let dir = String(getVal(tx, ['Direction', 'direction'])).trim();
-      let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
-      let amtColor = isCredit ? 'var(--success)' : 'var(--danger)';
-      let rawAmt = getVal(tx, ['Amount', 'amount', 'value']);
-      let amountVal = isNaN(parseFloat(rawAmt)) ? 0 : parseFloat(rawAmt);
-      let transId = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
-      let opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش مالی';
-      let dateStr = getVal(tx, ['Date', 'date', 'created_at']) || '---';
-      let dateOnly = extractDateOnly(dateStr);
-      let timeStr = extractTimeOnly(dateStr) || 'ثبت سیستمی';
-      let dayName = getPersianDayName(dateOnly);
-      let fullDateDisplay = dayName ? `${dayName}، ${toEnglishDigits(dateOnly)}` : toEnglishDigits(dateOnly);
-      let descStr = (getVal(tx, ['Description', 'description', 'desc']) || 'بدون توضیحات اضافی').replaceAll('+', ' ');
-      let currStr = getVal(tx, ['Currency', 'currency']) || 'AFN';
-      let statusStr = getVal(tx, ['Status', 'status']) || 'تأیید و ثبت شده در دفتر کل';
-      let nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
+      const tx = selectedTxItem;
+      const dir = String(getVal(tx, ['Direction', 'direction'])).trim();
+      const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
+      const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
+      const amountVal = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
+      const transId = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
+      const opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش مالی';
+      const dateStr = getVal(tx, ['Date', 'date', 'created_at']) || '---';
+      const dateOnly = extractDateOnly(dateStr);
+      const timeStr = extractTimeOnly(dateStr) || 'ثبت سیستمی';
+      const currStr = getVal(tx, ['Currency', 'currency']) || 'IQD';
+      const statusStr = getVal(tx, ['Status', 'status']) || 'تایید و ثبت شده';
+      const descStr = String(getVal(tx, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
+      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
+      const cpName = resolveCounterpartyName(currentFoundUser);
 
       document.getElementById('receiptDateStr').innerText = dateOnly + (extractTimeOnly(dateStr) ? ' | ' + extractTimeOnly(dateStr) : '');
 
-      let txCurr = currStr.toUpperCase();
-      let allChron = sortChronologically(customerTransactions, true);
-      let runningBalance = 0, balBefore = 0, balAfter = 0, txRankNumber = 1;
+      const txCurr = currStr.toUpperCase();
+      const allChron = sortChronologically(customerTransactions, true);
+      let runningBalance = 0, balBefore = 0, balAfter = 0;
 
-      allChron.forEach((t, indexPos) => {
-        let c = String(getVal(t, ['Currency', 'currency']) || 'AFN').toUpperCase();
-        let tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-        if (tidItem === transId || t === tx) txRankNumber = indexPos + 1;
+      allChron.forEach(t => {
+        const c = String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase();
+        const tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
         if (c === txCurr) {
-          let a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
-          let d = String(getVal(t, ['Direction', 'direction'])).trim();
+          const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
+          const d = String(getVal(t, ['Direction', 'direction'])).trim();
           if (tidItem === transId || t === tx) {
             balBefore = runningBalance;
             if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
@@ -2214,43 +3120,43 @@
         }
       });
 
-      let changeSign = isCredit ? '+' : '-';
-      let bodyHtml = `
-        <div class="receipt-row-item"><span class="receipt-row-label">نام صاحب حساب:</span><span class="receipt-row-val">${nameVal}</span></div>
-        <div class="receipt-row-item"><span class="receipt-row-label">تاریخ و ساعت:</span><span class="receipt-row-val eng-num">${fullDateDisplay} | ${toEnglishDigits(timeStr)}</span></div>
-        <div class="receipt-row-item"><span class="receipt-row-label">نوع تراکنش:</span><span class="receipt-row-val" style="color:var(--accent);">${opType}</span></div>
-        <div class="receipt-row-item"><span class="receipt-row-label">جهت تراکنش:</span><span class="receipt-row-val" style="color:${amtColor};">${isCredit ? 'واریز به حساب (بستانکار)' : 'برداشت از حساب (بدهکار)'}</span></div>
-        <div class="receipt-row-item"><span class="receipt-row-label">کد تراکنش (سند):</span><span class="receipt-row-val eng-num" style="color:var(--accent);">${toEnglishDigits(transId)}</span></div>
-        <div class="receipt-row-item"><span class="receipt-row-label">ردیف تراکنش:</span><span class="receipt-row-val eng-num">ردیف ${toEnglishDigits(txRankNumber)}</span></div>
-        <div class="receipt-row-item"><span class="receipt-row-label">مبلغ معامله:</span><span class="receipt-row-val eng-num" style="color:${amtColor}; font-size: 1.05rem;">${formatEnMoney(amountVal)} ${currStr}</span></div>
-        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%); border: 1.5px solid #bae6fd; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; margin: 4px 0;">
-          <div style="display:flex; justify-content:space-between; font-size:0.8rem;"><span style="color:#475569; font-weight:800;">مانده قبل از این تراکنش:</span><b class="eng-num">${formatEnMoney(balBefore)} ${currStr}</b></div>
-          <div style="display:flex; justify-content:space-between; font-size:0.84rem;"><span style="color:#475569; font-weight:800;">مبلغ دقیق تراکنش:</span><b class="eng-num" style="color:${amtColor};">${changeSign} ${formatEnMoney(amountVal)} ${currStr}</b></div>
-          <div style="display:flex; justify-content:space-between; font-size:0.86rem; border-top:1.5px dashed #cbd5e1; padding-top:7px; font-weight:900;"><span>مانده پس از این تراکنش:</span><b class="eng-num">${formatEnMoney(balAfter)} ${currStr}</b></div>
+      document.getElementById('modalBody').innerHTML = `
+        <div class="receipt-row"><span class="receipt-label">صاحب حساب:</span><span class="receipt-val">${nameVal}</span></div>
+        <div class="receipt-row"><span class="receipt-label">حساب نزد:</span><span class="receipt-val">${cpName}</span></div>
+        <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت:</span><span class="receipt-val eng-num">${dateOnly} | ${timeStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">نوع عملیات:</span><span class="receipt-val">${opType}</span></div>
+        <div class="receipt-row"><span class="receipt-label">کد سند:</span><span class="receipt-val eng-num">${transId}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مبلغ:</span><span class="receipt-val eng-num" style="color:${amtColor}; font-size:1rem;">${formatEnMoney(amountVal)} ${currStr}</span></div>
+        <div style="background:var(--emerald-50); border:1px solid #a7f3d0; border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; font-size:0.78rem;">
+          <div style="display:flex; justify-content:space-between;"><span>مانده قبل:</span><b class="eng-num">${formatEnMoney(balBefore)} ${currStr}</b></div>
+          <div style="display:flex; justify-content:space-between;"><span>مانده بعد:</span><b class="eng-num">${formatEnMoney(balAfter)} ${currStr}</b></div>
         </div>
-        <div class="receipt-row-item"><span class="receipt-row-label">وضعیت سند:</span><span class="receipt-row-val" style="color:var(--success);">✔ ${statusStr}</span></div>
-
+        <div class="receipt-row"><span class="receipt-label">شرح:</span><span class="receipt-val">${descStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">وضعیت:</span><span class="receipt-val" style="color:var(--emerald-700);">✔ ${statusStr}</span></div>
       `;
-
-      document.getElementById('modalBody').innerHTML = bodyHtml;
       document.getElementById('txDetailModal').classList.add('open');
+    }
+
+    function closeTxDetailModal() {
+      playSound('click');
+      document.getElementById('txDetailModal').classList.remove('open');
     }
 
     function shareReceiptToWhatsApp() {
       playSound('click');
       if (!selectedTxItem) return;
-      let tx = selectedTxItem;
-      let dir = String(getVal(tx, ['Direction', 'direction']));
-      let isCredit = (dir.includes('بستانکار') || dir.includes('دریافت'));
-      let amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
-      let curr = getVal(tx, ['Currency', 'currency']) || 'AFN';
-      let op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-      let tid = getVal(tx, ['TransID', 'transid', 'id']) || '---';
-      let date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
-      let name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
+      const tx = selectedTxItem;
+      const dir = String(getVal(tx, ['Direction', 'direction']));
+      const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
+      const amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
+      const curr = getVal(tx, ['Currency', 'currency']) || 'IQD';
+      const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+      const tid = getVal(tx, ['TransID', 'transid', 'id']) || '---';
+      const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
+      const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
-      let shareText = `🛡️ *رسید تراکنش - امانت‌داری کریمی*\n━━━━━━━━━━━━━━\n👤 صاحب حساب: ${name}\n📌 نوع عملیات: ${op}\n💵 مبلغ: ${amt} ${curr}\n🔄 جهت: ${isCredit ? 'واریز (بستانکار +)' : 'برداشت (بدهکار -)'}\n🔖 شماره سند: ${tid}\n📅 تاریخ: ${date}\n━━━━━━━━━━━━━━\n✅ ثبت شده در دفتر کل رسمی امانت‌داری کریمی`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+      const msg = `🛡️ *رسید تراکنش - امانت‌داری کریمی*\n━━━━━━━━━━━━━━\n👤 صاحب حساب: ${name}\n📌 عملیات: ${op}\n💵 مبلغ: ${amt} ${curr}\n🔄 جهت: ${isCredit ? 'واریز (+)' : 'برداشت (-)'}\n🔖 سند: ${tid}\n📅 تاریخ: ${date}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
   </script>
 </body>
