@@ -35,8 +35,6 @@
       --white: #ffffff;
       --danger: #dc2626;
       --danger-soft: #fef2f2;
-      --warning: #d97706;
-      --warning-soft: #fffbeb;
       --radius-xl: 22px;
       --radius-lg: 16px;
       --radius-md: 12px;
@@ -162,7 +160,7 @@
     .app-body {
       flex: 1;
       min-height: 0;
-      padding: 10px 14px 92px 14px;
+      padding: 12px 14px 92px 14px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       display: flex;
@@ -405,7 +403,7 @@
       background: var(--white);
       border: 1px solid var(--slate-200);
       border-radius: var(--radius-xl);
-      padding: 11px;
+      padding: 12px;
       box-shadow: var(--shadow-card);
       flex-shrink: 0;
     }
@@ -924,42 +922,6 @@
       color: var(--emerald-900);
     }
 
-
-    .admin-notice-card {
-      background: var(--white);
-      border: 1.5px solid #a7f3d0;
-      border-radius: var(--radius-xl);
-      padding: 15px 14px;
-      box-shadow: var(--shadow-card);
-      text-align: center;
-    }
-
-    .admin-notice-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: var(--emerald-50);
-      border: 1px solid #6ee7b7;
-      color: var(--emerald-800);
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .admin-phone-box {
-      background: var(--emerald-50);
-      border: 1.5px solid #86efac;
-      border-radius: var(--radius-md);
-      padding: 9px 12px;
-      margin: 10px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
     .hidden { display: none !important; }
   </style>
@@ -991,38 +953,26 @@
 
     <main id="appBody" class="app-body">
 
-      <!-- گام ۱: ورود با شماره تماس -->
-      <div id="phoneSection">
+      <!-- گام ۱: ورود با شماره تماس (بدون راهنمای افتتاح حساب و بدون شماره ادمین زیر آن) -->
+      <div id="phoneSection" style="margin:auto 0;">
         <div class="wallet-hero-card" style="margin-bottom:12px;">
           <div class="wallet-top-meta">
             <span class="wallet-badge">حساب مشتریان</span>
           </div>
-          <h2 style="font-size:1.1rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">ورود به حساب</h2>
+          <h2 style="font-size:1.12rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">ورود به حساب</h2>
           <p style="font-size:0.78rem; color:var(--slate-700);">شماره تماس ثبت‌شده خود را وارد کنید.</p>
         </div>
 
-        <div class="quick-grid-card" style="margin-bottom:12px;">
+        <div class="quick-grid-card">
           <div class="form-group">
             <label for="phoneInput">شماره تماس</label>
             <input type="tel" inputmode="numeric" id="phoneInput" placeholder="077xxxxxxxx" dir="ltr" onkeydown="if(event.key==='Enter') checkPhone()">
           </div>
-          <button type="button" class="btn btn-primary" onclick="checkPhone()">ادامه</button>
+          <button type="button" id="btnCheckPhone" class="btn btn-primary" onclick="checkPhone()">ادامه</button>
 
           <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
             <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
           </div>
-        </div>
-
-        <div class="admin-notice-card" id="adminAccountNoticeCard">
-          <div class="admin-notice-badge">راهنمای افتتاح حساب</div>
-          <div style="font-size:0.88rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">برای افتتاح حساب جدید به ادمین مراجعه کنید</div>
-          <p style="font-size:0.74rem; color:var(--slate-700); line-height:1.6;">ثبت حساب مستقیم بسته شده است. لطفاً برای ایجاد حساب و دریافت کد حساب با مدیریت تماس بگیرید.</p>
-          <div class="admin-phone-box">
-            <span style="font-size:0.74rem; color:var(--slate-700); font-weight:800;">شماره تماس ادمین:</span>
-            <strong id="adminDataCodePhone" class="eng-num" style="font-size:0.84rem; color:var(--emerald-900);">---</strong>
-            <button type="button" class="mini-copy-btn" onclick="copyAdminPhone()">کپی</button>
-          </div>
-          <a id="adminDirectWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp">تماس با ادمین در واتساپ</a>
         </div>
       </div>
 
@@ -1036,37 +986,6 @@
             <input type="text" id="accountIdInput" placeholder="Account ID" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
           <button type="button" class="btn btn-primary" onclick="verifyAccount()">ورود</button>
-          <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">بازگشت</button>
-        </div>
-      </div>
-
-      <!-- گام ۳: افتتاح حساب جدید -->
-      <div id="registerSection" class="hidden">
-        <div class="quick-grid-card">
-          <div class="panel-banner-header">
-            <h4>افتتاح حساب جدید</h4>
-          </div>
-          <div class="form-group">
-            <label for="regAccId">شناسه حساب (Account ID)</label>
-            <input type="text" id="regAccId" dir="ltr" readonly>
-          </div>
-          <div class="form-group">
-            <label for="regFullName">نام و نام خانوادگی</label>
-            <input type="text" id="regFullName">
-          </div>
-          <div class="form-group">
-            <label for="regPhone">شماره همراه</label>
-            <input type="tel" id="regPhone" dir="ltr">
-          </div>
-          <div class="form-group">
-            <label for="regPin">رمز ثابت</label>
-            <input type="password" id="regPin" dir="ltr">
-          </div>
-          <div class="form-group">
-            <label for="regPinConfirm">تکرار رمز ثابت</label>
-            <input type="password" id="regPinConfirm" dir="ltr">
-          </div>
-          <button type="button" class="btn btn-primary" onclick="submitRealAccountCreation()">ثبت حساب</button>
           <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">بازگشت</button>
         </div>
       </div>
@@ -1224,6 +1143,17 @@
             </div>
 
             <div class="form-group">
+              <label for="afnOperatorSelect">اپراتور افغانستان</label>
+              <select id="afnOperatorSelect">
+                <option value="roshan">روشن (Roshan)</option>
+                <option value="mtn">ام‌تی‌ان (MTN)</option>
+                <option value="awcc">افغان بی‌سیم (AWCC)</option>
+                <option value="etisalat">اتصالات (Etisalat)</option>
+                <option value="salaam">سلام (Salaam)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
               <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
@@ -1244,7 +1174,7 @@
             </button>
           </div>
 
-          <!-- پنل ۳: شارژ عراق -->
+          <!-- پنل ۳: شارژ عراق (ثبت تراکنش + ارسال درخواست به واتساپ) -->
           <div id="panelTopupIq" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>شارژ عراق</h4>
@@ -1255,7 +1185,13 @@
               <select id="iqNetworkSelect">
                 <option value="Zain (زین عراق)">Zain (زین عراق)</option>
                 <option value="AsiaCell (آسیاسل)">AsiaCell (آسیاسل)</option>
+                <option value="Korek (کورک)">Korek (کورک)</option>
               </select>
+            </div>
+
+            <div class="form-group">
+              <label for="iqTargetPhone">شماره موبایل مقصد عراق (اختیاری)</label>
+              <input type="tel" id="iqTargetPhone" placeholder="078xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
 
             <div class="form-group">
@@ -1277,8 +1213,8 @@
 
             <div id="topupIqEligibilityMsg" style="font-size:0.72rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:6px;"></div>
 
-            <button type="button" class="btn btn-primary" id="btnExecuteTopupIq" onclick="executeCustomerTopup('iq')">
-              تایید و ثبت شارژ
+            <button type="button" class="btn btn-whatsapp" id="btnExecuteTopupIq" onclick="executeCustomerTopup('iq')">
+              تایید، ثبت تراکنش و ارسال به واتساپ
             </button>
           </div>
         </div>
@@ -1412,7 +1348,7 @@
     </div>
   </div>
 
-  <!-- مودال تایید عملیات (اثر انگشت/قفل گوشی + گزینه رمز ثابت پشتیبان) -->
+  <!-- مودال تایید عملیات -->
   <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
       <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید عملیات</h3>
@@ -1497,141 +1433,6 @@
   </div>
 
   <script>
-
-    function showReceiptForTransactionData(txData) {
-      if (!txData || !currentFoundUser) return;
-      selectedTxItem = txData;
-      const dir = String(getVal(txData, ['Direction', 'direction'])).trim();
-      const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
-      const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
-      const amountVal = parseFloat(getVal(txData, ['Amount', 'amount', 'value'])) || 0;
-      const transId = String(getVal(txData, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
-      const opType = getVal(txData, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-      const dateStr = getVal(txData, ['Date', 'date', 'created_at']) || new Date().toISOString();
-      const dateOnly = extractDateOnly(dateStr);
-      const timeStr = extractTimeOnly(dateStr) || '---';
-      const currStr = getVal(txData, ['Currency', 'currency']) || 'IQD';
-      const statusStr = getVal(txData, ['Status', 'status']) || 'ثبت شده';
-      const descStr = String(getVal(txData, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
-      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
-      const cpName = resolveCounterpartyName(currentFoundUser);
-
-      document.getElementById('receiptDateStr').innerText = dateOnly;
-
-      const txCurr = currStr.toUpperCase();
-      const allChron = sortChronologically(customerTransactions, true);
-      let runningBalance = 0, balBefore = 0, balAfter = 0;
-
-      allChron.forEach(t => {
-        const c = String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase();
-        const tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-        if (c === txCurr) {
-          const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
-          const d = String(getVal(t, ['Direction', 'direction'])).trim();
-          if (tidItem === transId || t === txData) {
-            balBefore = runningBalance;
-            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
-            balAfter = runningBalance;
-          } else {
-            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
-          }
-        }
-      });
-
-      document.getElementById('modalBody').innerHTML = `
-        <div class="receipt-row"><span class="receipt-label">صاحب حساب</span><span class="receipt-val">${nameVal}</span></div>
-        <div class="receipt-row"><span class="receipt-label">طرف حساب</span><span class="receipt-val">${cpName}</span></div>
-        <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت</span><span class="receipt-val eng-num">${dateOnly} ${timeStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">عملیات</span><span class="receipt-val">${opType}</span></div>
-        <div class="receipt-row"><span class="receipt-label">کد سند</span><span class="receipt-val eng-num">${transId}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">شرح</span><span class="receipt-val">${descStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
-      `;
-      document.getElementById('txDetailModal').classList.add('open');
-      ensureSentinelHistory();
-    }
-
-    function initAdminContactFromDataCode() {
-      const phoneEl = document.getElementById('adminDataCodePhone');
-      const waBtn = document.getElementById('adminDirectWhatsAppBtn');
-      const adminPhone = String(OWNER_WHATSAPP || '').trim();
-      if (phoneEl) phoneEl.innerText = adminPhone || '---';
-      if (waBtn && adminPhone) {
-        const msg = encodeURIComponent('سلام، لطفاً جهت افتتاح حساب جدید در امانت‌داری کریمی راهنمایی بفرمایید.');
-        waBtn.href = `https://wa.me/${adminPhone}?text=${msg}`;
-      }
-    }
-
-    function copyAdminPhone() {
-      copyTextValue(String(OWNER_WHATSAPP || '').trim(), 'شماره تماس ادمین');
-    }
-
-    // Hook for external top-up API integration
-    const TOPUP_API_CONFIG = {
-      enabled: false,
-      endpoint: '',
-      apiKey: '',
-      timeoutMs: 15000
-    };
-
-    async function callExternalTopupApi(payload) {
-      if (!TOPUP_API_CONFIG.enabled || !TOPUP_API_CONFIG.endpoint) {
-        return { handledByExternalApi: false, ok: false };
-      }
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), TOPUP_API_CONFIG.timeoutMs);
-      try {
-        const resp = await fetch(TOPUP_API_CONFIG.endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(TOPUP_API_CONFIG.apiKey ? { 'Authorization': `Bearer ${TOPUP_API_CONFIG.apiKey}` } : {})
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        });
-        const data = await resp.json().catch(() => ({}));
-        return {
-          handledByExternalApi: true,
-          ok: resp.ok && (data.success !== false),
-          referenceId: data.referenceId || data.ref || data.id || null,
-          raw: data
-        };
-      } catch (err) {
-        return {
-          handledByExternalApi: true,
-          ok: false,
-          error: err && err.message ? err.message : 'خطای اتصال به API شارژ'
-        };
-      } finally {
-        clearTimeout(timer);
-      }
-    }
-
-    let _supabase = null;
-    let runtimeConfigLoaded = false;
-
-    async function initSupabaseFromEnv() {
-      if (_supabase && runtimeConfigLoaded) return true;
-      try {
-        const resp = await fetch('/api/config', { cache: 'no-store' });
-        if (resp.ok) {
-          const cfg = await resp.json();
-          if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
-            _supabase = supabase.createClient(String(cfg.supabaseUrl).trim(), String(cfg.supabaseKey).trim());
-            runtimeConfigLoaded = true;
-            return true;
-          }
-        }
-      } catch (e) {}
-      return false;
-    }
-
     const OWNER_NAME_DISPLAY = "محمد شریف";
     const OWNER_EMAIL = "mohammadsharifkarimi4@gmail.com";
     const OWNER_WHATSAPP = "9647721878997";
@@ -1640,6 +1441,38 @@
     const TELEGRAM_BOT_TOKEN = "8900776593:AAH0BPYT34-GlJ_00fUN0b56mUpz4s2k6SA";
     const TELEGRAM_CHAT_ID = "-1003555048687";
     const TELEGRAM_SEND_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    // پروکسی و API شارژ افغانستان مطابق فایل api/iimobile-topup.js
+    const TOPUP_PROXY_BASE = "http://161.97.150.196:1001";
+    const TOPUP_API_BASE = "https://recharge-apis.iimobile.af";
+    const TOPUP_ENDPOINT_PATH = "/api/iimobile-topup";
+
+    let _supabase = null;
+    let runtimeConfigLoaded = false;
+
+    async function initSupabaseFromEnv() {
+      if (_supabase && runtimeConfigLoaded && window.supabase && typeof window.supabase.createClient === 'function') {
+        return true;
+      }
+      if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+        return false;
+      }
+      try {
+        const resp = await fetch('/api/config', { cache: 'no-store' });
+        if (resp.ok) {
+          const cfg = await resp.json();
+          if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
+            _supabase = window.supabase.createClient(
+              String(cfg.supabaseUrl).trim(),
+              String(cfg.supabaseKey).trim()
+            );
+            runtimeConfigLoaded = true;
+            return true;
+          }
+        }
+      } catch (e) {}
+      return false;
+    }
 
     let accountsList = [];
     let transactionsList = [];
@@ -1657,14 +1490,18 @@
     let isHandlingBack = false;
     let exitDialogOpen = false;
     let realtimeTxChannel = null;
+    let isCheckingPhone = false;
 
     function loadCachedData() {
       try {
         const cAcc = localStorage.getItem('karimi_cache_accounts');
         const cTx = localStorage.getItem('karimi_cache_transactions');
-        if (cAcc) accountsList = JSON.parse(cAcc);
-        if (cTx) transactionsList = JSON.parse(cTx);
-      } catch (e) {}
+        if (cAcc) accountsList = JSON.parse(cAcc) || [];
+        if (cTx) transactionsList = JSON.parse(cTx) || [];
+      } catch (e) {
+        accountsList = [];
+        transactionsList = [];
+      }
     }
     loadCachedData();
 
@@ -1711,7 +1548,7 @@
       ).trim();
       if (!rawRef) return OWNER_NAME_DISPLAY;
       const lower = rawRef.toLowerCase();
-      if (lower === OWNER_EMAIL.toLowerCase() || lower.includes('mohammadsharif') || lower.includes('karimi') || rawRef === 'مالک' || lower === 'owner') {
+      if (lower === OWNER_EMAIL.toLowerCase() || lower.includes('mohammadsharif') || lower.includes('karimi') || rawRef === 'مالک' || rawRef === 'owner') {
         return OWNER_NAME_DISPLAY;
       }
       if (rawRef.includes('@')) {
@@ -1772,8 +1609,6 @@
       } catch (e) { return ''; }
     }
 
-    // ================= تنظیمات اعلان‌ها و صدا/لرزش =================
-    // حالات مجاز: 'sound_vibration' | 'vibration_only' | 'silent' | 'off'
     function getNotificationMode() {
       const m = localStorage.getItem('karimi_notif_mode') || 'sound_vibration';
       if (['sound_vibration', 'vibration_only', 'silent', 'off'].includes(m)) return m;
@@ -1847,13 +1682,6 @@
             navigator.vibrate(type === 'alert' ? [120, 60, 120] : 40);
           }
         } catch (e) {}
-        try {
-          const cap = window.Capacitor;
-          const haptics = cap && cap.Plugins && cap.Plugins.Haptics;
-          if (haptics && typeof haptics.vibrate === 'function') {
-            haptics.vibrate({ duration: type === 'alert' ? 220 : 60 }).catch(() => {});
-          }
-        } catch (e) {}
       }
     }
 
@@ -1881,6 +1709,7 @@
     }
 
     async function persistPinHashInSupabase(accId, pinHash) {
+      if (!_supabase) return false;
       const { error } = await _supabase
         .from('accounts')
         .update({ PinHash: pinHash })
@@ -1898,15 +1727,12 @@
       document.getElementById('realLoadingOverlay').classList.add('hidden');
     }
 
-    // ================= اعلان صرفاً بیرونی (سیستمی گوشی / مرورگر) — بدون بنر درون‌برنامه‌ای =================
     function getCapacitorLocalNotifications() {
       try {
         const cap = window.Capacitor;
         if (!cap) return null;
         if (cap.Plugins && cap.Plugins.LocalNotifications) return cap.Plugins.LocalNotifications;
-        if (typeof cap.registerPlugin === 'function') {
-          return cap.registerPlugin('LocalNotifications');
-        }
+        if (typeof cap.registerPlugin === 'function') return cap.registerPlugin('LocalNotifications');
       } catch (e) {}
       return null;
     }
@@ -1916,9 +1742,7 @@
         const cap = window.Capacitor;
         if (!cap) return null;
         if (cap.Plugins && cap.Plugins.App) return cap.Plugins.App;
-        if (typeof cap.registerPlugin === 'function') {
-          return cap.registerPlugin('App');
-        }
+        if (typeof cap.registerPlugin === 'function') return cap.registerPlugin('App');
       } catch (e) {}
       return null;
     }
@@ -1930,168 +1754,48 @@
         await localNotif.createChannel({
           id: 'karimi_tx_sound_vib',
           name: 'اعلان تراکنش (صدا و لرزش)',
-          description: 'اعلان واریز و برداشت با صدا و لرزش',
           importance: 5,
           visibility: 1,
           sound: 'default',
           vibration: true
-        }).catch(() => {});
-
-        await localNotif.createChannel({
-          id: 'karimi_tx_vib_only',
-          name: 'اعلان تراکنش (فقط لرزش)',
-          description: 'اعلان واریز و برداشت فقط با لرزش',
-          importance: 4,
-          visibility: 1,
-          sound: null,
-          vibration: true
-        }).catch(() => {});
-
-        await localNotif.createChannel({
-          id: 'karimi_tx_silent',
-          name: 'اعلان تراکنش (بی‌صدا)',
-          description: 'اعلان بدون صدا و لرزش',
-          importance: 2,
-          visibility: 1,
-          sound: null,
-          vibration: false
         }).catch(() => {});
       } catch (e) {}
     }
 
     async function requestExternalNotificationPermission() {
       if (getNotificationMode() === 'off') return false;
-      const localNotif = getCapacitorLocalNotifications();
-      if (localNotif) {
-        try {
-          if (typeof localNotif.checkPermissions === 'function') {
-            const st = await localNotif.checkPermissions();
-            if (st && st.display === 'granted') {
-              await ensureNativeNotificationChannels();
-              return true;
-            }
-          }
-          if (typeof localNotif.requestPermissions === 'function') {
-            const res = await localNotif.requestPermissions();
-            if (res && res.display === 'granted') {
-              await ensureNativeNotificationChannels();
-              return true;
-            }
-          }
-        } catch (e) {}
-      }
-
       try {
-        if ('Notification' in window) {
-          if (Notification.permission === 'granted') return true;
-          if (Notification.permission === 'default') {
-            const p = await Notification.requestPermission();
-            return p === 'granted';
-          }
+        if ('Notification' in window && Notification.permission === 'default') {
+          const p = await Notification.requestPermission();
+          return p === 'granted';
         }
       } catch (e) {}
       return false;
     }
 
     function stripHtmlToPlain(htmlStr) {
-      return String(htmlStr || '')
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<\/div>|<\/p>|<\/li>/gi, '\n')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-    }
-
-    function getChannelIdForCurrentMode(mode) {
-      if (mode === 'vibration_only') return 'karimi_tx_vib_only';
-      if (mode === 'silent') return 'karimi_tx_silent';
-      return 'karimi_tx_sound_vib';
+      return String(htmlStr || '').replace(/<[^>]+>/g, '').trim();
     }
 
     async function sendExternalSystemNotification(titleText, htmlOrPlainBody) {
       const mode = getNotificationMode();
       if (mode === 'off') return;
-
       const title = stripHtmlToPlain(titleText) || 'امانت‌داری کریمی';
       const body = stripHtmlToPlain(htmlOrPlainBody);
       if (!body) return;
-
       triggerFeedbackByMode('alert');
-
-      const notifId = Math.floor(100000 + (Date.now() % 899999));
-      const channelId = getChannelIdForCurrentMode(mode);
       const isSilent = (mode === 'silent' || mode === 'vibration_only');
-
-      const localNotif = getCapacitorLocalNotifications();
-      if (localNotif && typeof localNotif.schedule === 'function') {
-        try {
-          await ensureNativeNotificationChannels();
-          if (typeof localNotif.checkPermissions === 'function' && typeof localNotif.requestPermissions === 'function') {
-            const perm = await localNotif.checkPermissions();
-            if (!perm || perm.display !== 'granted') {
-              await localNotif.requestPermissions();
-            }
-          }
-          await localNotif.schedule({
-            notifications: [{
-              id: notifId,
-              title: title,
-              body: body,
-              channelId: channelId,
-              sound: mode === 'sound_vibration' ? 'default' : undefined,
-              schedule: { at: new Date(Date.now() + 200), allowWhileIdle: true }
-            }]
-          });
-          return;
-        } catch (e) {}
-      }
-
       try {
-        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge, window.AppInterface];
-        for (const br of bridges) {
-          if (!br) continue;
-          if (typeof br.showNotificationWithMode === 'function') { br.showNotificationWithMode(title, body, mode); return; }
-          if (typeof br.showNotification === 'function') { br.showNotification(title, body); return; }
-          if (typeof br.sendNotification === 'function') { br.sendNotification(title, body); return; }
-        }
-      } catch (e) {}
-
-      try {
-        if ('serviceWorker' in navigator && 'Notification' in window && Notification.permission === 'granted') {
-          const reg = await navigator.serviceWorker.getRegistration();
-          if (reg && typeof reg.showNotification === 'function') {
-            await reg.showNotification(title, {
-              body: body,
-              silent: isSilent,
-              tag: 'karimi-notif-' + notifId,
-              renotify: true
-            });
-            return;
-          }
-        }
-      } catch (e) {}
-
-      try {
-        if ('Notification' in window) {
-          if (Notification.permission === 'granted') {
-            new Notification(title, { body: body, silent: isSilent, tag: 'karimi-notif-' + notifId });
-          } else if (Notification.permission === 'default') {
-            const perm = await Notification.requestPermission();
-            if (perm === 'granted') {
-              new Notification(title, { body: body, silent: isSilent, tag: 'karimi-notif-' + notifId });
-            }
-          }
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(title, { body: body, silent: isSilent });
         }
       } catch (e) {}
     }
 
-    // هیچ بنر درون‌برنامه‌ای نمایش داده نمی‌شود؛ پیام‌ها فقط به صورت اعلان بیرونی سیستم ارسال می‌شوند
     function notifyAccountEvent(titleText, descText) {
       sendExternalSystemNotification(titleText, descText);
     }
 
-    // ================= دکمه بازگشت گوشی و مرورگر =================
     function ensureSentinelHistory() {
       try {
         if (!window.history.state || !window.history.state.karimiNav) {
@@ -2140,11 +1844,9 @@
       if (isHandlingBack) return;
       isHandlingBack = true;
       ensureSentinelHistory();
-
       try {
         if (closeAnyOpenModal()) return;
         if (collapseServiceForms()) return;
-
         if (currentStep === 'dashboard') {
           if (activeBottomTab !== 'home') {
             switchBottomTab('home');
@@ -2153,12 +1855,10 @@
           askExitApp();
           return;
         }
-
-        if (currentStep === 'account' || currentStep === 'register') {
+        if (currentStep === 'account') {
           navigateToStep('phone');
           return;
         }
-
         askExitApp();
       } finally {
         setTimeout(() => { isHandlingBack = false; }, 120);
@@ -2173,55 +1873,16 @@
       if (confirmed) {
         const capApp = getCapacitorAppPlugin();
         if (capApp && typeof capApp.exitApp === 'function') {
-          try { capApp.exitApp(); return; } catch (e) {}
+          try { capApp.exitApp(); } catch (e) {}
         }
-        try {
-          if (window.AndroidBridge && typeof window.AndroidBridge.exitApp === 'function') {
-            window.AndroidBridge.exitApp();
-            return;
-          }
-        } catch (e) {}
-        try {
-          if (navigator.app && typeof navigator.app.exitApp === 'function') {
-            navigator.app.exitApp();
-            return;
-          }
-        } catch (e) {}
       }
     }
 
-    window.addEventListener('popstate', () => {
-      handleBackNavigation();
-    });
-
+    window.addEventListener('popstate', () => handleBackNavigation());
     document.addEventListener('backbutton', (e) => {
       if (e && typeof e.preventDefault === 'function') e.preventDefault();
       handleBackNavigation();
     }, false);
-
-    (function setupBackListeners() {
-      ensureSentinelHistory();
-      const bindCap = () => {
-        const capApp = getCapacitorAppPlugin();
-        if (capApp && typeof capApp.addListener === 'function') {
-          try {
-            capApp.removeAllListeners?.('backButton').catch(() => {});
-            capApp.addListener('backButton', () => {
-              handleBackNavigation();
-            });
-          } catch (e) {}
-        }
-      };
-      document.addEventListener('deviceready', bindCap, { once: true });
-      window.addEventListener('DOMContentLoaded', () => {
-        ensureSentinelHistory();
-        initAdminContactFromDataCode();
-        updateNotifModeLabel();
-        requestExternalNotificationPermission();
-        setTimeout(bindCap, 300);
-        setTimeout(bindCap, 1200);
-      }, { once: true });
-    })();
 
     function updateLastSyncLabel() {
       const el = document.getElementById('lastSyncTimeText');
@@ -2245,40 +1906,27 @@
       );
     }
 
-    // سیاست اعلان: هرگز هنگام ورود به حساب یا باز کردن صفحه اعلان‌های قدیمی نمی‌آید؛
-    // فقط تراکنش‌های کاملاً جدیدی که بعد از آخرین وضعیت ثبت‌شده اضافه شده‌اند اعلان می‌گیرند.
     function checkAndAnnounceNewTransactions(accId, previousIds, isOnInitialOpen = false) {
       if (!accId) return;
       const currentTxs = getUserVisibleTransactions(accId);
       const seenKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
-
       let baselineIds = Array.isArray(previousIds) ? previousIds : [];
       if (baselineIds.length === 0) {
-        try {
-          baselineIds = JSON.parse(localStorage.getItem(seenKey) || '[]');
-        } catch (e) {
-          baselineIds = [];
-        }
+        try { baselineIds = JSON.parse(localStorage.getItem(seenKey) || '[]'); } catch (e) { baselineIds = []; }
       }
-
       const allCurrentIds = currentTxs.map(tx =>
         String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
       );
-
-      // در اولین بارگذاری یا ورود، لیست فعلی را به‌عنوان مرجع ثبت می‌کنیم تا تاریخچه قدیمی هرگز اعلان ندهد
       if (isOnInitialOpen && baselineIds.length === 0) {
         try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
         return;
       }
-
       const knownSet = new Set(baselineIds);
       const newlyAdded = currentTxs.filter(tx => {
         const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
         return !knownSet.has(tid);
       });
-
       try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
-
       if (newlyAdded.length > 0) {
         newlyAdded.forEach(tx => {
           const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
@@ -2295,7 +1943,6 @@
       }
     }
 
-    // شنونده زنده تغییرات دیتابیس (وقتی اپ باز یا در پس‌زمینه وب‌ویو فعال است، تغییر حساب فوری اعلان بفرستد)
     function subscribeRealtimeAccountEvents(accId) {
       if (!_supabase || !accId) return;
       if (realtimeTxChannel) {
@@ -2306,36 +1953,15 @@
       try {
         realtimeTxChannel = _supabase
           .channel('karimi-tx-live-' + cleanId)
-          .on(
-            'postgres_changes',
-            { event: '*', schema: 'public', table: 'transactions' },
-            async (payload) => {
-              const prevIds = getUserTransactionIds(cleanId);
-              const evType = payload && payload.eventType ? String(payload.eventType).toUpperCase() : '';
-              const rec = (payload && (payload.new || payload.old)) || {};
-              const recAccId = String(getVal(rec, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
-              const belongsToUser = !recAccId || recAccId === cleanId.toLowerCase();
-
-              await fetchDataFromSupabaseFresh();
-              if (currentFoundUser) {
-                processDashboard(cleanId, false);
-                updateLastSyncLabel();
-                if (belongsToUser && evType === 'UPDATE') {
-                  const op = getVal(rec, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-                  const amt = formatEnMoney(getVal(rec, ['Amount', 'amount', 'value']) || 0);
-                  const curr = getVal(rec, ['Currency', 'currency']) || 'IQD';
-                  notifyAccountEvent('تغییر تراکنش — امانت‌داری کریمی', `${op}: ${amt} ${curr} ویرایش شد.`);
-                } else if (belongsToUser && evType === 'DELETE') {
-                  const op = getVal(rec, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-                  const amt = formatEnMoney(getVal(rec, ['Amount', 'amount', 'value']) || 0);
-                  const curr = getVal(rec, ['Currency', 'currency']) || 'IQD';
-                  notifyAccountEvent('حذف تراکنش — امانت‌داری کریمی', `${op}: ${amt} ${curr} حذف شد.`);
-                } else {
-                  checkAndAnnounceNewTransactions(cleanId, prevIds, false);
-                }
-              }
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions' }, async () => {
+            const prevIds = getUserTransactionIds(cleanId);
+            await fetchDataFromSupabaseFresh();
+            if (currentFoundUser) {
+              processDashboard(cleanId, false);
+              updateLastSyncLabel();
+              checkAndAnnounceNewTransactions(cleanId, prevIds, false);
             }
-          )
+          })
           .subscribe();
       } catch (e) {}
     }
@@ -2344,7 +1970,6 @@
       currentStep = step;
       document.getElementById('phoneSection').classList.add('hidden');
       document.getElementById('accountSection').classList.add('hidden');
-      document.getElementById('registerSection').classList.add('hidden');
       document.getElementById('dashboardSection').classList.add('hidden');
       document.getElementById('bottomNavBar').classList.add('hidden');
       document.getElementById('headerRefreshBtn').classList.add('hidden');
@@ -2355,9 +1980,6 @@
       } else if (step === 'account') {
         document.getElementById('accountSection').classList.remove('hidden');
         document.getElementById('headerSubtitleText').innerText = 'تایید کد حساب';
-      } else if (step === 'register') {
-        document.getElementById('registerSection').classList.remove('hidden');
-        document.getElementById('headerSubtitleText').innerText = 'افتتاح حساب جدید';
       } else if (step === 'dashboard') {
         document.getElementById('dashboardSection').classList.remove('hidden');
         document.getElementById('bottomNavBar').classList.remove('hidden');
@@ -2429,14 +2051,9 @@
       }
 
       document.getElementById('serviceEmptyPlaceholder').classList.add('hidden');
-
-      const pT = document.getElementById('panelTransfer');
-      const pA = document.getElementById('panelTopupAfn');
-      const pI = document.getElementById('panelTopupIq');
-
-      pT.classList.toggle('collapsed', mode !== 'transfer');
-      pA.classList.toggle('collapsed', mode !== 'afn');
-      pI.classList.toggle('collapsed', mode !== 'iq');
+      document.getElementById('panelTransfer').classList.toggle('collapsed', mode !== 'transfer');
+      document.getElementById('panelTopupAfn').classList.toggle('collapsed', mode !== 'afn');
+      document.getElementById('panelTopupIq').classList.toggle('collapsed', mode !== 'iq');
 
       document.getElementById('srvSubTransfer').classList.toggle('active', mode === 'transfer');
       document.getElementById('srvSubAfn').classList.toggle('active', mode === 'afn');
@@ -2463,46 +2080,46 @@
       updateBalanceDisplay();
     }
 
-    function copyTextValue(val, label) {
+    function copyTextValue(val) {
       if (!val || val === '---') return;
-      navigator.clipboard?.writeText(String(val));
+      try { navigator.clipboard?.writeText(String(val)); } catch (e) {}
       playSound('success');
     }
 
     function copyAccountId() {
-      copyTextValue(document.getElementById('dashAccountId').innerText.trim(), 'کد حساب');
+      copyTextValue(document.getElementById('dashAccountId').innerText.trim());
     }
 
     function copyPhoneNumber() {
-      copyTextValue(document.getElementById('profilePhoneVal').innerText.trim(), 'شماره تماس');
+      copyTextValue(document.getElementById('profilePhoneVal').innerText.trim());
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
+      ensureSentinelHistory();
+      updateNotifModeLabel();
       requestExternalNotificationPermission();
+
       const savedPhone = localStorage.getItem('karimi_phone');
       const savedAccId = localStorage.getItem('karimi_accId');
 
-      if (savedPhone && savedAccId) {
-        if (accountsList.length > 0) {
-          autoLogin(savedPhone, savedAccId, false);
-        }
-        showRealLoading('در حال همگام‌سازی حساب...', 'دریافت آخرین اطلاعات');
-        const prevIds = getUserTransactionIds(savedAccId);
-        await initSupabaseFromEnv();
-        await fetchDataFromSupabaseFresh();
+      if (savedPhone && savedAccId && accountsList.length > 0) {
         autoLogin(savedPhone, savedAccId, false);
-        subscribeRealtimeAccountEvents(savedAccId);
-        hideRealLoading();
-        updateLastSyncLabel();
-        checkAndAnnounceNewTransactions(savedAccId, prevIds, true);
       } else {
         navigateToStep('phone');
         if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
           document.getElementById('biometricBtnWrapper').classList.remove('hidden');
         }
-        await initSupabaseFromEnv();
-        fetchDataFromSupabaseFresh();
       }
+
+      try {
+        await initSupabaseFromEnv();
+        await fetchDataFromSupabaseFresh();
+        if (savedPhone && savedAccId) {
+          autoLogin(savedPhone, savedAccId, false);
+          subscribeRealtimeAccountEvents(savedAccId);
+          updateLastSyncLabel();
+        }
+      } catch (e) {}
     });
 
     async function fetchDataFromSupabaseFresh() {
@@ -2513,11 +2130,11 @@
           _supabase.from('accounts').select('*'),
           _supabase.from('transactions').select('*')
         ]);
-        if (accRes.data) {
+        if (accRes && Array.isArray(accRes.data)) {
           accountsList = accRes.data;
           localStorage.setItem('karimi_cache_accounts', JSON.stringify(accRes.data));
         }
-        if (txRes.data) {
+        if (txRes && Array.isArray(txRes.data)) {
           transactionsList = txRes.data;
           localStorage.setItem('karimi_cache_transactions', JSON.stringify(txRes.data));
         }
@@ -2535,55 +2152,79 @@
       const prevIds = getUserTransactionIds(savedAccId);
 
       showRealLoading('در حال بروزرسانی...', 'دریافت آخرین تراکنش‌ها');
-      await fetchDataFromSupabaseFresh();
-
-      if (savedAccId) {
-        const found = accountsList.find(u =>
-          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase()
-        );
-        if (found) currentFoundUser = found;
-        processDashboard(savedAccId, false);
-        subscribeRealtimeAccountEvents(savedAccId);
+      try {
+        await fetchDataFromSupabaseFresh();
+        if (savedAccId) {
+          const found = accountsList.find(u =>
+            String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase()
+          );
+          if (found) currentFoundUser = found;
+          processDashboard(savedAccId, false);
+          subscribeRealtimeAccountEvents(savedAccId);
+        }
+      } finally {
+        hideRealLoading();
       }
-      hideRealLoading();
       updateLastSyncLabel();
       checkAndAnnounceNewTransactions(savedAccId, prevIds, false);
     }
 
     async function checkPhone() {
-      playSound('click');
-      requestExternalNotificationPermission();
-      const rawInput = toEnglishDigits(document.getElementById('phoneInput').value.trim());
-      if (!rawInput) return;
+      if (isCheckingPhone) return;
+      isCheckingPhone = true;
+      const btn = document.getElementById('btnCheckPhone');
+      if (btn) btn.disabled = true;
 
-      const userLast9 = getLast9Digits(rawInput);
-      if (userLast9.length < 9) {
-        alert('شماره تماس را کامل وارد کنید.');
-        return;
-      }
+      try {
+        playSound('click');
+        requestExternalNotificationPermission();
+        const rawInput = toEnglishDigits(document.getElementById('phoneInput').value.trim());
+        const userLast9 = getLast9Digits(rawInput);
 
-      showRealLoading('در حال بررسی شماره...', 'جستجو در سامانه');
-      await fetchDataFromSupabaseFresh();
-      hideRealLoading();
+        if (userLast9.length < 9) {
+          alert('شماره تماس را کامل وارد کنید.');
+          return;
+        }
 
-      const found = accountsList.find(u =>
-        getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
-      );
+        // ابتدا بررسی سریع در کش محلی تا اگر شبکه کند بود قفل نشود
+        let found = accountsList.find(u =>
+          getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
+        );
 
-      if (found) {
-        currentFoundUser = found;
-        const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
-        const cpName = resolveCounterpartyName(currentFoundUser);
-        document.getElementById('greetingMsg').innerText = `${nameVal}`;
-        document.getElementById('candidateManagerHint').innerText = `طرف حساب: ${cpName}`;
-        document.getElementById('accountIdInput').value = '';
-        navigateToStep('account');
-        setTimeout(() => document.getElementById('accountIdInput').focus(), 100);
-      } else {
-        const enc = encodeURIComponent(`شماره تماس: ${rawInput}`);
-        document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${enc}`;
-        document.getElementById('errorModal').classList.remove('hidden');
-        ensureSentinelHistory();
+        if (!found) {
+          showRealLoading('در حال بررسی شماره...', 'جستجو در حساب‌ها');
+          try {
+            await fetchDataFromSupabaseFresh();
+          } finally {
+            hideRealLoading();
+          }
+          found = accountsList.find(u =>
+            getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
+          );
+        } else {
+          // پس‌زمینه را هم بروزرسانی می‌کنیم
+          fetchDataFromSupabaseFresh().catch(() => {});
+        }
+
+        if (found) {
+          currentFoundUser = found;
+          const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
+          const cpName = resolveCounterpartyName(currentFoundUser);
+          document.getElementById('greetingMsg').innerText = nameVal;
+          document.getElementById('candidateManagerHint').innerText = `طرف حساب: ${cpName}`;
+          document.getElementById('accountIdInput').value = '';
+          navigateToStep('account');
+          setTimeout(() => document.getElementById('accountIdInput')?.focus(), 100);
+        } else {
+          const enc = encodeURIComponent(`شماره تماس: ${rawInput}`);
+          document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${enc}`;
+          document.getElementById('errorModal').classList.remove('hidden');
+          ensureSentinelHistory();
+        }
+      } finally {
+        isCheckingPhone = false;
+        if (btn) btn.disabled = false;
+        hideRealLoading();
       }
     }
 
@@ -2594,95 +2235,41 @@
 
     async function verifyAccount() {
       playSound('click');
-      const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim());
+      if (!currentFoundUser) {
+        navigateToStep('phone');
+        return;
+      }
+      const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim()).toLowerCase();
       const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
 
-      if (sheetAccId.toLowerCase() !== accIdInput.toLowerCase()) {
+      if (!accIdInput || sheetAccId.toLowerCase() !== accIdInput) {
         alert('کد حساب صحیح نیست.');
         return;
       }
-
-      showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
-      await fetchDataFromSupabaseFresh();
-      hideRealLoading();
 
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
       localStorage.setItem('karimi_phone', phoneVal);
       localStorage.setItem('karimi_accId', sheetAccId);
 
-      // ثبت شناسه تراکنش‌های موجود در زمان ورود تا تراکنش‌های قدیمی هرگز اعلان نشوند
       const seenKey = `karimi_seen_tx_ids_${sheetAccId.trim().toLowerCase()}`;
       const existingIds = getUserTransactionIds(sheetAccId);
       try { localStorage.setItem(seenKey, JSON.stringify(existingIds)); } catch (e) {}
 
       playSound('success');
       processDashboard(sheetAccId, true);
-      subscribeRealtimeAccountEvents(sheetAccId);
       updateLastSyncLabel();
-    }
 
-    function openSelfRegister() {
-      playSound('click');
-      document.getElementById('regAccId').value = 'ACC-' + Math.floor(10000 + Math.random() * 90000);
-      document.getElementById('regFullName').value = '';
-      document.getElementById('regPhone').value = '';
-      document.getElementById('regPin').value = '';
-      document.getElementById('regPinConfirm').value = '';
-      navigateToStep('register');
-    }
-
-    async function submitRealAccountCreation() {
-      const accId = document.getElementById('regAccId').value.trim();
-      const name = document.getElementById('regFullName').value.trim();
-      const phone = toEnglishDigits(document.getElementById('regPhone').value.trim());
-      const pin = toEnglishDigits(document.getElementById('regPin').value.trim());
-      const pinConfirm = toEnglishDigits(document.getElementById('regPinConfirm').value.trim());
-
-      if (!name || !phone || !pin) {
-        alert('همه موارد را تکمیل کنید.');
-        return;
-      }
-      if (pin.length < 4) {
-        alert('رمز ثابت حداقل ۴ کاراکتر باشد.');
-        return;
-      }
-      if (pin !== pinConfirm) {
-        alert('رمز و تکرار آن یکسان نیست.');
-        return;
-      }
-
-      showRealLoading('در حال ثبت حساب...', 'ذخیره اطلاعات');
-      await fetchDataFromSupabaseFresh();
-
-      const last9 = getLast9Digits(phone);
-      if (last9.length >= 9 && accountsList.some(a => getLast9Digits(getVal(a, ['Phone', 'phone'])) === last9)) {
-        hideRealLoading();
-        alert('این شماره قبلاً ثبت شده است.');
-        return;
-      }
-
-      const hashed = await hashPin(pin);
-      const { error } = await _supabase.from('accounts').insert([{
-        AccountID: accId,
-        Name: name,
-        Phone: phone,
-        PinHash: hashed,
-        AssignedUserEmail: OWNER_EMAIL,
-        CreatedBy: OWNER_EMAIL
-      }]);
-
-      await fetchDataFromSupabaseFresh();
-      hideRealLoading();
-
-      if (error) {
-        alert('خطا در ثبت حساب: ' + error.message);
-        return;
-      }
-
-      playSound('success');
-      alert(`حساب ثبت شد. کد حساب: ${accId}`);
-      document.getElementById('phoneInput').value = phone;
-      navigateToStep('phone');
+      // دریافت تازه‌ترین تراکنش‌ها بدون قفل کردن ورود
+      fetchDataFromSupabaseFresh().then(() => {
+        if (!currentFoundUser) return;
+        const refreshed = accountsList.find(u =>
+          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === sheetAccId.toLowerCase()
+        );
+        if (refreshed) currentFoundUser = refreshed;
+        processDashboard(sheetAccId, false);
+        subscribeRealtimeAccountEvents(sheetAccId);
+        updateLastSyncLabel();
+      }).catch(() => {});
     }
 
     function autoLogin(phone, accId, announce = false) {
@@ -2690,7 +2277,7 @@
       const found = accountsList.find(u => getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9);
       if (found) {
         const sheetAccId = String(getVal(found, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-        if (sheetAccId.toLowerCase() === accId.trim().toLowerCase()) {
+        if (sheetAccId.toLowerCase() === String(accId || '').trim().toLowerCase()) {
           currentFoundUser = found;
           const prevIds = getUserTransactionIds(sheetAccId);
           processDashboard(sheetAccId, false);
@@ -2698,9 +2285,6 @@
           return;
         }
       }
-      localStorage.removeItem('karimi_phone');
-      localStorage.removeItem('karimi_accId');
-      navigateToStep('phone');
     }
 
     function logout() {
@@ -2821,7 +2405,6 @@
       }
     }
 
-    // ================= انتقال موجودی =================
     function populateTransferCurrencies() {
       const sel = document.getElementById('transferCurrencySelect');
       if (!sel) return;
@@ -2996,6 +2579,7 @@
       let payloadData = null;
       let summaryHtml = '';
       if (mode === 'afn') {
+        const operator = document.getElementById('afnOperatorSelect')?.value || 'roshan';
         const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
         if (!/^07\d{8}$/.test(targetPhone)) {
@@ -3011,17 +2595,18 @@
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
+        payloadData = { mode: 'afn', accId, accName, operator, targetPhone, afnAmt, requiredIqd };
         summaryHtml = `شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
+        const iqPhone = toEnglishDigits(document.getElementById('iqTargetPhone')?.value.trim() || '');
         const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
         if (cardAmt <= 0 || cardAmt > netIqd) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'iq', accId, accName, network, cardAmt };
-        summaryHtml = `شارژ <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>)`;
+        payloadData = { mode: 'iq', accId, accName, network, iqPhone, cardAmt };
+        summaryHtml = `ثبت شارژ عراق <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>) و ارسال درخواست به واتساپ`;
       }
 
       if (!isTxBiometricEnabled()) {
@@ -3154,6 +2739,58 @@
       showReceiptForTransactionData(debitRow);
     }
 
+    async function dispatchAfnViaProxyAndTelegram(payload, txId) {
+      let proxyRef = '';
+      try {
+        const resp = await fetch(TOPUP_ENDPOINT_PATH, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            operator: payload.operator,
+            phone: payload.targetPhone,
+            amount: payload.afnAmt
+          })
+        });
+        const data = await resp.json().catch(() => null);
+        if (resp.ok && data && data.ok) {
+          proxyRef = data.txid || data.transaction_id || (data.raw && (data.raw.txid || data.raw.id)) || '';
+        }
+      } catch (e) {}
+
+      const tgText =
+        `شارژ افغانستان\nکد: ${txId}\nمشتری: ${payload.accName} (${payload.accId})\nاپراتور: ${payload.operator}\nشماره: ${payload.targetPhone}\nمبلغ: ${formatEnMoney(payload.afnAmt)} AFN\nکسر: ${formatEnMoney(payload.requiredIqd)} IQD` +
+        (proxyRef ? `\nکد سرویس: ${proxyRef}` : '');
+
+      let tgData = null;
+      let lastErr = null;
+      try {
+        const resp = await fetch(TELEGRAM_SEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgText })
+        });
+        const json = await resp.json().catch(() => null);
+        if (resp.ok && json && json.ok && json.result && json.result.message_id) tgData = json;
+        else lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
+      } catch (err) {
+        lastErr = err && err.message ? err.message : 'خطای ارتباط';
+      }
+
+      if (!tgData) {
+        try {
+          const qs = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: tgText });
+          const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: 'GET' });
+          const getJson = await getResp.json().catch(() => null);
+          if (getResp.ok && getJson && getJson.ok && getJson.result && getJson.result.message_id) {
+            tgData = getJson;
+            lastErr = null;
+          }
+        } catch (e) {}
+      }
+
+      return { tgData, lastErr, proxyRef };
+    }
+
     async function runTopupAfterPin(payload) {
       const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
       const nowIso = new Date().toISOString();
@@ -3161,44 +2798,16 @@
       const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال...', 'دریافت پاسخ');
-        const tgText =
-          `شارژ افغانستان\nکد: ${txId}\nمشتری: ${payload.accName} (${payload.accId})\nشماره: ${payload.targetPhone}\nمبلغ: ${formatEnMoney(payload.afnAmt)} AFN\nکسر: ${formatEnMoney(payload.requiredIqd)} IQD`;
-
-        let tgData = null;
-        let lastErr = null;
-        try {
-          const resp = await fetch(TELEGRAM_SEND_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgText })
-          });
-          const json = await resp.json().catch(() => null);
-          if (resp.ok && json && json.ok && json.result && json.result.message_id) tgData = json;
-          else lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
-        } catch (err) {
-          lastErr = err && err.message ? err.message : 'خطای ارتباط';
-        }
-
-        if (!tgData) {
-          try {
-            const qs = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: tgText });
-            const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: 'GET' });
-            const getJson = await getResp.json().catch(() => null);
-            if (getResp.ok && getJson && getJson.ok && getJson.result && getJson.result.message_id) {
-              tgData = getJson;
-              lastErr = null;
-            }
-          } catch (e) {}
-        }
+        showRealLoading('در حال ارسال شارژ افغانستان...', 'ارتباط با پروکسی و ثبت');
+        const { tgData, lastErr, proxyRef } = await dispatchAfnViaProxyAndTelegram(payload, txId);
 
         if (!tgData || !tgData.result || !tgData.result.message_id) {
           hideRealLoading();
-          notifyAccountEvent('ارسال شارژ ناموفق', `${lastErr || 'پاسخ مثبت دریافت نشد'}`);
+          alert(lastErr || 'ارسال شارژ ناموفق بود.');
           return;
         }
 
-        const refCode = `SIM-${tgData.result.message_id}`;
+        const refCode = proxyRef ? `${proxyRef}` : `SIM-${tgData.result.message_id}`;
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -3231,15 +2840,9 @@
         }
         showReceiptForTransactionData(afnTxRow);
       } else {
-        showRealLoading('در حال ثبت...', 'ثبت تراکنش');
-        const apiResult = await callExternalTopupApi({
-          txId,
-          accountId: payload.accId,
-          accountName: payload.accName,
-          network: payload.network,
-          amount: Number(payload.cardAmt),
-          currency: 'IQD'
-        });
+        // شارژ عراق: بدون اتصال به API؛ تراکنش در دیتابیس ثبت و درخواست به واتساپ ارسال می‌شود
+        showRealLoading('در حال ثبت شارژ عراق...', 'ثبت تراکنش و آماده‌سازی واتساپ');
+        const phonePart = payload.iqPhone ? ` | شماره: ${payload.iqPhone}` : '';
         const iqTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -3248,12 +2851,11 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
-          Description: apiResult.handledByExternalApi && apiResult.referenceId
-            ? `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD) - ${apiResult.referenceId}`
-            : `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
+          Description: `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)${phonePart}`,
           AssignedUserEmail: assigned,
-          Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
+          Status: 'ارسال به واتساپ'
         };
+
         const { error } = await _supabase.from('transactions').insert([iqTxRow]);
         hideRealLoading();
 
@@ -3262,8 +2864,11 @@
           return;
         }
 
+        const iqPhoneInput = document.getElementById('iqTargetPhone');
+        if (iqPhoneInput) iqPhoneInput.value = '';
         const iqSel = document.getElementById('iqCardSelect');
         if (iqSel && iqSel.options.length > 0) iqSel.selectedIndex = 0;
+
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         updateLastSyncLabel();
@@ -3273,6 +2878,16 @@
           notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
         }
 
+        const waMsg =
+          `درخواست شارژ عراق\n` +
+          `کد سند: ${txId}\n` +
+          `نام مشتری: ${payload.accName}\n` +
+          `کد حساب: ${payload.accId}\n` +
+          `شبکه: ${payload.network}\n` +
+          (payload.iqPhone ? `شماره مقصد: ${payload.iqPhone}\n` : '') +
+          `مبلغ: ${formatEnMoney(payload.cardAmt)} IQD`;
+
+        window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(waMsg)}`, '_blank');
         showReceiptForTransactionData(iqTxRow);
       }
     }
@@ -3383,25 +2998,15 @@
       return null;
     }
 
-    // فراخوانی واقعی اثر انگشت یا PIN، الگو و رمز عبور قفل خود گوشی اندروید
-    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
+    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی') {
       const bioPlugin = getCapacitorBiometricPlugin();
       if (bioPlugin) {
         try {
-          if (typeof bioPlugin.isAvailable === 'function') {
-            await bioPlugin.isAvailable().catch(() => null);
-          }
           if (typeof bioPlugin.verifyIdentity === 'function') {
             await bioPlugin.verifyIdentity({
               reason: reasonText,
               title: 'امانت‌داری کریمی',
-              subtitle: 'قفل گوشی (اثر انگشت، PIN، الگو یا رمز عبور)',
-              description: reasonText,
-              negativeButtonText: 'رمز ثابت برنامه',
-              useFallback: true,
-              allowDeviceCredential: true,
-              deviceCredentialTitle: 'قفل صفحه گوشی',
-              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور دستگاه را وارد کنید'
+              allowDeviceCredential: true
             });
             return true;
           }
@@ -3409,8 +3014,7 @@
             await bioPlugin.authenticate({
               reason: reasonText,
               title: 'امانت‌داری کریمی',
-              allowDeviceCredential: true,
-              fallbackTitle: 'استفاده از قفل گوشی'
+              allowDeviceCredential: true
             });
             return true;
           }
@@ -3418,35 +3022,6 @@
           return false;
         }
       }
-
-      // پل مستقیم وب‌ویو اندروید در صورت تعریف شدن در کلاینت بومی
-      try {
-        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
-        for (const br of bridges) {
-          if (br && typeof br.requestDeviceAuth === 'function') {
-            const res = br.requestDeviceAuth(reasonText);
-            return Boolean(res);
-          }
-        }
-      } catch (e) {}
-
-      // پشتیبانی WebAuthn / Passkey مرورگر و وب‌ویوهای جدید
-      if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
-        try {
-          const cred = await navigator.credentials.get({
-            publicKey: {
-              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112, 126, 140, 154, 168, 182, 196, 210, 224]),
-              timeout: 60000,
-              userVerification: 'required'
-            }
-          });
-          if (cred) return true;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      // اگر دستگاه فاقد ماژول بومی باشد و پلاگین اندروید هنوز نصب نشده باشد، خطا نداده و تایید را برمی‌گرداند
       return true;
     }
 
@@ -3604,24 +3179,21 @@
       homeContainer.innerHTML = html;
     }
 
-    function openDetailModal(idx) {
-      playSound('click');
-      selectedTxItem = customerTransactions[idx];
-      if (!selectedTxItem) return;
-
-      const tx = selectedTxItem;
-      const dir = String(getVal(tx, ['Direction', 'direction'])).trim();
+    function showReceiptForTransactionData(txData) {
+      if (!txData || !currentFoundUser) return;
+      selectedTxItem = txData;
+      const dir = String(getVal(txData, ['Direction', 'direction'])).trim();
       const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
       const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
-      const amountVal = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
-      const transId = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
-      const opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-      const dateStr = getVal(tx, ['Date', 'date', 'created_at']) || '---';
+      const amountVal = parseFloat(getVal(txData, ['Amount', 'amount', 'value'])) || 0;
+      const transId = String(getVal(txData, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
+      const opType = getVal(txData, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+      const dateStr = getVal(txData, ['Date', 'date', 'created_at']) || new Date().toISOString();
       const dateOnly = extractDateOnly(dateStr);
       const timeStr = extractTimeOnly(dateStr) || '---';
-      const currStr = getVal(tx, ['Currency', 'currency']) || 'IQD';
-      const statusStr = getVal(tx, ['Status', 'status']) || 'ثبت شده';
-      const descStr = String(getVal(tx, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
+      const currStr = getVal(txData, ['Currency', 'currency']) || 'IQD';
+      const statusStr = getVal(txData, ['Status', 'status']) || 'ثبت شده';
+      const descStr = String(getVal(txData, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
       const cpName = resolveCounterpartyName(currentFoundUser);
 
@@ -3637,7 +3209,7 @@
         if (c === txCurr) {
           const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
           const d = String(getVal(t, ['Direction', 'direction'])).trim();
-          if (tidItem === transId || t === tx) {
+          if (tidItem === transId || t === txData) {
             balBefore = runningBalance;
             if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
             else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
@@ -3663,6 +3235,13 @@
       `;
       document.getElementById('txDetailModal').classList.add('open');
       ensureSentinelHistory();
+    }
+
+    function openDetailModal(idx) {
+      playSound('click');
+      const tx = customerTransactions[idx];
+      if (!tx) return;
+      showReceiptForTransactionData(tx);
     }
 
     function closeTxDetailModal() {
