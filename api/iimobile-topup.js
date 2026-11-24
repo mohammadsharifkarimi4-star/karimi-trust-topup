@@ -4,8 +4,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
-  const proxyBase = 'http://161.97.150.196:1001';
-  const apiBase = 'https://recharge-apis.iimobile.af';
+  const proxyBase = (process.env.PROXY_BASE_URL || 'http://161.97.150.196:1001').replace(/\/+$/, '');
+  const apiBase = (process.env.IIMOBILE_API_BASE || 'https://recharge-apis.iimobile.af').replace(/\/+$/, '');
+  const defaultBundleId = process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506';
 
   const { operator, phone, bundle_id, amount } = req.body || {};
   if (!operator || !phone) {
@@ -14,7 +15,7 @@ export default async function handler(req, res) {
 
   const normalizedOperator = String(operator).trim().toLowerCase();
   const normalizedPhone = String(phone).trim();
-  const effectiveBundleId = bundle_id ? String(bundle_id).trim() : '543212506';
+  const effectiveBundleId = bundle_id ? String(bundle_id).trim() : String(defaultBundleId).trim();
 
   const payload = {
     operator: normalizedOperator,
@@ -23,6 +24,16 @@ export default async function handler(req, res) {
   };
   if (amount !== undefined && amount !== null && amount !== '') {
     payload.amount = Number(amount);
+  }
+
+  function isPositiveStatus(data) {
+    if (!data || typeof data !== 'object') return false;
+    const st = data.status;
+    if (st === 1 || st === 2 || st === '1' || st === '2' || st === true || st === 'success' || st === 'ok') {
+      return true;
+    }
+    if (data.success === true) return true;
+    return false;
   }
 
   async function postViaProxy(endpointPath, bodyObj) {
@@ -49,10 +60,11 @@ export default async function handler(req, res) {
       initData.id ||
       (initData.data && (initData.data.txid || initData.data.transaction_id || initData.data.id));
 
-    if (!initRes.resp.ok || (initData.status != 1 && initData.status != 2)) {
-      return res.status(initRes.resp.status || 400).json({
+    if (!initRes.resp.ok || (!isPositiveStatus(initData) && !txId)) {
+      return res.status(initRes.resp.status >= 400 ? initRes.resp.status : 400).json({
         ok: false,
         stage: 'initiate',
+        error: initData.message || initData.error || 'Initiate transaction failed',
         raw: initData
       });
     }
@@ -63,10 +75,14 @@ export default async function handler(req, res) {
         txnid: Number(txId) || txId
       });
       const execData = execRes.raw || {};
+      const execOk = execRes.resp.ok && (isPositiveStatus(execData) || execData.status === undefined);
+
       return res.status(execRes.resp.status || 200).json({
-        ok: execRes.resp.ok && (execData.status == 1 || execData.status == 2),
+        ok: execOk,
         stage: 'execute',
+        txid: txId,
         initiate: initData,
+        error: execOk ? undefined : (execData.message || execData.error || 'Execute transaction failed'),
         raw: execData
       });
     }
