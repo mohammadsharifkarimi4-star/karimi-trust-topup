@@ -1480,14 +1480,10 @@
   </div>
 
   <script>
-    // آدرس فایل مستقل شارژ افغانستان (در گیت‌هاب یا پوشه برنامه)
-    const AFGHANISTAN_TOPUP_URL = "afghanistan-topup.html";
+    // آدرس صفحه یا ماژول مستقل شارژ افغانستان (فقط لینک اتصال)
+    const AFGHANISTAN_TOPUP_LINK = "afghanistan-topup.html";
 
-    function openAfghanistanTopupPage(ev) {
-      if (ev && typeof ev.preventDefault === 'function') {
-        ev.preventDefault();
-      }
-      playSound('click');
+    function buildAfghanistanTopupHref() {
       const accId = currentFoundUser
         ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim()
         : (localStorage.getItem('karimi_accId') || '');
@@ -1499,8 +1495,15 @@
       if (accId) params.set('accId', accId);
       if (phone) params.set('phone', phone);
       const qs = params.toString();
-      const targetHref = qs ? `${AFGHANISTAN_TOPUP_URL}?${qs}` : AFGHANISTAN_TOPUP_URL;
-      window.location.href = targetHref;
+      return qs ? `${AFGHANISTAN_TOPUP_LINK}?${qs}` : AFGHANISTAN_TOPUP_LINK;
+    }
+
+    function openAfghanistanTopupPage(ev) {
+      if (ev && typeof ev.preventDefault === 'function') {
+        ev.preventDefault();
+      }
+      playSound('click');
+      window.location.href = buildAfghanistanTopupHref();
       return false;
     }
 
@@ -1586,8 +1589,10 @@
         const resp = await fetch('/api/config', { cache: 'no-store' });
         if (resp.ok) {
           const cfg = await resp.json();
-          if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
-            _supabase = supabase.createClient(String(cfg.supabaseUrl).trim(), String(cfg.supabaseKey).trim());
+          const sbUrl = (cfg && (cfg.supabaseUrl || cfg.supabase_url)) || '';
+          const sbKey = (cfg && (cfg.supabaseKey || cfg.supabase_anon_key || cfg.supabaseAnonKey)) || '';
+          if (sbUrl && sbKey && window.supabase) {
+            _supabase = window.supabase.createClient(String(sbUrl).trim(), String(sbKey).trim());
             runtimeConfigLoaded = true;
             return true;
           }
