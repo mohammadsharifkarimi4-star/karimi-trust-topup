@@ -12,12 +12,18 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'operator and phone are required' });
   }
 
+  const normalizedOperator = String(operator).trim().toLowerCase();
+  const normalizedPhone = String(phone).trim();
+  const effectiveBundleId = bundle_id ? String(bundle_id).trim() : '543212506';
+
   const payload = {
-    operator: String(operator).trim().toLowerCase(),
-    phone: String(phone).trim()
+    operator: normalizedOperator,
+    phone: normalizedPhone,
+    bundle_id: effectiveBundleId
   };
-  if (bundle_id) payload.bundle_id = String(bundle_id).trim();
-  if (amount !== undefined && amount !== null && amount !== '') payload.amount = Number(amount);
+  if (amount !== undefined && amount !== null && amount !== '') {
+    payload.amount = Number(amount);
+  }
 
   async function postViaProxy(endpointPath, bodyObj) {
     const targetUrl = `${apiBase}${endpointPath}`;
@@ -37,7 +43,11 @@ export default async function handler(req, res) {
   try {
     const initRes = await postViaProxy('/v1/api/initiate-transaction', payload);
     const initData = initRes.raw || {};
-    const txId = initData.transaction_id || initData.id || (initData.data && (initData.data.transaction_id || initData.data.id));
+    const txId =
+      initData.txid ||
+      initData.transaction_id ||
+      initData.id ||
+      (initData.data && (initData.data.txid || initData.data.transaction_id || initData.data.id));
 
     if (!initRes.resp.ok || (initData.status != 1 && initData.status != 2)) {
       return res.status(initRes.resp.status || 400).json({
@@ -48,7 +58,10 @@ export default async function handler(req, res) {
     }
 
     if (txId) {
-      const execRes = await postViaProxy('/v1/api/execute-transaction', { transaction_id: txId });
+      const execRes = await postViaProxy('/v1/api/execute-transaction', {
+        operator: normalizedOperator,
+        txnid: Number(txId) || txId
+      });
       const execData = execRes.raw || {};
       return res.status(execRes.resp.status || 200).json({
         ok: execRes.resp.ok && (execData.status == 1 || execData.status == 2),
