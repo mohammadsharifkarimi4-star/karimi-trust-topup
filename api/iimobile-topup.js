@@ -36,6 +36,24 @@ export default async function handler(req, res) {
     return false;
   }
 
+  function formatFriendlyError(data, fallbackMsg) {
+    const rawMsg = String(
+      (data && (data.message || data.error || data.msg || data.detail)) || fallbackMsg || ''
+    ).trim();
+
+    const lower = rawMsg.toLowerCase();
+    if (
+      lower.includes('balance') ||
+      lower.includes('insufficient') ||
+      lower.includes('credit') ||
+      lower.includes('fund') ||
+      lower.includes('موجودی')
+    ) {
+      return 'سیستم موجودی ندارد؛ شارژ انجام نشد.';
+    }
+    return rawMsg || 'درخواست شارژ توسط سرویس مقصد تایید نشد.';
+  }
+
   async function postViaProxy(endpointPath, bodyObj) {
     const targetUrl = `${apiBase}${endpointPath}`;
     const proxyUrl = `${proxyBase}/?url=${encodeURIComponent(targetUrl)}`;
@@ -61,10 +79,12 @@ export default async function handler(req, res) {
       (initData.data && (initData.data.txid || initData.data.transaction_id || initData.data.id));
 
     if (!initRes.resp.ok || (!isPositiveStatus(initData) && !txId)) {
+      const friendlyError = formatFriendlyError(initData, 'Initiate transaction failed');
       return res.status(initRes.resp.status >= 400 ? initRes.resp.status : 400).json({
         ok: false,
         stage: 'initiate',
-        error: initData.message || initData.error || 'Initiate transaction failed',
+        no_balance: friendlyError.includes('موجودی'),
+        error: friendlyError,
         raw: initData
       });
     }
@@ -76,13 +96,15 @@ export default async function handler(req, res) {
       });
       const execData = execRes.raw || {};
       const execOk = execRes.resp.ok && (isPositiveStatus(execData) || execData.status === undefined);
+      const friendlyError = execOk ? undefined : formatFriendlyError(execData, 'Execute transaction failed');
 
       return res.status(execRes.resp.status || 200).json({
         ok: execOk,
         stage: 'execute',
         txid: txId,
         initiate: initData,
-        error: execOk ? undefined : (execData.message || execData.error || 'Execute transaction failed'),
+        no_balance: friendlyError ? friendlyError.includes('موجودی') : false,
+        error: friendlyError,
         raw: execData
       });
     }
