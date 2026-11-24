@@ -35,6 +35,8 @@
       --white: #ffffff;
       --danger: #dc2626;
       --danger-soft: #fef2f2;
+      --warning: #d97706;
+      --warning-soft: #fffbeb;
       --radius-xl: 22px;
       --radius-lg: 16px;
       --radius-md: 12px;
@@ -160,7 +162,7 @@
     .app-body {
       flex: 1;
       min-height: 0;
-      padding: 12px 14px 92px 14px;
+      padding: 10px 14px 92px 14px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       display: flex;
@@ -403,7 +405,7 @@
       background: var(--white);
       border: 1px solid var(--slate-200);
       border-radius: var(--radius-xl);
-      padding: 12px;
+      padding: 11px;
       box-shadow: var(--shadow-card);
       flex-shrink: 0;
     }
@@ -953,22 +955,22 @@
 
     <main id="appBody" class="app-body">
 
-      <!-- گام ۱: ورود با شماره تماس (بدون راهنمای افتتاح حساب و بدون شماره ادمین زیر آن) -->
-      <div id="phoneSection" style="margin:auto 0;">
+      <!-- گام ۱: ورود با شماره تماس -->
+      <div id="phoneSection">
         <div class="wallet-hero-card" style="margin-bottom:12px;">
           <div class="wallet-top-meta">
             <span class="wallet-badge">حساب مشتریان</span>
           </div>
-          <h2 style="font-size:1.12rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">ورود به حساب</h2>
+          <h2 style="font-size:1.1rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">ورود به حساب</h2>
           <p style="font-size:0.78rem; color:var(--slate-700);">شماره تماس ثبت‌شده خود را وارد کنید.</p>
         </div>
 
-        <div class="quick-grid-card">
+        <div class="quick-grid-card" style="margin-bottom:12px;">
           <div class="form-group">
             <label for="phoneInput">شماره تماس</label>
             <input type="tel" inputmode="numeric" id="phoneInput" placeholder="077xxxxxxxx" dir="ltr" onkeydown="if(event.key==='Enter') checkPhone()">
           </div>
-          <button type="button" id="btnCheckPhone" class="btn btn-primary" onclick="checkPhone()">ادامه</button>
+          <button type="button" class="btn btn-primary" onclick="checkPhone()">ادامه</button>
 
           <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
             <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
@@ -986,6 +988,37 @@
             <input type="text" id="accountIdInput" placeholder="Account ID" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
           <button type="button" class="btn btn-primary" onclick="verifyAccount()">ورود</button>
+          <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">بازگشت</button>
+        </div>
+      </div>
+
+      <!-- گام ۳: افتتاح حساب جدید -->
+      <div id="registerSection" class="hidden">
+        <div class="quick-grid-card">
+          <div class="panel-banner-header">
+            <h4>افتتاح حساب جدید</h4>
+          </div>
+          <div class="form-group">
+            <label for="regAccId">شناسه حساب (Account ID)</label>
+            <input type="text" id="regAccId" dir="ltr" readonly>
+          </div>
+          <div class="form-group">
+            <label for="regFullName">نام و نام خانوادگی</label>
+            <input type="text" id="regFullName">
+          </div>
+          <div class="form-group">
+            <label for="regPhone">شماره همراه</label>
+            <input type="tel" id="regPhone" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label for="regPin">رمز ثابت</label>
+            <input type="password" id="regPin" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label for="regPinConfirm">تکرار رمز ثابت</label>
+            <input type="password" id="regPinConfirm" dir="ltr">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="submitRealAccountCreation()">ثبت حساب</button>
           <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">بازگشت</button>
         </div>
       </div>
@@ -1143,19 +1176,19 @@
             </div>
 
             <div class="form-group">
-              <label for="afnOperatorSelect">اپراتور افغانستان</label>
+              <label for="afnOperatorSelect">اپراتور</label>
               <select id="afnOperatorSelect">
-                <option value="roshan">روشن (Roshan)</option>
-                <option value="mtn">ام‌تی‌ان (MTN)</option>
-                <option value="awcc">افغان بی‌سیم (AWCC)</option>
-                <option value="etisalat">اتصالات (Etisalat)</option>
-                <option value="salaam">سلام (Salaam)</option>
+                <option value="atoma">atoma</option>
+                <option value="awcc">awcc</option>
+                <option value="salam">salam</option>
+                <option value="roshan">roshan</option>
+                <option value="etisalat">etisalat</option>
               </select>
             </div>
 
             <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
-              <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              <input type="tel" id="afnTargetPhone" maxlength="12" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
 
             <div class="form-group">
@@ -1174,7 +1207,7 @@
             </button>
           </div>
 
-          <!-- پنل ۳: شارژ عراق (ثبت تراکنش + ارسال درخواست به واتساپ) -->
+          <!-- پنل ۳: شارژ عراق -->
           <div id="panelTopupIq" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>شارژ عراق</h4>
@@ -1185,25 +1218,19 @@
               <select id="iqNetworkSelect">
                 <option value="Zain (زین عراق)">Zain (زین عراق)</option>
                 <option value="AsiaCell (آسیاسل)">AsiaCell (آسیاسل)</option>
-                <option value="Korek (کورک)">Korek (کورک)</option>
               </select>
-            </div>
-
-            <div class="form-group">
-              <label for="iqTargetPhone">شماره موبایل مقصد عراق (اختیاری)</label>
-              <input type="tel" id="iqTargetPhone" placeholder="078xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
 
             <div class="form-group">
               <label for="iqCardSelect">مبلغ (IQD)</label>
               <select id="iqCardSelect" onchange="recalcTopupCost()">
-                <option value="1000">1,000</option>
-                <option value="2000">2,000</option>
-                <option value="3000">3,000</option>
-                <option value="5000">5,000</option>
-                <option value="10000">10,000</option>
-                <option value="15000">15,000</option>
-                <option value="25000">25,000</option>
+                <option value="1000" data-charge="1000">1,000</option>
+                <option value="2000" data-charge="2000">2,000</option>
+                <option value="3000" data-charge="3000">3,000</option>
+                <option value="5000" data-charge="5000">5,000</option>
+                <option value="10000" data-charge="10000">10,000</option>
+                <option value="15000" data-charge="15000">15,000</option>
+                <option value="25000" data-charge="25000">25,000</option>
               </select>
             </div>
 
@@ -1213,8 +1240,8 @@
 
             <div id="topupIqEligibilityMsg" style="font-size:0.72rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:6px;"></div>
 
-            <button type="button" class="btn btn-whatsapp" id="btnExecuteTopupIq" onclick="executeCustomerTopup('iq')">
-              تایید، ثبت تراکنش و ارسال به واتساپ
+            <button type="button" class="btn btn-primary" id="btnExecuteTopupIq" onclick="executeCustomerTopup('iq')">
+              تایید و ثبت شارژ
             </button>
           </div>
         </div>
@@ -1436,36 +1463,38 @@
     const OWNER_NAME_DISPLAY = "محمد شریف";
     const OWNER_EMAIL = "mohammadsharifkarimi4@gmail.com";
     const OWNER_WHATSAPP = "9647721878997";
-    const AFN_TO_IQD_RATE = 26.5;
+    const TOPUP_API_ENDPOINT = "/api/iimobile-topup";
 
-    const TELEGRAM_BOT_TOKEN = "8900776593:AAH0BPYT34-GlJ_00fUN0b56mUpz4s2k6SA";
-    const TELEGRAM_CHAT_ID = "-1003555048687";
-    const TELEGRAM_SEND_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-    // پروکسی و API شارژ افغانستان مطابق فایل api/iimobile-topup.js
-    const TOPUP_PROXY_BASE = "http://161.97.150.196:1001";
-    const TOPUP_API_BASE = "https://recharge-apis.iimobile.af";
-    const TOPUP_ENDPOINT_PATH = "/api/iimobile-topup";
+    let appSettings = {
+      transfer_enabled: true,
+      topup_afn_enabled: true,
+      topup_iq_enabled: true,
+      afn_to_iqd_rate: 26.5,
+      iq_networks: ["Zain (زین عراق)", "AsiaCell (آسیاسل)"],
+      iq_packages: [
+        { id: "pkg-1", label: "1,000", card_amount: 1000, charge_amount: 1000, active: true },
+        { id: "pkg-2", label: "2,000", card_amount: 2000, charge_amount: 2000, active: true },
+        { id: "pkg-3", label: "3,000", card_amount: 3000, charge_amount: 3000, active: true },
+        { id: "pkg-4", label: "5,000", card_amount: 5000, charge_amount: 5000, active: true },
+        { id: "pkg-5", label: "10,000", card_amount: 10000, charge_amount: 10000, active: true },
+        { id: "pkg-6", label: "15,000", card_amount: 15000, charge_amount: 15000, active: true },
+        { id: "pkg-7", label: "25,000", card_amount: 25000, charge_amount: 25000, active: true }
+      ],
+      iq_whatsapp_phone: OWNER_WHATSAPP,
+      iq_mode: "whatsapp_record"
+    };
 
     let _supabase = null;
     let runtimeConfigLoaded = false;
 
     async function initSupabaseFromEnv() {
-      if (_supabase && runtimeConfigLoaded && window.supabase && typeof window.supabase.createClient === 'function') {
-        return true;
-      }
-      if (!window.supabase || typeof window.supabase.createClient !== 'function') {
-        return false;
-      }
+      if (_supabase && runtimeConfigLoaded) return true;
       try {
         const resp = await fetch('/api/config', { cache: 'no-store' });
         if (resp.ok) {
           const cfg = await resp.json();
           if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
-            _supabase = window.supabase.createClient(
-              String(cfg.supabaseUrl).trim(),
-              String(cfg.supabaseKey).trim()
-            );
+            _supabase = supabase.createClient(String(cfg.supabaseUrl).trim(), String(cfg.supabaseKey).trim());
             runtimeConfigLoaded = true;
             return true;
           }
@@ -1490,20 +1519,102 @@
     let isHandlingBack = false;
     let exitDialogOpen = false;
     let realtimeTxChannel = null;
-    let isCheckingPhone = false;
 
     function loadCachedData() {
       try {
         const cAcc = localStorage.getItem('karimi_cache_accounts');
         const cTx = localStorage.getItem('karimi_cache_transactions');
-        if (cAcc) accountsList = JSON.parse(cAcc) || [];
-        if (cTx) transactionsList = JSON.parse(cTx) || [];
-      } catch (e) {
-        accountsList = [];
-        transactionsList = [];
-      }
+        const cSet = localStorage.getItem('karimi_cache_settings');
+        if (cAcc) accountsList = JSON.parse(cAcc);
+        if (cTx) transactionsList = JSON.parse(cTx);
+        if (cSet) applySettingsObject(JSON.parse(cSet));
+      } catch (e) {}
     }
     loadCachedData();
+
+    function applySettingsObject(rawSet) {
+      if (!rawSet || typeof rawSet !== 'object') return;
+      const rateNum = parseFloat(toEnglishDigits(rawSet.afn_to_iqd_rate));
+      appSettings.transfer_enabled = rawSet.transfer_enabled !== false;
+      appSettings.topup_afn_enabled = rawSet.topup_afn_enabled !== false;
+      appSettings.topup_iq_enabled = rawSet.topup_iq_enabled !== false;
+      appSettings.afn_to_iqd_rate = (!isNaN(rateNum) && rateNum > 0) ? rateNum : 26.5;
+
+      if (Array.isArray(rawSet.iq_networks) && rawSet.iq_networks.length) {
+        appSettings.iq_networks = rawSet.iq_networks.map(x => String(x).trim()).filter(Boolean);
+      }
+      if (Array.isArray(rawSet.iq_packages) && rawSet.iq_packages.length) {
+        appSettings.iq_packages = rawSet.iq_packages
+          .filter(p => p && p.active !== false && Number(p.card_amount) > 0)
+          .map((p, idx) => ({
+            id: p.id || ('pkg-' + idx),
+            label: String(p.label || Number(p.card_amount).toLocaleString('en-US')),
+            card_amount: Number(p.card_amount),
+            charge_amount: (Number(p.charge_amount) > 0) ? Number(p.charge_amount) : Number(p.card_amount),
+            active: true
+          }));
+      }
+
+      const waDigits = toEnglishDigits(String(rawSet.iq_whatsapp_phone || '')).replace(/\D/g, '');
+      appSettings.iq_whatsapp_phone = waDigits || OWNER_WHATSAPP;
+      appSettings.iq_mode = rawSet.iq_mode || 'whatsapp_record';
+
+      syncSupportAndIqUiFromSettings();
+    }
+
+    function syncSupportAndIqUiFromSettings() {
+      const targetWa = appSettings.iq_whatsapp_phone || OWNER_WHATSAPP;
+      const supBtn = document.getElementById('headerSupportWaBtn');
+      if (supBtn) supBtn.href = `https://wa.me/${targetWa}`;
+
+      const netSel = document.getElementById('iqNetworkSelect');
+      if (netSel && appSettings.iq_networks.length) {
+        const prevNet = netSel.value;
+        netSel.innerHTML = appSettings.iq_networks.map(n => `<option value="${n}">${n}</option>`).join('');
+        if (prevNet && appSettings.iq_networks.includes(prevNet)) netSel.value = prevNet;
+      }
+
+      const cardSel = document.getElementById('iqCardSelect');
+      if (cardSel && appSettings.iq_packages.length) {
+        const prevVal = cardSel.value;
+        cardSel.innerHTML = appSettings.iq_packages.map(p =>
+          `<option value="${p.card_amount}" data-charge="${p.charge_amount}">${p.label}</option>`
+        ).join('');
+        if (prevVal && Array.from(cardSel.options).some(o => o.value === prevVal)) {
+          cardSel.value = prevVal;
+        }
+      }
+
+      const tTile = document.getElementById('qTileTransfer');
+      const aTile = document.getElementById('qTileAfn');
+      const iTile = document.getElementById('qTileIq');
+      const tSub = document.getElementById('srvSubTransfer');
+      const aSub = document.getElementById('srvSubAfn');
+      const iSub = document.getElementById('srvSubIq');
+
+      if (tTile) tTile.disabled = !appSettings.transfer_enabled;
+      if (aTile) aTile.disabled = !appSettings.topup_afn_enabled;
+      if (iTile) iTile.disabled = !appSettings.topup_iq_enabled;
+      if (tSub) tSub.disabled = !appSettings.transfer_enabled;
+      if (aSub) aSub.disabled = !appSettings.topup_afn_enabled;
+      if (iSub) iSub.disabled = !appSettings.topup_iq_enabled;
+    }
+
+    function getSelectedIqPackage() {
+      const sel = document.getElementById('iqCardSelect');
+      if (!sel || sel.selectedIndex < 0) return { cardAmount: 0, chargeAmount: 0, label: '0' };
+      const opt = sel.options[sel.selectedIndex];
+      const cardAmount = parseFloat(opt.value) || 0;
+      const rawCharge = parseFloat(opt.getAttribute('data-charge'));
+      const chargeAmount = (!isNaN(rawCharge) && rawCharge > 0) ? rawCharge : cardAmount;
+      return { cardAmount, chargeAmount, label: opt.textContent || formatEnMoney(cardAmount) };
+    }
+
+    function isAccountPurchaseBlocked(accObj) {
+      if (!accObj) return false;
+      const val = getVal(accObj, ['purchase_blocked', 'PurchaseBlocked', 'purchaseblocked']);
+      return val === true || String(val).toLowerCase() === 'true' || String(val) === '1';
+    }
 
     function toEnglishDigits(str) {
       if (str === null || str === undefined) return '';
@@ -1515,6 +1626,14 @@
     function getLast9Digits(str) {
       if (!str) return '';
       return toEnglishDigits(String(str)).replace(/\D/g, '').slice(-9);
+    }
+
+    function normalizeAfghanPhone(raw) {
+      const clean = toEnglishDigits(String(raw || '')).replace(/\D/g, '');
+      if (clean.startsWith('93') && clean.length >= 11) return clean;
+      if (clean.startsWith('07') && clean.length === 10) return '93' + clean.slice(1);
+      if (clean.startsWith('7') && clean.length === 9) return '93' + clean;
+      return clean;
     }
 
     function formatEnMoney(amount) {
@@ -1548,7 +1667,7 @@
       ).trim();
       if (!rawRef) return OWNER_NAME_DISPLAY;
       const lower = rawRef.toLowerCase();
-      if (lower === OWNER_EMAIL.toLowerCase() || lower.includes('mohammadsharif') || lower.includes('karimi') || rawRef === 'مالک' || rawRef === 'owner') {
+      if (lower === OWNER_EMAIL.toLowerCase() || lower.includes('mohammadsharif') || lower.includes('karimi') || rawRef === 'مالک' || lower === 'owner') {
         return OWNER_NAME_DISPLAY;
       }
       if (rawRef.includes('@')) {
@@ -1682,6 +1801,13 @@
             navigator.vibrate(type === 'alert' ? [120, 60, 120] : 40);
           }
         } catch (e) {}
+        try {
+          const cap = window.Capacitor;
+          const haptics = cap && cap.Plugins && cap.Plugins.Haptics;
+          if (haptics && typeof haptics.vibrate === 'function') {
+            haptics.vibrate({ duration: type === 'alert' ? 220 : 60 }).catch(() => {});
+          }
+        } catch (e) {}
       }
     }
 
@@ -1709,7 +1835,6 @@
     }
 
     async function persistPinHashInSupabase(accId, pinHash) {
-      if (!_supabase) return false;
       const { error } = await _supabase
         .from('accounts')
         .update({ PinHash: pinHash })
@@ -1732,7 +1857,9 @@
         const cap = window.Capacitor;
         if (!cap) return null;
         if (cap.Plugins && cap.Plugins.LocalNotifications) return cap.Plugins.LocalNotifications;
-        if (typeof cap.registerPlugin === 'function') return cap.registerPlugin('LocalNotifications');
+        if (typeof cap.registerPlugin === 'function') {
+          return cap.registerPlugin('LocalNotifications');
+        }
       } catch (e) {}
       return null;
     }
@@ -1742,7 +1869,9 @@
         const cap = window.Capacitor;
         if (!cap) return null;
         if (cap.Plugins && cap.Plugins.App) return cap.Plugins.App;
-        if (typeof cap.registerPlugin === 'function') return cap.registerPlugin('App');
+        if (typeof cap.registerPlugin === 'function') {
+          return cap.registerPlugin('App');
+        }
       } catch (e) {}
       return null;
     }
@@ -1754,40 +1883,163 @@
         await localNotif.createChannel({
           id: 'karimi_tx_sound_vib',
           name: 'اعلان تراکنش (صدا و لرزش)',
+          description: 'اعلان واریز و برداشت با صدا و لرزش',
           importance: 5,
           visibility: 1,
           sound: 'default',
           vibration: true
+        }).catch(() => {});
+
+        await localNotif.createChannel({
+          id: 'karimi_tx_vib_only',
+          name: 'اعلان تراکنش (فقط لرزش)',
+          description: 'اعلان واریز و برداشت فقط با لرزش',
+          importance: 4,
+          visibility: 1,
+          sound: null,
+          vibration: true
+        }).catch(() => {});
+
+        await localNotif.createChannel({
+          id: 'karimi_tx_silent',
+          name: 'اعلان تراکنش (بی‌صدا)',
+          description: 'اعلان بدون صدا و لرزش',
+          importance: 2,
+          visibility: 1,
+          sound: null,
+          vibration: false
         }).catch(() => {});
       } catch (e) {}
     }
 
     async function requestExternalNotificationPermission() {
       if (getNotificationMode() === 'off') return false;
+      const localNotif = getCapacitorLocalNotifications();
+      if (localNotif) {
+        try {
+          if (typeof localNotif.checkPermissions === 'function') {
+            const st = await localNotif.checkPermissions();
+            if (st && st.display === 'granted') {
+              await ensureNativeNotificationChannels();
+              return true;
+            }
+          }
+          if (typeof localNotif.requestPermissions === 'function') {
+            const res = await localNotif.requestPermissions();
+            if (res && res.display === 'granted') {
+              await ensureNativeNotificationChannels();
+              return true;
+            }
+          }
+        } catch (e) {}
+      }
+
       try {
-        if ('Notification' in window && Notification.permission === 'default') {
-          const p = await Notification.requestPermission();
-          return p === 'granted';
+        if ('Notification' in window) {
+          if (Notification.permission === 'granted') return true;
+          if (Notification.permission === 'default') {
+            const p = await Notification.requestPermission();
+            return p === 'granted';
+          }
         }
       } catch (e) {}
       return false;
     }
 
     function stripHtmlToPlain(htmlStr) {
-      return String(htmlStr || '').replace(/<[^>]+>/g, '').trim();
+      return String(htmlStr || '')
+        .replace(/<br\s*\/?>/gi, '
+')
+        .replace(/<\/div>|<\/p>|<\/li>/gi, '
+')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/
+{3,}/g, '
+
+')
+        .trim();
+    }
+
+    function getChannelIdForCurrentMode(mode) {
+      if (mode === 'vibration_only') return 'karimi_tx_vib_only';
+      if (mode === 'silent') return 'karimi_tx_silent';
+      return 'karimi_tx_sound_vib';
     }
 
     async function sendExternalSystemNotification(titleText, htmlOrPlainBody) {
       const mode = getNotificationMode();
       if (mode === 'off') return;
+
       const title = stripHtmlToPlain(titleText) || 'امانت‌داری کریمی';
       const body = stripHtmlToPlain(htmlOrPlainBody);
       if (!body) return;
+
       triggerFeedbackByMode('alert');
+
+      const notifId = Math.floor(100000 + (Date.now() % 899999));
+      const channelId = getChannelIdForCurrentMode(mode);
       const isSilent = (mode === 'silent' || mode === 'vibration_only');
+
+      const localNotif = getCapacitorLocalNotifications();
+      if (localNotif && typeof localNotif.schedule === 'function') {
+        try {
+          await ensureNativeNotificationChannels();
+          if (typeof localNotif.checkPermissions === 'function' && typeof localNotif.requestPermissions === 'function') {
+            const perm = await localNotif.checkPermissions();
+            if (!perm || perm.display !== 'granted') {
+              await localNotif.requestPermissions();
+            }
+          }
+          await localNotif.schedule({
+            notifications: [{
+              id: notifId,
+              title: title,
+              body: body,
+              channelId: channelId,
+              sound: mode === 'sound_vibration' ? 'default' : undefined,
+              schedule: { at: new Date(Date.now() + 200), allowWhileIdle: true }
+            }]
+          });
+          return;
+        } catch (e) {}
+      }
+
       try {
-        if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification(title, { body: body, silent: isSilent });
+        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge, window.AppInterface];
+        for (const br of bridges) {
+          if (!br) continue;
+          if (typeof br.showNotificationWithMode === 'function') { br.showNotificationWithMode(title, body, mode); return; }
+          if (typeof br.showNotification === 'function') { br.showNotification(title, body); return; }
+          if (typeof br.sendNotification === 'function') { br.sendNotification(title, body); return; }
+        }
+      } catch (e) {}
+
+      try {
+        if ('serviceWorker' in navigator && 'Notification' in window && Notification.permission === 'granted') {
+          const reg = await navigator.serviceWorker.getRegistration();
+          if (reg && typeof reg.showNotification === 'function') {
+            await reg.showNotification(title, {
+              body: body,
+              silent: isSilent,
+              tag: 'karimi-notif-' + notifId,
+              renotify: true
+            });
+            return;
+          }
+        }
+      } catch (e) {}
+
+      try {
+        if ('Notification' in window) {
+          if (Notification.permission === 'granted') {
+            new Notification(title, { body: body, silent: isSilent, tag: 'karimi-notif-' + notifId });
+          } else if (Notification.permission === 'default') {
+            const perm = await Notification.requestPermission();
+            if (perm === 'granted') {
+              new Notification(title, { body: body, silent: isSilent, tag: 'karimi-notif-' + notifId });
+            }
+          }
         }
       } catch (e) {}
     }
@@ -1844,9 +2096,11 @@
       if (isHandlingBack) return;
       isHandlingBack = true;
       ensureSentinelHistory();
+
       try {
         if (closeAnyOpenModal()) return;
         if (collapseServiceForms()) return;
+
         if (currentStep === 'dashboard') {
           if (activeBottomTab !== 'home') {
             switchBottomTab('home');
@@ -1855,10 +2109,12 @@
           askExitApp();
           return;
         }
-        if (currentStep === 'account') {
+
+        if (currentStep === 'account' || currentStep === 'register') {
           navigateToStep('phone');
           return;
         }
+
         askExitApp();
       } finally {
         setTimeout(() => { isHandlingBack = false; }, 120);
@@ -1873,16 +2129,55 @@
       if (confirmed) {
         const capApp = getCapacitorAppPlugin();
         if (capApp && typeof capApp.exitApp === 'function') {
-          try { capApp.exitApp(); } catch (e) {}
+          try { capApp.exitApp(); return; } catch (e) {}
         }
+        try {
+          if (window.AndroidBridge && typeof window.AndroidBridge.exitApp === 'function') {
+            window.AndroidBridge.exitApp();
+            return;
+          }
+        } catch (e) {}
+        try {
+          if (navigator.app && typeof navigator.app.exitApp === 'function') {
+            navigator.app.exitApp();
+            return;
+          }
+        } catch (e) {}
       }
     }
 
-    window.addEventListener('popstate', () => handleBackNavigation());
+    window.addEventListener('popstate', () => {
+      handleBackNavigation();
+    });
+
     document.addEventListener('backbutton', (e) => {
       if (e && typeof e.preventDefault === 'function') e.preventDefault();
       handleBackNavigation();
     }, false);
+
+    (function setupBackListeners() {
+      ensureSentinelHistory();
+      const bindCap = () => {
+        const capApp = getCapacitorAppPlugin();
+        if (capApp && typeof capApp.addListener === 'function') {
+          try {
+            capApp.removeAllListeners?.('backButton').catch(() => {});
+            capApp.addListener('backButton', () => {
+              handleBackNavigation();
+            });
+          } catch (e) {}
+        }
+      };
+      document.addEventListener('deviceready', bindCap, { once: true });
+      window.addEventListener('DOMContentLoaded', () => {
+        ensureSentinelHistory();
+        syncSupportAndIqUiFromSettings();
+        updateNotifModeLabel();
+        requestExternalNotificationPermission();
+        setTimeout(bindCap, 300);
+        setTimeout(bindCap, 1200);
+      }, { once: true });
+    })();
 
     function updateLastSyncLabel() {
       const el = document.getElementById('lastSyncTimeText');
@@ -1910,23 +2205,33 @@
       if (!accId) return;
       const currentTxs = getUserVisibleTransactions(accId);
       const seenKey = `karimi_seen_tx_ids_${String(accId).trim().toLowerCase()}`;
+
       let baselineIds = Array.isArray(previousIds) ? previousIds : [];
       if (baselineIds.length === 0) {
-        try { baselineIds = JSON.parse(localStorage.getItem(seenKey) || '[]'); } catch (e) { baselineIds = []; }
+        try {
+          baselineIds = JSON.parse(localStorage.getItem(seenKey) || '[]');
+        } catch (e) {
+          baselineIds = [];
+        }
       }
+
       const allCurrentIds = currentTxs.map(tx =>
         String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
       );
+
       if (isOnInitialOpen && baselineIds.length === 0) {
         try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
         return;
       }
+
       const knownSet = new Set(baselineIds);
       const newlyAdded = currentTxs.filter(tx => {
         const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx));
         return !knownSet.has(tid);
       });
+
       try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
+
       if (newlyAdded.length > 0) {
         newlyAdded.forEach(tx => {
           const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
@@ -1953,15 +2258,46 @@
       try {
         realtimeTxChannel = _supabase
           .channel('karimi-tx-live-' + cleanId)
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions' }, async () => {
-            const prevIds = getUserTransactionIds(cleanId);
-            await fetchDataFromSupabaseFresh();
-            if (currentFoundUser) {
-              processDashboard(cleanId, false);
-              updateLastSyncLabel();
-              checkAndAnnounceNewTransactions(cleanId, prevIds, false);
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'transactions' },
+            async (payload) => {
+              const prevIds = getUserTransactionIds(cleanId);
+              const evType = payload && payload.eventType ? String(payload.eventType).toUpperCase() : '';
+              const rec = (payload && (payload.new || payload.old)) || {};
+              const recAccId = String(getVal(rec, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
+              const belongsToUser = !recAccId || recAccId === cleanId.toLowerCase();
+
+              await fetchDataFromSupabaseFresh();
+              if (currentFoundUser) {
+                processDashboard(cleanId, false);
+                updateLastSyncLabel();
+                if (belongsToUser && evType === 'UPDATE') {
+                  const op = getVal(rec, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+                  const amt = formatEnMoney(getVal(rec, ['Amount', 'amount', 'value']) || 0);
+                  const curr = getVal(rec, ['Currency', 'currency']) || 'IQD';
+                  notifyAccountEvent('تغییر تراکنش — امانت‌داری کریمی', `${op}: ${amt} ${curr} ویرایش شد.`);
+                } else if (belongsToUser && evType === 'DELETE') {
+                  const op = getVal(rec, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+                  const amt = formatEnMoney(getVal(rec, ['Amount', 'amount', 'value']) || 0);
+                  const curr = getVal(rec, ['Currency', 'currency']) || 'IQD';
+                  notifyAccountEvent('حذف تراکنش — امانت‌داری کریمی', `${op}: ${amt} ${curr} حذف شد.`);
+                } else {
+                  checkAndAnnounceNewTransactions(cleanId, prevIds, false);
+                }
+              }
             }
-          })
+          )
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'app_settings' },
+            async () => {
+              await fetchDataFromSupabaseFresh();
+              if (currentFoundUser) {
+                processDashboard(cleanId, false);
+              }
+            }
+          )
           .subscribe();
       } catch (e) {}
     }
@@ -1970,6 +2306,7 @@
       currentStep = step;
       document.getElementById('phoneSection').classList.add('hidden');
       document.getElementById('accountSection').classList.add('hidden');
+      document.getElementById('registerSection').classList.add('hidden');
       document.getElementById('dashboardSection').classList.add('hidden');
       document.getElementById('bottomNavBar').classList.add('hidden');
       document.getElementById('headerRefreshBtn').classList.add('hidden');
@@ -1980,6 +2317,9 @@
       } else if (step === 'account') {
         document.getElementById('accountSection').classList.remove('hidden');
         document.getElementById('headerSubtitleText').innerText = 'تایید کد حساب';
+      } else if (step === 'register') {
+        document.getElementById('registerSection').classList.remove('hidden');
+        document.getElementById('headerSubtitleText').innerText = 'افتتاح حساب جدید';
       } else if (step === 'dashboard') {
         document.getElementById('dashboardSection').classList.remove('hidden');
         document.getElementById('bottomNavBar').classList.remove('hidden');
@@ -2034,6 +2374,20 @@
     function openServiceForm(mode) {
       playSound('click');
       requestExternalNotificationPermission();
+
+      if (mode === 'transfer' && !appSettings.transfer_enabled) {
+        alert('انتقال موجودی در حال حاضر غیرفعال است.');
+        return;
+      }
+      if (mode === 'afn' && !appSettings.topup_afn_enabled) {
+        alert('شارژ افغانستان در حال حاضر غیرفعال است.');
+        return;
+      }
+      if (mode === 'iq' && !appSettings.topup_iq_enabled) {
+        alert('شارژ عراق در حال حاضر غیرفعال است.');
+        return;
+      }
+
       activeServiceMode = mode;
 
       if (activeBottomTab !== 'services') {
@@ -2051,9 +2405,14 @@
       }
 
       document.getElementById('serviceEmptyPlaceholder').classList.add('hidden');
-      document.getElementById('panelTransfer').classList.toggle('collapsed', mode !== 'transfer');
-      document.getElementById('panelTopupAfn').classList.toggle('collapsed', mode !== 'afn');
-      document.getElementById('panelTopupIq').classList.toggle('collapsed', mode !== 'iq');
+
+      const pT = document.getElementById('panelTransfer');
+      const pA = document.getElementById('panelTopupAfn');
+      const pI = document.getElementById('panelTopupIq');
+
+      pT.classList.toggle('collapsed', mode !== 'transfer');
+      pA.classList.toggle('collapsed', mode !== 'afn');
+      pI.classList.toggle('collapsed', mode !== 'iq');
 
       document.getElementById('srvSubTransfer').classList.toggle('active', mode === 'transfer');
       document.getElementById('srvSubAfn').classList.toggle('active', mode === 'afn');
@@ -2073,6 +2432,27 @@
       ensureSentinelHistory();
     }
 
+    function clearTransferFields() {
+      document.getElementById('transferTargetAccIdInput').value = '';
+      document.getElementById('transferTargetPhoneInput').value = '';
+      document.getElementById('transferAmountInput').value = '';
+      previewTransferRecipient();
+      recalcTransferBox();
+    }
+
+    function clearTopupFields(mode) {
+      if (mode === 'afn') {
+        document.getElementById('afnTargetPhone').value = '';
+        document.getElementById('afnAmountInput').value = '';
+        document.getElementById('topupAfnEligibilityMsg').innerText = '';
+      } else if (mode === 'iq') {
+        const iqSel = document.getElementById('iqCardSelect');
+        if (iqSel && iqSel.options.length > 0) iqSel.selectedIndex = 0;
+        document.getElementById('topupIqEligibilityMsg').innerText = '';
+      }
+      recalcTopupCost();
+    }
+
     function toggleBalanceVisibility() {
       playSound('click');
       balanceHidden = !balanceHidden;
@@ -2080,63 +2460,68 @@
       updateBalanceDisplay();
     }
 
-    function copyTextValue(val) {
+    function copyTextValue(val, label) {
       if (!val || val === '---') return;
-      try { navigator.clipboard?.writeText(String(val)); } catch (e) {}
+      navigator.clipboard?.writeText(String(val));
       playSound('success');
     }
 
     function copyAccountId() {
-      copyTextValue(document.getElementById('dashAccountId').innerText.trim());
+      copyTextValue(document.getElementById('dashAccountId').innerText.trim(), 'کد حساب');
     }
 
     function copyPhoneNumber() {
-      copyTextValue(document.getElementById('profilePhoneVal').innerText.trim());
+      copyTextValue(document.getElementById('profilePhoneVal').innerText.trim(), 'شماره تماس');
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-      ensureSentinelHistory();
-      updateNotifModeLabel();
       requestExternalNotificationPermission();
-
       const savedPhone = localStorage.getItem('karimi_phone');
       const savedAccId = localStorage.getItem('karimi_accId');
 
-      if (savedPhone && savedAccId && accountsList.length > 0) {
+      if (savedPhone && savedAccId) {
+        if (accountsList.length > 0) {
+          autoLogin(savedPhone, savedAccId, false);
+        }
+        showRealLoading('در حال همگام‌سازی حساب...', 'دریافت آخرین اطلاعات');
+        const prevIds = getUserTransactionIds(savedAccId);
+        await initSupabaseFromEnv();
+        await fetchDataFromSupabaseFresh();
         autoLogin(savedPhone, savedAccId, false);
+        subscribeRealtimeAccountEvents(savedAccId);
+        hideRealLoading();
+        updateLastSyncLabel();
+        checkAndAnnounceNewTransactions(savedAccId, prevIds, true);
       } else {
         navigateToStep('phone');
         if (localStorage.getItem('karimi_biometric_enabled') === 'true') {
           document.getElementById('biometricBtnWrapper').classList.remove('hidden');
         }
-      }
-
-      try {
         await initSupabaseFromEnv();
         await fetchDataFromSupabaseFresh();
-        if (savedPhone && savedAccId) {
-          autoLogin(savedPhone, savedAccId, false);
-          subscribeRealtimeAccountEvents(savedAccId);
-          updateLastSyncLabel();
-        }
-      } catch (e) {}
+      }
     });
 
     async function fetchDataFromSupabaseFresh() {
       const ready = await initSupabaseFromEnv();
       if (!ready || !_supabase) return false;
       try {
-        const [accRes, txRes] = await Promise.all([
+        const [accRes, txRes, setRes] = await Promise.all([
           _supabase.from('accounts').select('*'),
-          _supabase.from('transactions').select('*')
+          _supabase.from('transactions').select('*'),
+          _supabase.from('app_settings').select('*').eq('id', 'default').single()
         ]);
-        if (accRes && Array.isArray(accRes.data)) {
+        if (accRes.data) {
           accountsList = accRes.data;
           localStorage.setItem('karimi_cache_accounts', JSON.stringify(accRes.data));
         }
-        if (txRes && Array.isArray(txRes.data)) {
+        if (txRes.data) {
           transactionsList = txRes.data;
           localStorage.setItem('karimi_cache_transactions', JSON.stringify(txRes.data));
+        }
+        if (!setRes.error && setRes.data) {
+          applySettingsObject(setRes.data);
+          localStorage.setItem('karimi_cache_settings', JSON.stringify(setRes.data));
         }
         return true;
       } catch (e) {
@@ -2152,79 +2537,56 @@
       const prevIds = getUserTransactionIds(savedAccId);
 
       showRealLoading('در حال بروزرسانی...', 'دریافت آخرین تراکنش‌ها');
-      try {
-        await fetchDataFromSupabaseFresh();
-        if (savedAccId) {
-          const found = accountsList.find(u =>
-            String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase()
-          );
-          if (found) currentFoundUser = found;
-          processDashboard(savedAccId, false);
-          subscribeRealtimeAccountEvents(savedAccId);
-        }
-      } finally {
-        hideRealLoading();
+      await fetchDataFromSupabaseFresh();
+
+      if (savedAccId) {
+        const found = accountsList.find(u =>
+          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === savedAccId.toLowerCase()
+        );
+        if (found) currentFoundUser = found;
+        processDashboard(savedAccId, false);
+        subscribeRealtimeAccountEvents(savedAccId);
       }
+      hideRealLoading();
       updateLastSyncLabel();
       checkAndAnnounceNewTransactions(savedAccId, prevIds, false);
     }
 
     async function checkPhone() {
-      if (isCheckingPhone) return;
-      isCheckingPhone = true;
-      const btn = document.getElementById('btnCheckPhone');
-      if (btn) btn.disabled = true;
+      playSound('click');
+      requestExternalNotificationPermission();
+      const rawInput = toEnglishDigits(document.getElementById('phoneInput').value.trim());
+      if (!rawInput) return;
 
-      try {
-        playSound('click');
-        requestExternalNotificationPermission();
-        const rawInput = toEnglishDigits(document.getElementById('phoneInput').value.trim());
-        const userLast9 = getLast9Digits(rawInput);
+      const userLast9 = getLast9Digits(rawInput);
+      if (userLast9.length < 9) {
+        alert('شماره تماس را کامل وارد کنید.');
+        return;
+      }
 
-        if (userLast9.length < 9) {
-          alert('شماره تماس را کامل وارد کنید.');
-          return;
-        }
+      showRealLoading('در حال بررسی شماره...', 'جستجو در سامانه');
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
 
-        // ابتدا بررسی سریع در کش محلی تا اگر شبکه کند بود قفل نشود
-        let found = accountsList.find(u =>
-          getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
-        );
+      const found = accountsList.find(u =>
+        getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
+      );
 
-        if (!found) {
-          showRealLoading('در حال بررسی شماره...', 'جستجو در حساب‌ها');
-          try {
-            await fetchDataFromSupabaseFresh();
-          } finally {
-            hideRealLoading();
-          }
-          found = accountsList.find(u =>
-            getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9
-          );
-        } else {
-          // پس‌زمینه را هم بروزرسانی می‌کنیم
-          fetchDataFromSupabaseFresh().catch(() => {});
-        }
-
-        if (found) {
-          currentFoundUser = found;
-          const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
-          const cpName = resolveCounterpartyName(currentFoundUser);
-          document.getElementById('greetingMsg').innerText = nameVal;
-          document.getElementById('candidateManagerHint').innerText = `طرف حساب: ${cpName}`;
-          document.getElementById('accountIdInput').value = '';
-          navigateToStep('account');
-          setTimeout(() => document.getElementById('accountIdInput')?.focus(), 100);
-        } else {
-          const enc = encodeURIComponent(`شماره تماس: ${rawInput}`);
-          document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${enc}`;
-          document.getElementById('errorModal').classList.remove('hidden');
-          ensureSentinelHistory();
-        }
-      } finally {
-        isCheckingPhone = false;
-        if (btn) btn.disabled = false;
-        hideRealLoading();
+      if (found) {
+        currentFoundUser = found;
+        const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
+        const cpName = resolveCounterpartyName(currentFoundUser);
+        document.getElementById('greetingMsg').innerText = `${nameVal}`;
+        document.getElementById('candidateManagerHint').innerText = `طرف حساب: ${cpName}`;
+        document.getElementById('accountIdInput').value = '';
+        navigateToStep('account');
+        setTimeout(() => document.getElementById('accountIdInput').focus(), 100);
+      } else {
+        const targetWa = appSettings.iq_whatsapp_phone || OWNER_WHATSAPP;
+        const enc = encodeURIComponent(`شماره تماس: ${rawInput}`);
+        document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/${targetWa}?text=${enc}`;
+        document.getElementById('errorModal').classList.remove('hidden');
+        ensureSentinelHistory();
       }
     }
 
@@ -2235,17 +2597,17 @@
 
     async function verifyAccount() {
       playSound('click');
-      if (!currentFoundUser) {
-        navigateToStep('phone');
-        return;
-      }
-      const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim()).toLowerCase();
+      const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim());
       const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
 
-      if (!accIdInput || sheetAccId.toLowerCase() !== accIdInput) {
+      if (sheetAccId.toLowerCase() !== accIdInput.toLowerCase()) {
         alert('کد حساب صحیح نیست.');
         return;
       }
+
+      showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
 
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
       localStorage.setItem('karimi_phone', phoneVal);
@@ -2257,19 +2619,62 @@
 
       playSound('success');
       processDashboard(sheetAccId, true);
+      subscribeRealtimeAccountEvents(sheetAccId);
       updateLastSyncLabel();
+    }
 
-      // دریافت تازه‌ترین تراکنش‌ها بدون قفل کردن ورود
-      fetchDataFromSupabaseFresh().then(() => {
-        if (!currentFoundUser) return;
-        const refreshed = accountsList.find(u =>
-          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === sheetAccId.toLowerCase()
-        );
-        if (refreshed) currentFoundUser = refreshed;
-        processDashboard(sheetAccId, false);
-        subscribeRealtimeAccountEvents(sheetAccId);
-        updateLastSyncLabel();
-      }).catch(() => {});
+    async function submitRealAccountCreation() {
+      const accId = document.getElementById('regAccId').value.trim();
+      const name = document.getElementById('regFullName').value.trim();
+      const phone = toEnglishDigits(document.getElementById('regPhone').value.trim());
+      const pin = toEnglishDigits(document.getElementById('regPin').value.trim());
+      const pinConfirm = toEnglishDigits(document.getElementById('regPinConfirm').value.trim());
+
+      if (!name || !phone || !pin) {
+        alert('همه موارد را تکمیل کنید.');
+        return;
+      }
+      if (pin.length < 4) {
+        alert('رمز ثابت حداقل ۴ کاراکتر باشد.');
+        return;
+      }
+      if (pin !== pinConfirm) {
+        alert('رمز و تکرار آن یکسان نیست.');
+        return;
+      }
+
+      showRealLoading('در حال ثبت حساب...', 'ذخیره اطلاعات');
+      await fetchDataFromSupabaseFresh();
+
+      const last9 = getLast9Digits(phone);
+      if (last9.length >= 9 && accountsList.some(a => getLast9Digits(getVal(a, ['Phone', 'phone'])) === last9)) {
+        hideRealLoading();
+        alert('این شماره قبلاً ثبت شده است.');
+        return;
+      }
+
+      const hashed = await hashPin(pin);
+      const { error } = await _supabase.from('accounts').insert([{
+        AccountID: accId,
+        Name: name,
+        Phone: phone,
+        PinHash: hashed,
+        AssignedUserEmail: OWNER_EMAIL,
+        CreatedBy: OWNER_EMAIL
+      }]);
+
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
+
+      if (error) {
+        alert('خطا در ثبت حساب: ' + error.message);
+        return;
+      }
+
+      playSound('success');
+      alert(`حساب ثبت شد. کد حساب: ${accId}`);
+      document.getElementById('phoneInput').value = phone;
+      navigateToStep('phone');
     }
 
     function autoLogin(phone, accId, announce = false) {
@@ -2277,7 +2682,7 @@
       const found = accountsList.find(u => getLast9Digits(getVal(u, ['Phone', 'phone', 'تلفن', 'mobile'])) === userLast9);
       if (found) {
         const sheetAccId = String(getVal(found, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-        if (sheetAccId.toLowerCase() === String(accId || '').trim().toLowerCase()) {
+        if (sheetAccId.toLowerCase() === accId.trim().toLowerCase()) {
           currentFoundUser = found;
           const prevIds = getUserTransactionIds(sheetAccId);
           processDashboard(sheetAccId, false);
@@ -2285,6 +2690,9 @@
           return;
         }
       }
+      localStorage.removeItem('karimi_phone');
+      localStorage.removeItem('karimi_accId');
+      navigateToStep('phone');
     }
 
     function logout() {
@@ -2346,6 +2754,7 @@
 
       if (activeCurrencyIndex >= currencyList.length) activeCurrencyIndex = 0;
 
+      syncSupportAndIqUiFromSettings();
       updatePinMenuLabel(sheetAccId);
       updateBioStatusLabel();
       updateTxBioStatusLabel();
@@ -2463,6 +2872,13 @@
       const box = document.getElementById('transferCalcBox');
       const btn = document.getElementById('btnExecuteTransfer');
 
+      if (!appSettings.transfer_enabled) {
+        box.className = 'calc-summary-box error';
+        box.innerHTML = 'انتقال موجودی غیرفعال است.';
+        btn.disabled = true;
+        return;
+      }
+
       if (avail <= 0 || amt > avail) {
         box.className = 'calc-summary-box error';
         box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
@@ -2491,6 +2907,10 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
+      if (!appSettings.transfer_enabled) {
+        alert('انتقال موجودی در حال حاضر غیرفعال است.');
+        return;
+      }
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
       const phQ = document.getElementById('transferTargetPhoneInput').value.trim();
       const targetAcc = findRecipientByIdAndPhone(idQ, phQ);
@@ -2535,15 +2955,25 @@
 
     function recalcTopupCost() {
       const netIqd = getNetIqdBalance();
+      const rate = appSettings.afn_to_iqd_rate || 26.5;
+      const blocked = isAccountPurchaseBlocked(currentFoundUser);
 
       const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
-      const reqIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+      const reqIqd = Math.round(afnAmt * rate);
       const afnBox = document.getElementById('afnCalcBox');
       const afnErr = document.getElementById('topupAfnEligibilityMsg');
       const afnBtn = document.getElementById('btnExecuteTopupAfn');
       document.getElementById('afnCalculatedIqd').innerText = formatEnMoney(reqIqd);
 
-      if (netIqd <= 0 || reqIqd > netIqd) {
+      if (!appSettings.topup_afn_enabled) {
+        afnBox.classList.add('error');
+        afnErr.innerText = 'شارژ افغانستان غیرفعال است.';
+        afnBtn.disabled = true;
+      } else if (blocked) {
+        afnBox.classList.add('error');
+        afnErr.innerText = 'خرید برای این حساب مسدود شده است.';
+        afnBtn.disabled = true;
+      } else if (netIqd <= 0 || reqIqd > netIqd) {
         afnBox.classList.add('error');
         afnErr.innerText = 'موجودی دینار کافی نیست.';
         afnBtn.disabled = true;
@@ -2553,13 +2983,22 @@
         afnBtn.disabled = false;
       }
 
-      const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+      const iqPkg = getSelectedIqPackage();
+      const chargeAmt = iqPkg.chargeAmount;
       const iqBox = document.getElementById('iqCalcBox');
       const iqErr = document.getElementById('topupIqEligibilityMsg');
       const iqBtn = document.getElementById('btnExecuteTopupIq');
-      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
+      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(chargeAmt);
 
-      if (netIqd <= 0 || cardAmt > netIqd) {
+      if (!appSettings.topup_iq_enabled) {
+        iqBox.classList.add('error');
+        iqErr.innerText = 'شارژ عراق غیرفعال است.';
+        iqBtn.disabled = true;
+      } else if (blocked) {
+        iqBox.classList.add('error');
+        iqErr.innerText = 'خرید برای این حساب مسدود شده است.';
+        iqBtn.disabled = true;
+      } else if (netIqd <= 0 || chargeAmt > netIqd) {
         iqBox.classList.add('error');
         iqErr.innerText = 'موجودی دینار کافی نیست.';
         iqBtn.disabled = true;
@@ -2572,41 +3011,76 @@
 
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
+      if (isAccountPurchaseBlocked(currentFoundUser)) {
+        alert('خرید برای این حساب مسدود شده است.');
+        return;
+      }
+
       const netIqd = getNetIqdBalance();
+      const rate = appSettings.afn_to_iqd_rate || 26.5;
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
 
       let payloadData = null;
       let summaryHtml = '';
       if (mode === 'afn') {
-        const operator = document.getElementById('afnOperatorSelect')?.value || 'roshan';
-        const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        if (!appSettings.topup_afn_enabled) {
+          alert('شارژ افغانستان در حال حاضر غیرفعال است.');
+          return;
+        }
+        const operator = String(document.getElementById('afnOperatorSelect').value || 'atoma').trim().toLowerCase();
+        const rawPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        const normalizedPhone = normalizeAfghanPhone(rawPhone);
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
-        if (!/^07\d{8}$/.test(targetPhone)) {
-          alert('شماره باید ۱۰ رقم و با 07 شروع شود.');
+
+        if (!/^937\d{8}$/.test(normalizedPhone) && !/^07\d{8}$/.test(rawPhone)) {
+          alert('شماره باید معتبر و با 07 یا 937 شروع شود.');
           return;
         }
         if (isNaN(afnAmt) || afnAmt <= 0) {
           alert('مبلغ را وارد کنید.');
           return;
         }
-        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+        const requiredIqd = Math.round(afnAmt * rate);
         if (requiredIqd > netIqd || netIqd <= 0) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, operator, targetPhone, afnAmt, requiredIqd };
-        summaryHtml = `شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
+        payloadData = {
+          mode: 'afn',
+          accId,
+          accName,
+          operator,
+          targetPhone: normalizedPhone,
+          displayPhone: rawPhone || normalizedPhone,
+          afnAmt,
+          requiredIqd
+        };
+        summaryHtml = `شارژ <b>${operator}</b> <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${payloadData.displayPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
+        if (!appSettings.topup_iq_enabled) {
+          alert('شارژ عراق در حال حاضر غیرفعال است.');
+          return;
+        }
         const network = document.getElementById('iqNetworkSelect').value;
-        const iqPhone = toEnglishDigits(document.getElementById('iqTargetPhone')?.value.trim() || '');
-        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
-        if (cardAmt <= 0 || cardAmt > netIqd) {
+        const iqPkg = getSelectedIqPackage();
+        const cardAmt = iqPkg.cardAmount;
+        const chargeAmt = iqPkg.chargeAmount;
+
+        if (chargeAmt <= 0 || chargeAmt > netIqd) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'iq', accId, accName, network, iqPhone, cardAmt };
-        summaryHtml = `ثبت شارژ عراق <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>) و ارسال درخواست به واتساپ`;
+        payloadData = {
+          mode: 'iq',
+          accId,
+          accName,
+          network,
+          cardAmt,
+          chargeAmt,
+          label: iqPkg.label
+        };
+        summaryHtml = `شارژ <b>${network}</b> مبلغ کارت <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> — کسر: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>`;
       }
 
       if (!isTxBiometricEnabled()) {
@@ -2725,9 +3199,7 @@
         return;
       }
 
-      document.getElementById('transferAmountInput').value = '';
-      document.getElementById('transferTargetAccIdInput').value = '';
-      document.getElementById('transferTargetPhoneInput').value = '';
+      clearTransferFields();
       await fetchDataFromSupabaseFresh();
       processDashboard(d.fromId, false);
       updateLastSyncLabel();
@@ -2739,56 +3211,21 @@
       showReceiptForTransactionData(debitRow);
     }
 
-    async function dispatchAfnViaProxyAndTelegram(payload, txId) {
-      let proxyRef = '';
-      try {
-        const resp = await fetch(TOPUP_ENDPOINT_PATH, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operator: payload.operator,
-            phone: payload.targetPhone,
-            amount: payload.afnAmt
-          })
-        });
-        const data = await resp.json().catch(() => null);
-        if (resp.ok && data && data.ok) {
-          proxyRef = data.txid || data.transaction_id || (data.raw && (data.raw.txid || data.raw.id)) || '';
-        }
-      } catch (e) {}
-
-      const tgText =
-        `شارژ افغانستان\nکد: ${txId}\nمشتری: ${payload.accName} (${payload.accId})\nاپراتور: ${payload.operator}\nشماره: ${payload.targetPhone}\nمبلغ: ${formatEnMoney(payload.afnAmt)} AFN\nکسر: ${formatEnMoney(payload.requiredIqd)} IQD` +
-        (proxyRef ? `\nکد سرویس: ${proxyRef}` : '');
-
-      let tgData = null;
-      let lastErr = null;
-      try {
-        const resp = await fetch(TELEGRAM_SEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgText })
-        });
-        const json = await resp.json().catch(() => null);
-        if (resp.ok && json && json.ok && json.result && json.result.message_id) tgData = json;
-        else lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
-      } catch (err) {
-        lastErr = err && err.message ? err.message : 'خطای ارتباط';
+    function extractFriendlyProviderMessage(data, fallbackMsg) {
+      if (!data || typeof data !== 'object') return fallbackMsg || 'درخواست شارژ ناموفق بود.';
+      const direct = data.error || data.message || data.msg || data.detail || (data.raw && (data.raw.message || data.raw.error));
+      const str = String(direct || fallbackMsg || '').trim();
+      const lower = str.toLowerCase();
+      if (
+        lower.includes('balance') ||
+        lower.includes('insufficient') ||
+        lower.includes('credit') ||
+        lower.includes('fund') ||
+        lower.includes('موجودی')
+      ) {
+        return 'سیستم موجودی ندارد؛ شارژ انجام نشد.';
       }
-
-      if (!tgData) {
-        try {
-          const qs = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: tgText });
-          const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: 'GET' });
-          const getJson = await getResp.json().catch(() => null);
-          if (getResp.ok && getJson && getJson.ok && getJson.result && getJson.result.message_id) {
-            tgData = getJson;
-            lastErr = null;
-          }
-        } catch (e) {}
-      }
-
-      return { tgData, lastErr, proxyRef };
+      return str || 'درخواست شارژ توسط سرویس مقصد تایید نشد.';
     }
 
     async function runTopupAfterPin(payload) {
@@ -2798,16 +3235,39 @@
       const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال شارژ افغانستان...', 'ارتباط با پروکسی و ثبت');
-        const { tgData, lastErr, proxyRef } = await dispatchAfnViaProxyAndTelegram(payload, txId);
+        showRealLoading('در حال ارسال شارژ افغانستان...', 'ارتباط با سرور و پروکسی');
+        let apiJson = null;
+        let httpOk = false;
+        let netErrorMsg = '';
 
-        if (!tgData || !tgData.result || !tgData.result.message_id) {
+        try {
+          const resp = await fetch(TOPUP_API_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              operator: payload.operator,
+              phone: payload.targetPhone,
+              amount: Number(payload.afnAmt)
+            })
+          });
+          httpOk = resp.ok;
+          apiJson = await resp.json().catch(() => ({}));
+        } catch (err) {
+          netErrorMsg = err && err.message ? err.message : 'خطای ارتباط با سرور';
+        }
+
+        const isSuccess = Boolean(httpOk && apiJson && apiJson.ok === true);
+
+        if (!isSuccess) {
           hideRealLoading();
-          alert(lastErr || 'ارسال شارژ ناموفق بود.');
+          const friendlyMsg = extractFriendlyProviderMessage(apiJson, netErrorMsg);
+          document.getElementById('topupAfnEligibilityMsg').innerText = friendlyMsg;
+          alert(friendlyMsg);
+          notifyAccountEvent('شارژ افغانستان انجام نشد', friendlyMsg);
           return;
         }
 
-        const refCode = proxyRef ? `${proxyRef}` : `SIM-${tgData.result.message_id}`;
+        const refCode = apiJson.txid ? `TXID-${apiJson.txid}` : txId;
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -2816,10 +3276,11 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ افغانستان',
-          Description: `${payload.targetPhone} (${payload.afnAmt} AFN) - ${refCode}`,
+          Description: `${payload.displayPhone} (${payload.operator} - ${payload.afnAmt} AFN) - ${refCode}`,
           AssignedUserEmail: assigned,
           Status: 'تایید شده'
         };
+
         const { error } = await _supabase.from('transactions').insert([afnTxRow]);
         hideRealLoading();
 
@@ -2828,8 +3289,7 @@
           return;
         }
 
-        document.getElementById('afnTargetPhone').value = '';
-        document.getElementById('afnAmountInput').value = '';
+        clearTopupFields('afn');
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         updateLastSyncLabel();
@@ -2840,20 +3300,18 @@
         }
         showReceiptForTransactionData(afnTxRow);
       } else {
-        // شارژ عراق: بدون اتصال به API؛ تراکنش در دیتابیس ثبت و درخواست به واتساپ ارسال می‌شود
         showRealLoading('در حال ثبت شارژ عراق...', 'ثبت تراکنش و آماده‌سازی واتساپ');
-        const phonePart = payload.iqPhone ? ` | شماره: ${payload.iqPhone}` : '';
         const iqTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
-          Amount: Number(payload.cardAmt),
+          Amount: Number(payload.chargeAmt),
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
-          Description: `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)${phonePart}`,
+          Description: `${payload.network} - کارت ${formatEnMoney(payload.cardAmt)} IQD (کسر ${formatEnMoney(payload.chargeAmt)} IQD)`,
           AssignedUserEmail: assigned,
-          Status: 'ارسال به واتساپ'
+          Status: 'ثبت شده'
         };
 
         const { error } = await _supabase.from('transactions').insert([iqTxRow]);
@@ -2864,30 +3322,31 @@
           return;
         }
 
-        const iqPhoneInput = document.getElementById('iqTargetPhone');
-        if (iqPhoneInput) iqPhoneInput.value = '';
-        const iqSel = document.getElementById('iqCardSelect');
-        if (iqSel && iqSel.options.length > 0) iqSel.selectedIndex = 0;
+        const waTarget = appSettings.iq_whatsapp_phone || OWNER_WHATSAPP;
+        const waMessage =
+          `درخواست شارژ عراق
+` +
+          `کد سند: ${txId}
+` +
+          `مشتری: ${payload.accName} (${payload.accId})
+` +
+          `شبکه: ${payload.network}
+` +
+          `مبلغ کارت: ${formatEnMoney(payload.cardAmt)} IQD
+` +
+          `مبلغ کسر شده: ${formatEnMoney(payload.chargeAmt)} IQD`;
 
+        clearTopupFields('iq');
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         updateLastSyncLabel();
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
         if (curIds.length > prevIds.length) {
-          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
+          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.chargeAmt)} IQD`);
         }
 
-        const waMsg =
-          `درخواست شارژ عراق\n` +
-          `کد سند: ${txId}\n` +
-          `نام مشتری: ${payload.accName}\n` +
-          `کد حساب: ${payload.accId}\n` +
-          `شبکه: ${payload.network}\n` +
-          (payload.iqPhone ? `شماره مقصد: ${payload.iqPhone}\n` : '') +
-          `مبلغ: ${formatEnMoney(payload.cardAmt)} IQD`;
-
-        window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(waMsg)}`, '_blank');
+        window.open(`https://wa.me/${waTarget}?text=${encodeURIComponent(waMessage)}`, '_blank');
         showReceiptForTransactionData(iqTxRow);
       }
     }
@@ -2895,8 +3354,12 @@
     function openLegacyPinActivationModal(accId) {
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
-      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت\nنام: ${nameVal}\nکد حساب: ${accId}\nشماره: ${phoneVal}`);
-      document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
+      const targetWa = appSettings.iq_whatsapp_phone || OWNER_WHATSAPP;
+      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت
+نام: ${nameVal}
+کد حساب: ${accId}
+شماره: ${phoneVal}`);
+      document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${targetWa}?text=${msg}`;
       document.getElementById('legacyPinActivationModal').classList.remove('hidden');
       ensureSentinelHistory();
     }
@@ -2998,15 +3461,24 @@
       return null;
     }
 
-    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی') {
+    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
       const bioPlugin = getCapacitorBiometricPlugin();
       if (bioPlugin) {
         try {
+          if (typeof bioPlugin.isAvailable === 'function') {
+            await bioPlugin.isAvailable().catch(() => null);
+          }
           if (typeof bioPlugin.verifyIdentity === 'function') {
             await bioPlugin.verifyIdentity({
               reason: reasonText,
               title: 'امانت‌داری کریمی',
-              allowDeviceCredential: true
+              subtitle: 'قفل گوشی (اثر انگشت، PIN، الگو یا رمز عبور)',
+              description: reasonText,
+              negativeButtonText: 'رمز ثابت برنامه',
+              useFallback: true,
+              allowDeviceCredential: true,
+              deviceCredentialTitle: 'قفل صفحه گوشی',
+              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور دستگاه را وارد کنید'
             });
             return true;
           }
@@ -3014,7 +3486,8 @@
             await bioPlugin.authenticate({
               reason: reasonText,
               title: 'امانت‌داری کریمی',
-              allowDeviceCredential: true
+              allowDeviceCredential: true,
+              fallbackTitle: 'استفاده از قفل گوشی'
             });
             return true;
           }
@@ -3022,6 +3495,32 @@
           return false;
         }
       }
+
+      try {
+        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
+        for (const br of bridges) {
+          if (br && typeof br.requestDeviceAuth === 'function') {
+            const res = br.requestDeviceAuth(reasonText);
+            return Boolean(res);
+          }
+        }
+      } catch (e) {}
+
+      if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
+        try {
+          const cred = await navigator.credentials.get({
+            publicKey: {
+              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112, 126, 140, 154, 168, 182, 196, 210, 224]),
+              timeout: 60000,
+              userVerification: 'required'
+            }
+          });
+          if (cred) return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
       return true;
     }
 
@@ -3260,7 +3759,12 @@
       const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
       const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
-      const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
+      const msg = `امانت‌داری کریمی
+نام: ${name}
+عملیات: ${op}
+مبلغ: ${amt} ${curr}
+سند: ${tid}
+تاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
   </script>
