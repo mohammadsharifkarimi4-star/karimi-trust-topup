@@ -1613,6 +1613,68 @@
       }
     }
 
+
+    function detectAfOperatorFromPhone(phoneDigits) {
+      const clean = String(phoneDigits || '').replace(/\D/g, '');
+      const local10 = clean.startsWith('93') && clean.length >= 11 ? '0' + clean.slice(2) : clean;
+      const prefix3 = local10.slice(0, 3);
+      if (prefix3 === '070' || prefix3 === '071') return 'awcc';
+      if (prefix3 === '077' || prefix3 === '076') return 'atoma';
+      if (prefix3 === '079' || prefix3 === '078') return 'roshan';
+      if (prefix3 === '074') return 'salam';
+      if (prefix3 === '072' || prefix3 === '073') return 'etisalat';
+      return 'atoma';
+    }
+
+    async function callIIMobileTopupApi(payload) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 25000);
+      try {
+        const resp = await fetch(IIMOBILE_TOPUP_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        const data = await resp.json().catch(() => ({}));
+        const execObj = data.raw || data;
+        const initObj = data.initiate || {};
+        const txRef =
+          (execObj && (execObj.data && (execObj.data.messageId || execObj.data.txnid || execObj.data.txid))) ||
+          execObj.txnid ||
+          execObj.txid ||
+          initObj.txid ||
+          (initObj.data && initObj.data.txid) ||
+          null;
+        const msgText =
+          (execObj && (execObj.msg || execObj.message || (execObj.data && execObj.data.status))) ||
+          data.error ||
+          '';
+        const isSuccess = Boolean(
+          resp.ok &&
+          data.ok !== false &&
+          execObj &&
+          execObj.status != 0 &&
+          String(execObj.status || '').toLowerCase() !== 'failed'
+        );
+        return {
+          ok: isSuccess,
+          referenceId: txRef ? String(txRef) : null,
+          message: String(msgText || ''),
+          raw: data
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          referenceId: null,
+          message: err && err.message ? err.message : 'خطای ارتباط با سرور شارژ',
+          raw: null
+        };
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
     let _supabase = null;
     let runtimeConfigLoaded = false;
 
@@ -1622,9 +1684,6 @@
         const resp = await fetch('/api/config', { cache: 'no-store' });
         if (resp.ok) {
           const cfg = await resp.json();
-          if (cfg && typeof cfg === 'object') {
-            applyAppSettings(cfg.appSettings || cfg.settings || null);
-          }
           if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
             _supabase = supabase.createClient(String(cfg.supabaseUrl).trim(), String(cfg.supabaseKey).trim());
             runtimeConfigLoaded = true;
@@ -1635,101 +1694,12 @@
       return false;
     }
 
-    // تنظیمات قابل مدیریت از پنل مدیریت / پیکربندی بیرونی (بدون اطلاعات حساس در فایل اصلی)
-    const APP_SETTINGS = {
-      brandName: "امانت‌داری کریمی",
-      brandSubtitleDefault: "سامانه مالی و شارژ مشتریان",
-      ownerName: "محمد شریف",
-      ownerEmail: "mohammadsharifkarimi4@gmail.com",
-      ownerWhatsapp: "9647721878997",
-      afnToIqdRate: 26.5,
-      transferCurrencies: ["IQD", "AFN", "USD"],
-      iqNetworks: ["Zain (زین عراق)", "AsiaCell (آسیاسل)"],
-      iqCardAmounts: [1000, 2000, 3000, 5000, 10000, 15000, 25000],
-      allowSelfRegister: false,
-      afnTopupProxyEndpoint: "/api/topup/afn",
-      adminNoticeTitle: "برای افتتاح حساب جدید به ادمین مراجعه کنید",
-      adminNoticeText: "ثبت حساب مستقیم بسته شده است. لطفاً برای ایجاد حساب و دریافت کد حساب با مدیریت تماس بگیرید."
-    };
+    const OWNER_NAME_DISPLAY = "محمد شریف";
+    const OWNER_EMAIL = "mohammadsharifkarimi4@gmail.com";
+    const OWNER_WHATSAPP = "9647721878997";
+    const AFN_TO_IQD_RATE = 26.5;
 
-    let OWNER_NAME_DISPLAY = APP_SETTINGS.ownerName;
-    let OWNER_EMAIL = APP_SETTINGS.ownerEmail;
-    let OWNER_WHATSAPP = APP_SETTINGS.ownerWhatsapp;
-    let AFN_TO_IQD_RATE = APP_SETTINGS.afnToIqdRate;
-
-    function applyAppSettings(overrideCfg = null) {
-      if (overrideCfg && typeof overrideCfg === 'object') {
-        if (overrideCfg.brandName) APP_SETTINGS.brandName = String(overrideCfg.brandName).trim();
-        if (overrideCfg.brandSubtitleDefault) APP_SETTINGS.brandSubtitleDefault = String(overrideCfg.brandSubtitleDefault).trim();
-        if (overrideCfg.ownerName) APP_SETTINGS.ownerName = String(overrideCfg.ownerName).trim();
-        if (overrideCfg.ownerEmail) APP_SETTINGS.ownerEmail = String(overrideCfg.ownerEmail).trim();
-        if (overrideCfg.ownerWhatsapp) APP_SETTINGS.ownerWhatsapp = String(overrideCfg.ownerWhatsapp).trim();
-        if (overrideCfg.afnToIqdRate !== undefined && !isNaN(parseFloat(overrideCfg.afnToIqdRate))) {
-          APP_SETTINGS.afnToIqdRate = parseFloat(overrideCfg.afnToIqdRate);
-        }
-        if (Array.isArray(overrideCfg.transferCurrencies) && overrideCfg.transferCurrencies.length > 0) {
-          APP_SETTINGS.transferCurrencies = overrideCfg.transferCurrencies.map(c => String(c).toUpperCase().trim()).filter(Boolean);
-        }
-        if (Array.isArray(overrideCfg.iqNetworks) && overrideCfg.iqNetworks.length > 0) {
-          APP_SETTINGS.iqNetworks = overrideCfg.iqNetworks.map(n => String(n).trim()).filter(Boolean);
-        }
-        if (Array.isArray(overrideCfg.iqCardAmounts) && overrideCfg.iqCardAmounts.length > 0) {
-          APP_SETTINGS.iqCardAmounts = overrideCfg.iqCardAmounts.map(v => parseInt(v, 10)).filter(v => !isNaN(v) && v > 0);
-        }
-        if (typeof overrideCfg.allowSelfRegister === 'boolean') {
-          APP_SETTINGS.allowSelfRegister = overrideCfg.allowSelfRegister;
-        }
-        if (overrideCfg.afnTopupProxyEndpoint) {
-          APP_SETTINGS.afnTopupProxyEndpoint = String(overrideCfg.afnTopupProxyEndpoint).trim();
-        }
-        if (overrideCfg.adminNoticeTitle) APP_SETTINGS.adminNoticeTitle = String(overrideCfg.adminNoticeTitle).trim();
-        if (overrideCfg.adminNoticeText) APP_SETTINGS.adminNoticeText = String(overrideCfg.adminNoticeText).trim();
-      }
-
-      OWNER_NAME_DISPLAY = APP_SETTINGS.ownerName;
-      OWNER_EMAIL = APP_SETTINGS.ownerEmail;
-      OWNER_WHATSAPP = APP_SETTINGS.ownerWhatsapp;
-      AFN_TO_IQD_RATE = APP_SETTINGS.afnToIqdRate;
-
-      document.title = `${APP_SETTINGS.brandName} — ${APP_SETTINGS.brandSubtitleDefault}`;
-      const brandH1 = document.querySelector('.brand-texts h1');
-      if (brandH1) brandH1.innerText = APP_SETTINGS.brandName;
-
-      const subEl = document.getElementById('headerSubtitleText');
-      if (subEl && currentStep === 'phone') subEl.innerText = APP_SETTINGS.brandSubtitleDefault;
-
-      const waHeaderBtn = document.getElementById('headerSupportWaBtn');
-      if (waHeaderBtn && OWNER_WHATSAPP) {
-        waHeaderBtn.href = `https://wa.me/${OWNER_WHATSAPP}`;
-      }
-
-      const noticeCard = document.getElementById('adminAccountNoticeCard');
-      if (noticeCard) {
-        const titleNode = noticeCard.querySelector('div[style*="0.88rem"]');
-        const textNode = noticeCard.querySelector('p');
-        if (titleNode) titleNode.innerText = APP_SETTINGS.adminNoticeTitle;
-        if (textNode) textNode.innerText = APP_SETTINGS.adminNoticeText;
-      }
-
-      const netSel = document.getElementById('iqNetworkSelect');
-      if (netSel) {
-        const prevNet = netSel.value;
-        netSel.innerHTML = APP_SETTINGS.iqNetworks.map(n => `<option value="${n}">${n}</option>`).join('');
-        if (prevNet && APP_SETTINGS.iqNetworks.includes(prevNet)) netSel.value = prevNet;
-      }
-
-      const cardSel = document.getElementById('iqCardSelect');
-      if (cardSel) {
-        const prevCard = parseInt(cardSel.value, 10);
-        cardSel.innerHTML = APP_SETTINGS.iqCardAmounts.map(v => `<option value="${v}">${formatEnMoney(v)}</option>`).join('');
-        if (prevCard && APP_SETTINGS.iqCardAmounts.includes(prevCard)) cardSel.value = String(prevCard);
-      }
-
-      initAdminContactFromDataCode();
-      populateTransferCurrencies();
-      recalcTopupCost();
-    }
-
+    const IIMOBILE_TOPUP_ENDPOINT = "/api/iimobile-topup";
 
     let accountsList = [];
     let transactionsList = [];
@@ -2305,7 +2275,7 @@
       document.addEventListener('deviceready', bindCap, { once: true });
       window.addEventListener('DOMContentLoaded', () => {
         ensureSentinelHistory();
-        applyAppSettings();
+        initAdminContactFromDataCode();
         updateNotifModeLabel();
         requestExternalNotificationPermission();
         setTimeout(bindCap, 300);
@@ -2916,7 +2886,7 @@
       const sel = document.getElementById('transferCurrencySelect');
       if (!sel) return;
       const prevVal = sel.value;
-      const allCurrs = Array.from(new Set([...APP_SETTINGS.transferCurrencies, ...currencyList]));
+      const allCurrs = Array.from(new Set(['IQD', 'AFN', 'USD', ...currencyList]));
       sel.innerHTML = allCurrs.map(c => `<option value="${c}">${c}</option>`).join('');
       if (prevVal && allCurrs.includes(prevVal)) sel.value = prevVal;
       else if (allCurrs.includes('IQD')) sel.value = 'IQD';
@@ -3251,58 +3221,27 @@
       const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال...', 'دریافت پاسخ');
-        let refCode = null;
-        let lastErr = null;
+        showRealLoading('در حال ارسال شارژ افغانستان...', 'اتصال به درگاه IIMobile');
+        const operatorCode = detectAfOperatorFromPhone(payload.targetPhone);
+        const apiRes = await callIIMobileTopupApi({
+          txId,
+          accountId: payload.accId,
+          accountName: payload.accName,
+          operator: operatorCode,
+          phone: payload.targetPhone,
+          bundle_id: '543212506',
+          amount: Number(payload.afnAmt)
+        });
 
-        if (TOPUP_API_CONFIG.enabled && TOPUP_API_CONFIG.endpoint) {
-          const extRes = await callExternalTopupApi({
-            txId,
-            mode: 'afn',
-            accountId: payload.accId,
-            accountName: payload.accName,
-            targetPhone: payload.targetPhone,
-            amountAfn: Number(payload.afnAmt),
-            amountIqd: Number(payload.requiredIqd),
-            currency: 'IQD'
-          });
-          if (extRes.handledByExternalApi && extRes.ok) {
-            refCode = extRes.referenceId || `API-${txId}`;
-          } else {
-            lastErr = extRes.error || 'پاسخ ناموفق از سرویس شارژ';
-          }
-        }
-
-        if (!refCode && APP_SETTINGS.afnTopupProxyEndpoint) {
-          try {
-            const resp = await fetch(APP_SETTINGS.afnTopupProxyEndpoint, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                txId,
-                accountId: payload.accId,
-                accountName: payload.accName,
-                targetPhone: payload.targetPhone,
-                afnAmount: Number(payload.afnAmt),
-                requiredIqd: Number(payload.requiredIqd)
-              })
-            });
-            const json = await resp.json().catch(() => null);
-            if (resp.ok && json && (json.ok !== false)) {
-              refCode = json.referenceId || json.ref || (json.message_id ? `SIM-${json.message_id}` : `REF-${txId}`);
-            } else {
-              lastErr = (json && (json.error || json.description)) ? (json.error || json.description) : `HTTP ${resp.status}`;
-            }
-          } catch (err) {
-            lastErr = err && err.message ? err.message : 'خطای ارتباط با سرور';
-          }
-        }
-
-        if (!refCode) {
+        if (!apiRes.ok) {
           hideRealLoading();
-          notifyAccountEvent('ارسال شارژ ناموفق', `${lastErr || 'مسیر ارسال شارژ پیکربندی نشده است'}`);
+          const errDetail = apiRes.message || 'تراکنش شارژ افغانستان تایید نشد';
+          notifyAccountEvent('ارسال شارژ افغانستان ناموفق', errDetail);
+          alert('خطا در ارسال شارژ افغانستان: ' + errDetail);
           return;
         }
+
+        const refCode = apiRes.referenceId ? `IIM-${apiRes.referenceId}` : txId;
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -3311,7 +3250,7 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ افغانستان',
-          Description: `${payload.targetPhone} (${payload.afnAmt} AFN) - ${refCode}`,
+          Description: `${payload.targetPhone} (${operatorCode.toUpperCase()} - ${payload.afnAmt} AFN) - ${refCode}`,
           AssignedUserEmail: assigned,
           Status: 'تایید شده'
         };
