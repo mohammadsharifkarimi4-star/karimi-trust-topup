@@ -1252,12 +1252,23 @@
 
             <div class="form-group">
               <label for="iqNetworkSelect">شبکه</label>
-              <select id="iqNetworkSelect"></select>
+              <select id="iqNetworkSelect">
+                <option value="Zain (زین عراق)">Zain (زین عراق)</option>
+                <option value="AsiaCell (آسیاسل)">AsiaCell (آسیاسل)</option>
+              </select>
             </div>
 
             <div class="form-group">
-              <label for="iqCardSelect">مبلغ / بسته (IQD)</label>
-              <select id="iqCardSelect" onchange="recalcTopupCost()"></select>
+              <label for="iqCardSelect">مبلغ (IQD)</label>
+              <select id="iqCardSelect" onchange="recalcTopupCost()">
+                <option value="1000">1,000</option>
+                <option value="2000">2,000</option>
+                <option value="3000">3,000</option>
+                <option value="5000">5,000</option>
+                <option value="10000">10,000</option>
+                <option value="15000">15,000</option>
+                <option value="25000">25,000</option>
+              </select>
             </div>
 
             <div id="iqCalcBox" class="calc-summary-box">
@@ -1611,6 +1622,9 @@
         const resp = await fetch('/api/config', { cache: 'no-store' });
         if (resp.ok) {
           const cfg = await resp.json();
+          if (cfg && typeof cfg === 'object') {
+            applyAppSettings(cfg.appSettings || cfg.settings || null);
+          }
           if (cfg && cfg.supabaseUrl && cfg.supabaseKey) {
             _supabase = supabase.createClient(String(cfg.supabaseUrl).trim(), String(cfg.supabaseKey).trim());
             runtimeConfigLoaded = true;
@@ -1621,106 +1635,101 @@
       return false;
     }
 
-    const OWNER_NAME_DISPLAY = "محمد شریف";
-    const OWNER_EMAIL = "mohammadsharifkarimi4@gmail.com";
-    const OWNER_WHATSAPP = "9647721878997";
-
-    const DEFAULT_APP_SETTINGS = {
-      id: 'default',
-      transfer_enabled: true,
-      topup_afn_enabled: true,
-      topup_iq_enabled: true,
-      afn_to_iqd_rate: 26.5,
-      iq_networks: ['Zain (زین عراق)', 'AsiaCell (آسیاسل)'],
-      iq_packages: [
-        { id: 'iq-1000', label: '1,000', card_amount: 1000, charge_amount: 1000, active: true },
-        { id: 'iq-2000', label: '2,000', card_amount: 2000, charge_amount: 2000, active: true },
-        { id: 'iq-3000', label: '3,000', card_amount: 3000, charge_amount: 3000, active: true },
-        { id: 'iq-5000', label: '5,000', card_amount: 5000, charge_amount: 5000, active: true },
-        { id: 'iq-10000', label: '10,000', card_amount: 10000, charge_amount: 10000, active: true },
-        { id: 'iq-15000', label: '15,000', card_amount: 15000, charge_amount: 15000, active: true },
-        { id: 'iq-25000', label: '25,000', card_amount: 25000, charge_amount: 25000, active: true }
-      ],
-      afn_api_enabled: false,
-      afn_api_endpoint: '',
-      afn_api_mode: 'telegram_relay'
+    // تنظیمات قابل مدیریت از پنل مدیریت / پیکربندی بیرونی (بدون اطلاعات حساس در فایل اصلی)
+    const APP_SETTINGS = {
+      brandName: "امانت‌داری کریمی",
+      brandSubtitleDefault: "سامانه مالی و شارژ مشتریان",
+      ownerName: "محمد شریف",
+      ownerEmail: "mohammadsharifkarimi4@gmail.com",
+      ownerWhatsapp: "9647721878997",
+      afnToIqdRate: 26.5,
+      transferCurrencies: ["IQD", "AFN", "USD"],
+      iqNetworks: ["Zain (زین عراق)", "AsiaCell (آسیاسل)"],
+      iqCardAmounts: [1000, 2000, 3000, 5000, 10000, 15000, 25000],
+      allowSelfRegister: false,
+      afnTopupProxyEndpoint: "/api/topup/afn",
+      adminNoticeTitle: "برای افتتاح حساب جدید به ادمین مراجعه کنید",
+      adminNoticeText: "ثبت حساب مستقیم بسته شده است. لطفاً برای ایجاد حساب و دریافت کد حساب با مدیریت تماس بگیرید."
     };
 
-    let appSettings = { ...DEFAULT_APP_SETTINGS };
+    let OWNER_NAME_DISPLAY = APP_SETTINGS.ownerName;
+    let OWNER_EMAIL = APP_SETTINGS.ownerEmail;
+    let OWNER_WHATSAPP = APP_SETTINGS.ownerWhatsapp;
+    let AFN_TO_IQD_RATE = APP_SETTINGS.afnToIqdRate;
 
-    const TELEGRAM_BOT_TOKEN = "8900776593:AAH0BPYT34-GlJ_00fUN0b56mUpz4s2k6SA";
-    const TELEGRAM_CHAT_ID = "-1003555048687";
-    const TELEGRAM_SEND_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-    function getActiveAfnToIqdRate() {
-      const r = parseFloat(appSettings && appSettings.afn_to_iqd_rate);
-      return (!isNaN(r) && r > 0) ? r : 26.5;
-    }
-
-    function applyAppSettingsToUI() {
-      const transferOn = appSettings.transfer_enabled !== false;
-      const afnOn = appSettings.topup_afn_enabled !== false;
-      const iqOn = appSettings.topup_iq_enabled !== false;
-
-      const tileTransfer = document.getElementById('qTileTransfer');
-      const tileAfn = document.getElementById('qTileAfn');
-      const tileIq = document.getElementById('qTileIq');
-      const subTransfer = document.getElementById('srvSubTransfer');
-      const subAfn = document.getElementById('srvSubAfn');
-      const subIq = document.getElementById('srvSubIq');
-
-      if (tileTransfer) {
-        tileTransfer.style.opacity = transferOn ? '1' : '0.45';
-        tileTransfer.querySelector('.quick-label').innerText = transferOn ? 'انتقال موجودی' : 'انتقال (غیرفعال)';
+    function applyAppSettings(overrideCfg = null) {
+      if (overrideCfg && typeof overrideCfg === 'object') {
+        if (overrideCfg.brandName) APP_SETTINGS.brandName = String(overrideCfg.brandName).trim();
+        if (overrideCfg.brandSubtitleDefault) APP_SETTINGS.brandSubtitleDefault = String(overrideCfg.brandSubtitleDefault).trim();
+        if (overrideCfg.ownerName) APP_SETTINGS.ownerName = String(overrideCfg.ownerName).trim();
+        if (overrideCfg.ownerEmail) APP_SETTINGS.ownerEmail = String(overrideCfg.ownerEmail).trim();
+        if (overrideCfg.ownerWhatsapp) APP_SETTINGS.ownerWhatsapp = String(overrideCfg.ownerWhatsapp).trim();
+        if (overrideCfg.afnToIqdRate !== undefined && !isNaN(parseFloat(overrideCfg.afnToIqdRate))) {
+          APP_SETTINGS.afnToIqdRate = parseFloat(overrideCfg.afnToIqdRate);
+        }
+        if (Array.isArray(overrideCfg.transferCurrencies) && overrideCfg.transferCurrencies.length > 0) {
+          APP_SETTINGS.transferCurrencies = overrideCfg.transferCurrencies.map(c => String(c).toUpperCase().trim()).filter(Boolean);
+        }
+        if (Array.isArray(overrideCfg.iqNetworks) && overrideCfg.iqNetworks.length > 0) {
+          APP_SETTINGS.iqNetworks = overrideCfg.iqNetworks.map(n => String(n).trim()).filter(Boolean);
+        }
+        if (Array.isArray(overrideCfg.iqCardAmounts) && overrideCfg.iqCardAmounts.length > 0) {
+          APP_SETTINGS.iqCardAmounts = overrideCfg.iqCardAmounts.map(v => parseInt(v, 10)).filter(v => !isNaN(v) && v > 0);
+        }
+        if (typeof overrideCfg.allowSelfRegister === 'boolean') {
+          APP_SETTINGS.allowSelfRegister = overrideCfg.allowSelfRegister;
+        }
+        if (overrideCfg.afnTopupProxyEndpoint) {
+          APP_SETTINGS.afnTopupProxyEndpoint = String(overrideCfg.afnTopupProxyEndpoint).trim();
+        }
+        if (overrideCfg.adminNoticeTitle) APP_SETTINGS.adminNoticeTitle = String(overrideCfg.adminNoticeTitle).trim();
+        if (overrideCfg.adminNoticeText) APP_SETTINGS.adminNoticeText = String(overrideCfg.adminNoticeText).trim();
       }
-      if (tileAfn) {
-        tileAfn.style.opacity = afnOn ? '1' : '0.45';
-        tileAfn.querySelector('.quick-label').innerText = afnOn ? 'شارژ افغانستان' : 'شارژ AFN (غیرفعال)';
-      }
-      if (tileIq) {
-        tileIq.style.opacity = iqOn ? '1' : '0.45';
-        tileIq.querySelector('.quick-label').innerText = iqOn ? 'شارژ عراق' : 'شارژ عراق (غیرفعال)';
-      }
-      if (subTransfer) subTransfer.style.opacity = transferOn ? '1' : '0.45';
-      if (subAfn) subAfn.style.opacity = afnOn ? '1' : '0.45';
-      if (subIq) subIq.style.opacity = iqOn ? '1' : '0.45';
 
-      // Populate Iraq networks dynamically from app_settings
+      OWNER_NAME_DISPLAY = APP_SETTINGS.ownerName;
+      OWNER_EMAIL = APP_SETTINGS.ownerEmail;
+      OWNER_WHATSAPP = APP_SETTINGS.ownerWhatsapp;
+      AFN_TO_IQD_RATE = APP_SETTINGS.afnToIqdRate;
+
+      document.title = `${APP_SETTINGS.brandName} — ${APP_SETTINGS.brandSubtitleDefault}`;
+      const brandH1 = document.querySelector('.brand-texts h1');
+      if (brandH1) brandH1.innerText = APP_SETTINGS.brandName;
+
+      const subEl = document.getElementById('headerSubtitleText');
+      if (subEl && currentStep === 'phone') subEl.innerText = APP_SETTINGS.brandSubtitleDefault;
+
+      const waHeaderBtn = document.getElementById('headerSupportWaBtn');
+      if (waHeaderBtn && OWNER_WHATSAPP) {
+        waHeaderBtn.href = `https://wa.me/${OWNER_WHATSAPP}`;
+      }
+
+      const noticeCard = document.getElementById('adminAccountNoticeCard');
+      if (noticeCard) {
+        const titleNode = noticeCard.querySelector('div[style*="0.88rem"]');
+        const textNode = noticeCard.querySelector('p');
+        if (titleNode) titleNode.innerText = APP_SETTINGS.adminNoticeTitle;
+        if (textNode) textNode.innerText = APP_SETTINGS.adminNoticeText;
+      }
+
       const netSel = document.getElementById('iqNetworkSelect');
       if (netSel) {
         const prevNet = netSel.value;
-        const nets = (Array.isArray(appSettings.iq_networks) && appSettings.iq_networks.length)
-          ? appSettings.iq_networks
-          : DEFAULT_APP_SETTINGS.iq_networks;
-        netSel.innerHTML = nets.map(n => `<option value="${String(n)}">${String(n)}</option>`).join('');
-        if (prevNet && nets.includes(prevNet)) netSel.value = prevNet;
+        netSel.innerHTML = APP_SETTINGS.iqNetworks.map(n => `<option value="${n}">${n}</option>`).join('');
+        if (prevNet && APP_SETTINGS.iqNetworks.includes(prevNet)) netSel.value = prevNet;
       }
 
-      // Populate Iraq packages dynamically from app_settings
       const cardSel = document.getElementById('iqCardSelect');
       if (cardSel) {
-        const prevIdx = cardSel.selectedIndex;
-        const rawPkgs = Array.isArray(appSettings.iq_packages) ? appSettings.iq_packages : DEFAULT_APP_SETTINGS.iq_packages;
-        const activePkgs = rawPkgs.filter(p => p && p.active !== false && Number(p.card_amount || p.amount) > 0);
-        const listToRender = activePkgs.length ? activePkgs : DEFAULT_APP_SETTINGS.iq_packages;
-        cardSel.innerHTML = listToRender.map((p, i) => {
-          const cardAmt = Number(p.card_amount ?? p.amount ?? 0);
-          const chargeAmt = Number(p.charge_amount ?? p.sell_price ?? cardAmt);
-          const lbl = p.label ? String(p.label) : formatEnMoney(cardAmt);
-          const suffix = chargeAmt !== cardAmt ? ` (کسر: ${formatEnMoney(chargeAmt)} IQD)` : '';
-          return `<option value="${cardAmt}" data-charge="${chargeAmt}" data-label="${lbl}" data-idx="${i}">${lbl}${suffix}</option>`;
-        }).join('');
-        if (prevIdx >= 0 && prevIdx < cardSel.options.length) {
-          cardSel.selectedIndex = prevIdx;
-        }
+        const prevCard = parseInt(cardSel.value, 10);
+        cardSel.innerHTML = APP_SETTINGS.iqCardAmounts.map(v => `<option value="${v}">${formatEnMoney(v)}</option>`).join('');
+        if (prevCard && APP_SETTINGS.iqCardAmounts.includes(prevCard)) cardSel.value = String(prevCard);
       }
 
-      if (activeServiceMode === 'transfer' && !transferOn) collapseServiceForms();
-      if (activeServiceMode === 'afn' && !afnOn) collapseServiceForms();
-      if (activeServiceMode === 'iq' && !iqOn) collapseServiceForms();
-
+      initAdminContactFromDataCode();
+      populateTransferCurrencies();
       recalcTopupCost();
     }
+
 
     let accountsList = [];
     let transactionsList = [];
@@ -1743,10 +1752,8 @@
       try {
         const cAcc = localStorage.getItem('karimi_cache_accounts');
         const cTx = localStorage.getItem('karimi_cache_transactions');
-        const cSet = localStorage.getItem('karimi_cache_app_settings');
         if (cAcc) accountsList = JSON.parse(cAcc);
         if (cTx) transactionsList = JSON.parse(cTx);
-        if (cSet) appSettings = { ...DEFAULT_APP_SETTINGS, ...JSON.parse(cSet) };
       } catch (e) {}
     }
     loadCachedData();
@@ -2298,7 +2305,7 @@
       document.addEventListener('deviceready', bindCap, { once: true });
       window.addEventListener('DOMContentLoaded', () => {
         ensureSentinelHistory();
-        initAdminContactFromDataCode();
+        applyAppSettings();
         updateNotifModeLabel();
         requestExternalNotificationPermission();
         setTimeout(bindCap, 300);
@@ -2389,20 +2396,6 @@
       try {
         realtimeTxChannel = _supabase
           .channel('karimi-tx-live-' + cleanId)
-          .on(
-            'postgres_changes',
-            { event: '*', schema: 'public', table: 'app_settings' },
-            async (payload) => {
-              if (payload && payload.new) {
-                appSettings = { ...DEFAULT_APP_SETTINGS, ...payload.new };
-                try { localStorage.setItem('karimi_cache_app_settings', JSON.stringify(appSettings)); } catch (e) {}
-                applyAppSettingsToUI();
-              } else {
-                await fetchDataFromSupabaseFresh();
-                applyAppSettingsToUI();
-              }
-            }
-          )
           .on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'transactions' },
@@ -2509,20 +2502,6 @@
     function openServiceForm(mode) {
       playSound('click');
       requestExternalNotificationPermission();
-
-      if (mode === 'transfer' && appSettings.transfer_enabled === false) {
-        alert('سرویس انتقال موجودی در حال حاضر از سوی مدیریت غیرفعال است.');
-        return;
-      }
-      if (mode === 'afn' && appSettings.topup_afn_enabled === false) {
-        alert('سرویس شارژ افغانستان در حال حاضر از سوی مدیریت غیرفعال است.');
-        return;
-      }
-      if (mode === 'iq' && appSettings.topup_iq_enabled === false) {
-        alert('سرویس شارژ عراق در حال حاضر از سوی مدیریت غیرفعال است.');
-        return;
-      }
-
       activeServiceMode = mode;
 
       if (activeBottomTab !== 'services') {
@@ -2589,7 +2568,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-      applyAppSettingsToUI();
       requestExternalNotificationPermission();
       const savedPhone = localStorage.getItem('karimi_phone');
       const savedAccId = localStorage.getItem('karimi_accId');
@@ -2621,10 +2599,9 @@
       const ready = await initSupabaseFromEnv();
       if (!ready || !_supabase) return false;
       try {
-        const [accRes, txRes, setRes] = await Promise.all([
+        const [accRes, txRes] = await Promise.all([
           _supabase.from('accounts').select('*'),
-          _supabase.from('transactions').select('*'),
-          _supabase.from('app_settings').select('*').eq('id', 'default').maybeSingle()
+          _supabase.from('transactions').select('*')
         ]);
         if (accRes.data) {
           accountsList = accRes.data;
@@ -2633,11 +2610,6 @@
         if (txRes.data) {
           transactionsList = txRes.data;
           localStorage.setItem('karimi_cache_transactions', JSON.stringify(txRes.data));
-        }
-        if (setRes && setRes.data) {
-          appSettings = { ...DEFAULT_APP_SETTINGS, ...setRes.data };
-          localStorage.setItem('karimi_cache_app_settings', JSON.stringify(appSettings));
-          applyAppSettingsToUI();
         }
         return true;
       } catch (e) {
@@ -2880,7 +2852,6 @@
 
       if (activeCurrencyIndex >= currencyList.length) activeCurrencyIndex = 0;
 
-      applyAppSettingsToUI();
       updatePinMenuLabel(sheetAccId);
       updateBioStatusLabel();
       updateTxBioStatusLabel();
@@ -2945,7 +2916,7 @@
       const sel = document.getElementById('transferCurrencySelect');
       if (!sel) return;
       const prevVal = sel.value;
-      const allCurrs = Array.from(new Set(['IQD', 'AFN', 'USD', ...currencyList]));
+      const allCurrs = Array.from(new Set([...APP_SETTINGS.transferCurrencies, ...currencyList]));
       sel.innerHTML = allCurrs.map(c => `<option value="${c}">${c}</option>`).join('');
       if (prevVal && allCurrs.includes(prevVal)) sel.value = prevVal;
       else if (allCurrs.includes('IQD')) sel.value = 'IQD';
@@ -3027,10 +2998,6 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
-      if (appSettings.transfer_enabled === false) {
-        alert('سرویس انتقال موجودی در حال حاضر از سوی مدیریت غیرفعال است.');
-        return;
-      }
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
       const phQ = document.getElementById('transferTargetPhoneInput').value.trim();
       const targetAcc = findRecipientByIdAndPhone(idQ, phQ);
@@ -3073,32 +3040,17 @@
       return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
     }
 
-    function getSelectedIqPackageInfo() {
-      const sel = document.getElementById('iqCardSelect');
-      if (!sel || sel.options.length === 0) return { cardAmt: 0, chargeAmt: 0, label: '0' };
-      const opt = sel.options[sel.selectedIndex] || sel.options[0];
-      const cardAmt = parseFloat(opt.value) || 0;
-      const chargeAmt = parseFloat(opt.getAttribute('data-charge')) || cardAmt;
-      const label = opt.getAttribute('data-label') || formatEnMoney(cardAmt);
-      return { cardAmt, chargeAmt, label };
-    }
-
     function recalcTopupCost() {
       const netIqd = getNetIqdBalance();
-      const rate = getActiveAfnToIqdRate();
 
       const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
-      const reqIqd = Math.round(afnAmt * rate);
+      const reqIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
       const afnBox = document.getElementById('afnCalcBox');
       const afnErr = document.getElementById('topupAfnEligibilityMsg');
       const afnBtn = document.getElementById('btnExecuteTopupAfn');
       document.getElementById('afnCalculatedIqd').innerText = formatEnMoney(reqIqd);
 
-      if (appSettings.topup_afn_enabled === false) {
-        afnBox.classList.add('error');
-        afnErr.innerText = 'شارژ افغانستان غیرفعال است.';
-        afnBtn.disabled = true;
-      } else if (netIqd <= 0 || reqIqd > netIqd) {
+      if (netIqd <= 0 || reqIqd > netIqd) {
         afnBox.classList.add('error');
         afnErr.innerText = 'موجودی دینار کافی نیست.';
         afnBtn.disabled = true;
@@ -3108,17 +3060,13 @@
         afnBtn.disabled = false;
       }
 
-      const pkgInfo = getSelectedIqPackageInfo();
+      const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
       const iqBox = document.getElementById('iqCalcBox');
       const iqErr = document.getElementById('topupIqEligibilityMsg');
       const iqBtn = document.getElementById('btnExecuteTopupIq');
-      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(pkgInfo.chargeAmt);
+      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
 
-      if (appSettings.topup_iq_enabled === false) {
-        iqBox.classList.add('error');
-        iqErr.innerText = 'شارژ عراق غیرفعال است.';
-        iqBtn.disabled = true;
-      } else if (netIqd <= 0 || pkgInfo.chargeAmt > netIqd) {
+      if (netIqd <= 0 || cardAmt > netIqd) {
         iqBox.classList.add('error');
         iqErr.innerText = 'موجودی دینار کافی نیست.';
         iqBtn.disabled = true;
@@ -3131,15 +3079,6 @@
 
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
-      if (mode === 'afn' && appSettings.topup_afn_enabled === false) {
-        alert('سرویس شارژ افغانستان در حال حاضر از سوی مدیریت غیرفعال است.');
-        return;
-      }
-      if (mode === 'iq' && appSettings.topup_iq_enabled === false) {
-        alert('سرویس شارژ عراق در حال حاضر از سوی مدیریت غیرفعال است.');
-        return;
-      }
-
       const netIqd = getNetIqdBalance();
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
@@ -3157,31 +3096,22 @@
           alert('مبلغ را وارد کنید.');
           return;
         }
-        const rate = getActiveAfnToIqdRate();
-        const requiredIqd = Math.round(afnAmt * rate);
+        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
         if (requiredIqd > netIqd || netIqd <= 0) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd, rateUsed: rate };
+        payloadData = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
         summaryHtml = `شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
-        const pkgInfo = getSelectedIqPackageInfo();
-        if (pkgInfo.chargeAmt <= 0 || pkgInfo.chargeAmt > netIqd) {
+        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+        if (cardAmt <= 0 || cardAmt > netIqd) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = {
-          mode: 'iq',
-          accId,
-          accName,
-          network,
-          cardAmt: pkgInfo.cardAmt,
-          chargeAmt: pkgInfo.chargeAmt,
-          pkgLabel: pkgInfo.label
-        };
-        summaryHtml = `شارژ <b>${network}</b> — بسته <b class="eng-num">${pkgInfo.label}</b> (کسر: <b class="eng-num">${formatEnMoney(pkgInfo.chargeAmt)} IQD</b>)`;
+        payloadData = { mode: 'iq', accId, accName, network, cardAmt };
+        summaryHtml = `شارژ <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>)`;
       }
 
       if (!isTxBiometricEnabled()) {
@@ -3314,29 +3244,6 @@
       showReceiptForTransactionData(debitRow);
     }
 
-    async function dispatchAfnTopupThroughProxyApi(endpointUrl, apiPayload) {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 20000);
-      try {
-        const resp = await fetch(endpointUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(apiPayload),
-          signal: controller.signal
-        });
-        const data = await resp.json().catch(() => ({}));
-        if (resp.ok && data && data.success !== false && data.ok !== false) {
-          const ref = data.referenceId || data.ref || data.tracking_code || data.id || ('API-' + Date.now());
-          return { ok: true, refCode: String(ref) };
-        }
-        return { ok: false, error: (data && (data.message || data.error)) || `HTTP ${resp.status}` };
-      } catch (err) {
-        return { ok: false, error: err && err.message ? err.message : 'خطای اتصال به سرور API' };
-      } finally {
-        clearTimeout(timer);
-      }
-    }
-
     async function runTopupAfterPin(payload) {
       const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
       const nowIso = new Date().toISOString();
@@ -3345,74 +3252,57 @@
 
       if (payload.mode === 'afn') {
         showRealLoading('در حال ارسال...', 'دریافت پاسخ');
-
-        const useProxyApi = Boolean(
-          appSettings.afn_api_enabled &&
-          appSettings.afn_api_mode === 'proxy_api' &&
-          String(appSettings.afn_api_endpoint || '').trim()
-        );
-
-        let refCode = '';
+        let refCode = null;
         let lastErr = null;
 
-        if (useProxyApi) {
-          const proxyRes = await dispatchAfnTopupThroughProxyApi(
-            String(appSettings.afn_api_endpoint).trim(),
-            {
-              txId,
-              accountId: payload.accId,
-              accountName: payload.accName,
-              targetPhone: payload.targetPhone,
-              afnAmount: Number(payload.afnAmt),
-              requiredIqd: Number(payload.requiredIqd),
-              rateUsed: Number(payload.rateUsed || getActiveAfnToIqdRate()),
-              currency: 'IQD'
-            }
-          );
-          if (!proxyRes.ok) {
-            hideRealLoading();
-            notifyAccountEvent('ارسال شارژ ناموفق', `${proxyRes.error || 'پاسخ مثبت از API دریافت نشد'}`);
-            return;
+        if (TOPUP_API_CONFIG.enabled && TOPUP_API_CONFIG.endpoint) {
+          const extRes = await callExternalTopupApi({
+            txId,
+            mode: 'afn',
+            accountId: payload.accId,
+            accountName: payload.accName,
+            targetPhone: payload.targetPhone,
+            amountAfn: Number(payload.afnAmt),
+            amountIqd: Number(payload.requiredIqd),
+            currency: 'IQD'
+          });
+          if (extRes.handledByExternalApi && extRes.ok) {
+            refCode = extRes.referenceId || `API-${txId}`;
+          } else {
+            lastErr = extRes.error || 'پاسخ ناموفق از سرویس شارژ';
           }
-          refCode = proxyRes.refCode;
-        } else {
-          const tgText =
-            `شارژ افغانستان\nکد: ${txId}\nمشتری: ${payload.accName} (${payload.accId})\nشماره: ${payload.targetPhone}\nمبلغ: ${formatEnMoney(payload.afnAmt)} AFN\nکسر: ${formatEnMoney(payload.requiredIqd)} IQD`;
-
-          let tgData = null;
-          try {
-            const resp = await fetch(TELEGRAM_SEND_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: tgText })
-            });
-            const json = await resp.json().catch(() => null);
-            if (resp.ok && json && json.ok && json.result && json.result.message_id) tgData = json;
-            else lastErr = (json && json.description) ? json.description : `HTTP ${resp.status}`;
-          } catch (err) {
-            lastErr = err && err.message ? err.message : 'خطای ارتباط';
-          }
-
-          if (!tgData) {
-            try {
-              const qs = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: tgText });
-              const getResp = await fetch(`${TELEGRAM_SEND_URL}?${qs.toString()}`, { method: 'GET' });
-              const getJson = await getResp.json().catch(() => null);
-              if (getResp.ok && getJson && getJson.ok && getJson.result && getJson.result.message_id) {
-                tgData = getJson;
-                lastErr = null;
-              }
-            } catch (e) {}
-          }
-
-          if (!tgData || !tgData.result || !tgData.result.message_id) {
-            hideRealLoading();
-            notifyAccountEvent('ارسال شارژ ناموفق', `${lastErr || 'پاسخ مثبت دریافت نشد'}`);
-            return;
-          }
-          refCode = `SIM-${tgData.result.message_id}`;
         }
 
+        if (!refCode && APP_SETTINGS.afnTopupProxyEndpoint) {
+          try {
+            const resp = await fetch(APP_SETTINGS.afnTopupProxyEndpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                txId,
+                accountId: payload.accId,
+                accountName: payload.accName,
+                targetPhone: payload.targetPhone,
+                afnAmount: Number(payload.afnAmt),
+                requiredIqd: Number(payload.requiredIqd)
+              })
+            });
+            const json = await resp.json().catch(() => null);
+            if (resp.ok && json && (json.ok !== false)) {
+              refCode = json.referenceId || json.ref || (json.message_id ? `SIM-${json.message_id}` : `REF-${txId}`);
+            } else {
+              lastErr = (json && (json.error || json.description)) ? (json.error || json.description) : `HTTP ${resp.status}`;
+            }
+          } catch (err) {
+            lastErr = err && err.message ? err.message : 'خطای ارتباط با سرور';
+          }
+        }
+
+        if (!refCode) {
+          hideRealLoading();
+          notifyAccountEvent('ارسال شارژ ناموفق', `${lastErr || 'مسیر ارسال شارژ پیکربندی نشده است'}`);
+          return;
+        }
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -3446,31 +3336,25 @@
         showReceiptForTransactionData(afnTxRow);
       } else {
         showRealLoading('در حال ثبت...', 'ثبت تراکنش');
-        const deductAmount = Number(payload.chargeAmt ?? payload.cardAmt);
-        const cardAmount = Number(payload.cardAmt);
         const apiResult = await callExternalTopupApi({
           txId,
           accountId: payload.accId,
           accountName: payload.accName,
           network: payload.network,
-          cardAmount: cardAmount,
-          amount: deductAmount,
+          amount: Number(payload.cardAmt),
           currency: 'IQD'
         });
-        const cardDesc = cardAmount !== deductAmount
-          ? `${payload.network} (بسته ${formatEnMoney(cardAmount)} — کسر ${formatEnMoney(deductAmount)} IQD)`
-          : `${payload.network} (${formatEnMoney(cardAmount)} IQD)`;
         const iqTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
-          Amount: deductAmount,
+          Amount: Number(payload.cardAmt),
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
           Description: apiResult.handledByExternalApi && apiResult.referenceId
-            ? `${cardDesc} - ${apiResult.referenceId}`
-            : cardDesc,
+            ? `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD) - ${apiResult.referenceId}`
+            : `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
           AssignedUserEmail: assigned,
           Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
         };
@@ -3490,7 +3374,7 @@
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
         if (curIds.length > prevIds.length) {
-          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(deductAmount)} IQD`);
+          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
         }
 
         showReceiptForTransactionData(iqTxRow);
