@@ -1447,20 +1447,17 @@
             </div>
 
             <div class="form-group">
-              <label for="afnNetworkSelect">انتخاب شبکه (بدون قفل روی شبکه خاص)</label>
-              <select id="afnNetworkSelect" onchange="syncAfnNetworkHint(true)">
-                <option value="آزاد (تشخیص خودکار شبکه)">آزاد (همه شبکه‌ها / تشخیص خودکار)</option>
+              <label for="afnNetworkSelect">انتخاب شبکه (اتصالات، روشن، سلام)</label>
+              <select id="afnNetworkSelect">
                 <option value="اتصالات">اتصالات</option>
                 <option value="روشن">روشن</option>
                 <option value="سلام">سلام</option>
-                <option value="MTN افغانستان">MTN افغانستان</option>
               </select>
-              <div id="afnDetectedNetworkBadge" style="margin-top:5px; font-size:0.7rem; font-weight:800; color:var(--emerald-800); text-align:right;">شبکه تشخیص‌داده‌شده: آزاد (تشخیص خودکار شبکه)</div>
             </div>
 
             <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
-              <input type="tel" id="afnTargetPhone" maxlength="12" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,''); syncAfnNetworkHint(false);">
+              <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
 
             <div class="form-group">
@@ -1862,7 +1859,6 @@
       if (afnPhone) afnPhone.value = '';
       if (afnAmt) afnAmt.value = '';
       if (afnErr) afnErr.innerText = '';
-      syncAfnNetworkHint(false);
 
       const iqNet = document.getElementById('iqNetworkSelect');
       const iqCard = document.getElementById('iqCardSelect');
@@ -1981,124 +1977,7 @@
     const OWNER_WHATSAPP = "9647721878997";
     const AFN_TO_IQD_RATE = 26.5;
 
-    const DEFAULT_AFN_API_ENDPOINT = "/api/iimobile-topup";
-    let dynamicAfnApiEndpoint = "";
-    let dynamicAfnApiEnabled = null;
-    let dynamicAfnApiMode = "";
-    let dynamicAfnApiKey = "";
-    let dynamicAfnTimeoutMs = 15000;
-
-    function normalizeProxyEndpoint(rawUrl) {
-      const clean = String(rawUrl || "").trim();
-      if (!clean) return DEFAULT_AFN_API_ENDPOINT;
-      if (clean.startsWith("/")) return clean;
-      if (/^https?:\/\//i.test(clean)) return clean;
-      return "/" + clean.replace(/^\/+/, "");
-    }
-
-    function detectNetworkFromPhone(phoneStr) {
-      const clean = toEnglishDigits(String(phoneStr || "")).replace(/\D/g, "");
-      const local10 = clean.startsWith("93") && clean.length >= 11 ? "0" + clean.slice(2) : clean;
-      if (/^07(8|3)/.test(local10)) return "اتصالات";
-      if (/^07(4|2)/.test(local10)) return "روشن";
-      if (/^07(0|1)/.test(local10)) return "سلام";
-      if (/^07(9|6|7)/.test(local10)) return "آریانا / MTN";
-      return "آزاد (تشخیص خودکار شبکه)";
-    }
-
-    function syncAfnNetworkHint(fromUserSelection = false) {
-      const phoneEl = document.getElementById("afnTargetPhone");
-      const selEl = document.getElementById("afnNetworkSelect");
-      const badgeEl = document.getElementById("afnDetectedNetworkBadge");
-      if (!phoneEl || !selEl) return;
-      const detected = detectNetworkFromPhone(phoneEl.value);
-      if (badgeEl) {
-        badgeEl.innerText = "شبکه تشخیص‌داده‌شده: " + detected;
-      }
-      if (!fromUserSelection && phoneEl.value.trim().length >= 3) {
-        if (detected === "اتصالات" || detected === "روشن" || detected === "سلام") {
-          selEl.value = detected;
-        }
-      }
-    }
-
-    async function resolveAfnProxyConfig() {
-      const fallbackEndpoint = (TOPUP_API_CONFIG && TOPUP_API_CONFIG.endpoint)
-        ? normalizeProxyEndpoint(TOPUP_API_CONFIG.endpoint)
-        : DEFAULT_AFN_API_ENDPOINT;
-
-      if (dynamicAfnApiEndpoint) {
-        return {
-          endpoint: normalizeProxyEndpoint(dynamicAfnApiEndpoint),
-          enabled: dynamicAfnApiEnabled !== false,
-          mode: dynamicAfnApiMode || "proxy",
-          apiKey: dynamicAfnApiKey || "",
-          timeoutMs: dynamicAfnTimeoutMs || 15000
-        };
-      }
-
-      try {
-        const cfgResp = await fetch("/api/config", { cache: "no-store" });
-        if (cfgResp.ok) {
-          const cfg = await cfgResp.json().catch(() => ({}));
-          const cfgEndpoint = cfg.afnApiEndpoint || cfg.afn_api_endpoint || cfg.afnProxyUrl || cfg.afn_proxy_url || "";
-          if (cfgEndpoint) {
-            dynamicAfnApiEndpoint = normalizeProxyEndpoint(cfgEndpoint);
-          }
-          if (cfg.afnApiEnabled !== undefined || cfg.afn_api_enabled !== undefined) {
-            dynamicAfnApiEnabled = Boolean(cfg.afnApiEnabled ?? cfg.afn_api_enabled);
-          }
-          if (cfg.afnApiMode || cfg.afn_api_mode) {
-            dynamicAfnApiMode = String(cfg.afnApiMode || cfg.afn_api_mode).trim();
-          }
-          if (cfg.afnApiKey || cfg.afn_api_key) {
-            dynamicAfnApiKey = String(cfg.afnApiKey || cfg.afn_api_key).trim();
-          }
-        }
-      } catch (e) {}
-
-      if (_supabase) {
-        try {
-          const { data, error } = await _supabase.from("app_settings").select("*");
-          if (!error && Array.isArray(data) && data.length > 0) {
-            const map = {};
-            data.forEach(row => {
-              const k = String(row.key || row.Key || row.name || row.setting_key || "").trim().toLowerCase();
-              const v = row.value ?? row.Value ?? row.val ?? row.setting_value ?? "";
-              if (k) map[k] = v;
-              Object.keys(row).forEach(col => {
-                const lc = col.toLowerCase();
-                if (["afn_api_endpoint", "afn_api_enabled", "afn_api_mode", "afn_proxy_url", "afn_api_key"].includes(lc) && row[col] !== undefined && row[col] !== null && row[col] !== "") {
-                  map[lc] = row[col];
-                }
-              });
-            });
-            const dbEndpoint = map["afn_api_endpoint"] || map["afn_proxy_url"] || map["afnendpoint"] || "";
-            if (dbEndpoint) {
-              dynamicAfnApiEndpoint = normalizeProxyEndpoint(dbEndpoint);
-            }
-            if (map["afn_api_enabled"] !== undefined) {
-              const rawEn = String(map["afn_api_enabled"]).trim().toLowerCase();
-              dynamicAfnApiEnabled = !(rawEn === "false" || rawEn === "0" || rawEn === "no" || rawEn === "off");
-            }
-            if (map["afn_api_mode"]) {
-              dynamicAfnApiMode = String(map["afn_api_mode"]).trim();
-            }
-            if (map["afn_api_key"]) {
-              dynamicAfnApiKey = String(map["afn_api_key"]).trim();
-            }
-          }
-        } catch (e) {}
-      }
-
-      return {
-        endpoint: normalizeProxyEndpoint(dynamicAfnApiEndpoint || fallbackEndpoint),
-        enabled: dynamicAfnApiEnabled !== false,
-        mode: dynamicAfnApiMode || "proxy",
-        apiKey: dynamicAfnApiKey || "",
-        timeoutMs: dynamicAfnTimeoutMs || 15000
-      };
-    }
+    const AFN_TOPUP_API_ENDPOINT = "/api/iimobile-topup";
 
     let accountsList = [];
     let transactionsList = [];
@@ -3521,18 +3400,11 @@
       let payloadData = null;
       let summaryHtml = '';
       if (mode === 'afn') {
-        const selectedNet = document.getElementById('afnNetworkSelect')?.value || 'آزاد (تشخیص خودکار شبکه)';
-        const rawTargetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
-        const normalizedLocalPhone = rawTargetPhone.startsWith('93') && rawTargetPhone.length >= 11
-          ? '0' + rawTargetPhone.slice(2)
-          : rawTargetPhone;
-        const afnNetwork = (selectedNet === 'آزاد (تشخیص خودکار شبکه)')
-          ? detectNetworkFromPhone(normalizedLocalPhone)
-          : selectedNet;
-        const targetPhone = normalizedLocalPhone;
+        const afnNetwork = document.getElementById('afnNetworkSelect')?.value || 'اتصالات';
+        const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
-        if (!/^(07\d{8}|7\d{8}|937\d{8})$/.test(rawTargetPhone)) {
-          alert('شماره موبایل افغانستان را به درستی وارد کنید (مثلاً 078xxxxxxx یا 070xxxxxxx).');
+        if (!/^07\d{8}$/.test(targetPhone)) {
+          alert('شماره باید ۱۰ رقم و با 07 شروع شود.');
           return;
         }
         if (isNaN(afnAmt) || afnAmt <= 0) {
@@ -3695,76 +3567,43 @@
       const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال...', 'ارتباط از طریق API و پروکسی با شرکت مقابل');
+        showRealLoading('در حال ارسال...', 'ارتباط با سرور شارژ');
         const intlPhone = payload.targetPhone.startsWith('0')
           ? '93' + payload.targetPhone.slice(1)
           : payload.targetPhone;
 
-        const proxyCfg = await resolveAfnProxyConfig();
-        if (proxyCfg.enabled === false) {
-          hideRealLoading();
-          const msg = 'AFN Top-up API is disabled in settings';
-          notifyAccountEvent('ارسال شارژ غیرفعال است', msg);
-          showTopupRawErrorModal(msg);
-          return;
-        }
-
         let apiOk = false;
         let apiRef = txId;
         let lastErr = '';
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), proxyCfg.timeoutMs || 15000);
 
         try {
-          const headers = { 'Content-Type': 'application/json' };
-          if (proxyCfg.apiKey) {
-            headers['Authorization'] = `Bearer ${proxyCfg.apiKey}`;
-            headers['X-Proxy-Key'] = proxyCfg.apiKey;
-          }
-
-          const resp = await fetch(proxyCfg.endpoint, {
+          const resp = await fetch(AFN_TOPUP_API_ENDPOINT, {
             method: 'POST',
-            headers,
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              txId,
-              accountId: payload.accId,
-              accountName: payload.accName,
-              operator: payload.operator || 'auto',
-              network: payload.afnNetwork || detectNetworkFromPhone(intlPhone),
+              operator: payload.operator || 'atoma',
+              network: payload.afnNetwork || 'اتصالات',
               phone: intlPhone,
               bundle_id: payload.bundle_id || undefined,
-              amount: Number(payload.afnAmt),
-              currency: 'AFN',
-              mode: proxyCfg.mode || 'proxy'
-            }),
-            signal: controller.signal
+              amount: Number(payload.afnAmt)
+            })
           });
           const rawText = await resp.text();
           let json = null;
           try { json = JSON.parse(rawText); } catch (e) { json = null; }
 
-          const isSuccessResponse = resp.ok && (
-            (json && (json.ok === true || json.success === true || String(json.status || '').toLowerCase() === 'success' || String(json.status || '').toLowerCase() === 'ok')) ||
-            (!json && rawText.trim().length > 0 && !/error|fail|invalid/i.test(rawText))
-          );
-
-          if (isSuccessResponse) {
+          if (resp.ok && json && json.ok) {
             apiOk = true;
-            const extRef = json && (json.txid || json.referenceId || json.ref || json.transaction_id || json.id || (json.data && (json.data.txid || json.data.ref || json.data.id)));
-            if (extRef) apiRef = `REF-${extRef}`;
+            if (json.txid) apiRef = `REF-${json.txid}`;
           } else {
             const exactServerMsg =
-              (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason || (json.data && (json.data.error || json.data.message)))) ||
+              (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) ||
               (rawText && rawText.trim()) ||
               `HTTP ${resp.status} ${resp.statusText || ''}`.trim();
             lastErr = typeof exactServerMsg === 'string' ? exactServerMsg : JSON.stringify(exactServerMsg);
           }
         } catch (err) {
-          lastErr = err && err.name === 'AbortError'
-            ? 'Request Timeout while connecting through API proxy'
-            : (err && err.message ? String(err.message) : 'Network Error');
-        } finally {
-          clearTimeout(timeoutId);
+          lastErr = err && err.message ? String(err.message) : 'Network Error';
         }
 
         if (!apiOk) {
