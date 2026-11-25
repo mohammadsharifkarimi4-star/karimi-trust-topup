@@ -1309,21 +1309,18 @@
 
       </div>
 
-      <!-- گام ۲: ورود با پین / پسورد یا ایجاد رمز برای حساب بدون رمز -->
+      <!-- گام ۲: ورود با پین / پسورد یا ایجاد رمز برای حساب بدون رمز (بدون نیاز به کد حساب) -->
       <div id="accountSection" class="hidden" style="margin:auto 0;">
         <div class="quick-grid-card" style="text-align:center; padding:20px 16px;">
           <div id="greetingMsg" style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:4px;"></div>
-          <div id="candidateManagerHint" style="font-size:0.74rem; color:var(--emerald-700); font-weight:800; margin-bottom:10px;"></div>
-          <div class="form-group">
-            <label for="accountIdInput">کد حساب (Account ID)</label>
-            <input type="text" id="accountIdInput" placeholder="Account ID" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
-          </div>
+          <div id="candidateManagerHint" style="font-size:0.74rem; color:var(--emerald-700); font-weight:800; margin-bottom:12px;"></div>
+          <input type="hidden" id="accountIdInput">
           <div id="loginPinRequiredBox" class="form-group">
-            <label for="loginAccountPinInput">پین / پسورد حساب (الزامی برای ورود)</label>
+            <label for="loginAccountPinInput">پین / پسورد حساب</label>
             <input type="password" id="loginAccountPinInput" placeholder="پین یا پسورد خود را وارد کنید" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
           <div id="legacyNoPinSetupBox" class="warn-callout-box hidden">
-            <div style="margin-bottom:6px;">این حساب رمز یا پسورد فعالی ندارد و برای ادامه ملزم به ایجاد پسورد/پین است. لطفاً رمز ثابت خود را تعیین کنید (حداقل ۶ کاراکتر شامل حروف کوچک، بزرگ و عدد یا پین امن).</div>
+            <div style="margin-bottom:6px;">این حساب رمز یا پسورد فعالی ندارد و برای ادامه ملزم به ایجاد پسورد/پین است. رمز تعیین‌شده در ستون <code>PinHash</code> ذخیره می‌شود.</div>
             <div class="form-group" style="margin-bottom:6px;">
               <label for="legacyInitialPinInput">ایجاد پسورد / پین جدید</label>
               <input type="password" id="legacyInitialPinInput" placeholder="پسورد جدید" dir="ltr">
@@ -1458,44 +1455,18 @@
             </div>
           </div>
 
-          <div class="launch-hub-card">
+          <div class="launch-hub-card" id="homeInfoGuideCard">
             <div class="launch-hub-header">
-              <h4>منوی عملیات و باز کردن فرم</h4>
-              <span>بازشونده</span>
+              <h4>اطلاعات و راهنمایی</h4>
+              <span>راهنمای حساب</span>
             </div>
-            <div class="three-option-menu">
-              <button type="button" class="fancy-menu-option" id="homeMenuOptTransfer" onclick="launchOperationForm('transfer')">
-                <div class="fancy-opt-left">
-                  <div class="fancy-opt-badge">⇄</div>
-                  <div>
-                    <span class="fancy-opt-title">انتقال موجودی</span>
-                    <span class="fancy-opt-sub" id="homeTransferSub">برای باز شدن فرم انتقال موجودی لمس کنید</span>
-                  </div>
-                </div>
-                <span class="fancy-opt-cta">باز کردن فرم ↑</span>
-              </button>
-
-              <button type="button" class="fancy-menu-option" id="homeMenuOptAfn" onclick="launchOperationForm('afn')">
-                <div class="fancy-opt-left">
-                  <div class="fancy-opt-badge">🇦🇫</div>
-                  <div>
-                    <span class="fancy-opt-title">ارسال کردیت</span>
-                    <span class="fancy-opt-sub" id="homeAfnSub">ام‌تی‌ان، افغان بی‌سیم، سلام، روشن، اتصالات</span>
-                  </div>
-                </div>
-                <span class="fancy-opt-cta">باز کردن فرم ↑</span>
-              </button>
-
-              <button type="button" class="fancy-menu-option" id="homeMenuOptIq" onclick="launchOperationForm('iq')">
-                <div class="fancy-opt-left">
-                  <div class="fancy-opt-badge">🇮🇶</div>
-                  <div>
-                    <span class="fancy-opt-title">شارژ عراق</span>
-                    <span class="fancy-opt-sub" id="homeIqSub">باز شدن فرم ثبت شارژ زین و آسیاسل</span>
-                  </div>
-                </div>
-                <span class="fancy-opt-cta">باز کردن فرم ↑</span>
-              </button>
+            <div class="info-callout-box" style="margin-bottom:8px;">
+              • ورود به حساب از طریق <b>پین / پسورد</b> انجام می‌شود و در صورت نداشتن رمز، ابتدا رمز جدید ایجاد و در ستون <code>PinHash</code> ذخیره می‌گردد.<br>
+              • انتقال موجودی فقط بر اساس <b>کد حساب (Account ID)</b> انجام می‌شود و نیازی به شماره تماس مقصد نیست.<br>
+              • برای تایید تراکنش‌ها، <b>پین / پسورد</b> در اولویت است و گزینه اثر انگشت اختیاری و نیازمند تایید مجدد است.
+            </div>
+            <div id="homeRateGuideNote" style="font-size:0.73rem; font-weight:800; color:var(--emerald-900); text-align:right;">
+              نرخ تبدیل افغانی به دینار و وضعیت خدمات به‌صورت زنده از تنظیمات مدیریت خوانده می‌شود.
             </div>
           </div>
 
@@ -1534,7 +1505,7 @@
           <div class="currency-switcher" style="flex-wrap:wrap;">
             <button type="button" class="curr-pill-btn" id="srvSubTransfer" onclick="openServiceForm('transfer')">⇄ انتقال موجودی</button>
             <button type="button" class="curr-pill-btn" id="srvSubAfn" onclick="openServiceForm('afn')">📲 کردیت</button>
-            <button type="button" class="curr-pill-btn" id="srvSubBundles" onclick="openServiceForm('bundles')">📦 شارژ بسته‌ها</button>
+            <button type="button" class="curr-pill-btn" id="srvSubBundles" disabled aria-disabled="true" style="opacity:0.45; cursor:not-allowed; pointer-events:none;">📦 شارژ بسته‌ها (غیرفعال)</button>
             <button type="button" class="curr-pill-btn" id="srvSubIq" onclick="openServiceForm('iq')">🇮🇶 شارژ عراق</button>
           </div>
 
@@ -1566,16 +1537,16 @@
                 <span class="fancy-opt-cta">باز کردن فرم</span>
               </button>
 
-              <button type="button" class="fancy-menu-option" id="srvMenuOptBundles" onclick="openServiceForm('bundles')">
+              <div class="fancy-menu-option disabled-service" id="srvMenuOptBundles" aria-disabled="true" style="pointer-events:none; user-select:none;">
                 <div class="fancy-opt-left">
                   <div class="fancy-opt-badge">📦</div>
                   <div>
                     <span class="fancy-opt-title">شارژ بسته‌ها</span>
-                    <span class="fancy-opt-sub">بخش مستقل بسته‌های شارژ</span>
+                    <span class="fancy-opt-sub">این گزینه غیرفعال است</span>
                   </div>
                 </div>
-                <span class="fancy-opt-cta">به‌زودی</span>
-              </button>
+                <span class="fancy-opt-cta">غیرفعال</span>
+              </div>
 
               <button type="button" class="fancy-menu-option" id="srvMenuOptIq" onclick="openServiceForm('iq')">
                 <div class="fancy-opt-left">
@@ -1626,22 +1597,17 @@
             </div>
 
             <div class="info-callout-box">
-              انتقال موجودی فقط از طریق <b>شماره تماس</b> یا <b>کد حساب (Account ID)</b> و صرفاً به کسی که در سامانه حساب داشته باشد امکان‌پذیر است.
+              انتقال موجودی فقط بر اساس <b>کد حساب مقصد (Account ID)</b> و بدون نیاز به شماره تماس انجام می‌شود.
             </div>
 
             <div class="form-group">
               <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
-              <input type="text" id="transferTargetAccIdInput" placeholder="Account ID" dir="ltr" oninput="previewTransferRecipient()">
-            </div>
-
-            <div class="form-group">
-              <label for="transferTargetPhoneInput">شماره تماس مقصد</label>
-              <input type="tel" id="transferTargetPhoneInput" placeholder="077xxxxxxxx" dir="ltr" oninput="previewTransferRecipient()">
+              <input type="text" id="transferTargetAccIdInput" placeholder="Account ID مقصد" dir="ltr" oninput="previewTransferRecipient()">
             </div>
 
             <div id="transferRecipientPreview" class="recipient-preview-box invalid">
               <span>مقصد</span>
-              <span>کد حساب و شماره تماس را وارد کنید</span>
+              <span>کد حساب مقصد (Account ID) را وارد کنید</span>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:8px;" class="form-group">
@@ -2413,6 +2379,10 @@
       if (hSubT) hSubT.innerText = tEnabled ? 'برای باز شدن فرم انتقال موجودی لمس کنید' : 'این بخش توسط مدیریت غیرفعال است';
       if (hSubA) hSubA.innerText = aEnabled ? `شما با این برنامه می‌توانید خودتان در هر زمان به شماره‌های افغانستان کردیت ارسال کنید (نرخ: ${rateVal} IQD)` : 'ارسال کردیت توسط مدیریت غیرفعال است';
       if (hSubI) hSubI.innerText = iEnabled ? 'برای باز شدن فرم ثبت شارژ عراق لمس کنید' : 'شارژ عراق توسط مدیریت غیرفعال است';
+      const rateGuideEl = document.getElementById('homeRateGuideNote');
+      if (rateGuideEl) {
+        rateGuideEl.innerText = `نرخ تبدیل افغانی به دینار: ${rateVal} IQD | انتقال موجودی: ${tEnabled ? 'فعال' : 'غیرفعال'} | کردیت: ${aEnabled ? 'فعال' : 'غیرفعال'} | شارژ عراق: ${iEnabled ? 'فعال' : 'غیرفعال'}`;
+      }
       const annEl = document.getElementById('homeAnnouncementText');
       if (annEl) {
         annEl.innerText = appSettingsState.home_announcement || DEFAULT_HOME_ANNOUNCEMENT;
@@ -3288,11 +3258,29 @@
     }
 
     async function persistPinHashInSupabase(accId, pinHash) {
-      const { error } = await _supabase
+      const cleanId = String(accId || '').trim();
+      const cleanHash = String(pinHash || '').trim();
+      if (!cleanId || !cleanHash) return false;
+      const ready = await initSupabaseFromEnv();
+      if (!ready || !_supabase) return false;
+      const { data, error } = await _supabase
         .from('accounts')
-        .update({ PinHash: pinHash })
-        .eq('AccountID', String(accId || '').trim());
-      return !error;
+        .update({ PinHash: cleanHash })
+        .eq('AccountID', cleanId)
+        .select('AccountID, PinHash');
+      if (error) return false;
+      if (Array.isArray(data) && data.length > 0) {
+        accountsList = accountsList.map(a => {
+          const aid = String(getVal(a, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+          return aid.toLowerCase() === cleanId.toLowerCase() ? { ...a, PinHash: cleanHash } : a;
+        });
+        try { localStorage.setItem('karimi_cache_accounts', JSON.stringify(accountsList)); } catch (e) {}
+        if (currentFoundUser && String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === cleanId.toLowerCase()) {
+          currentFoundUser = { ...currentFoundUser, PinHash: cleanHash };
+        }
+        return true;
+      }
+      return false;
     }
 
     function showRealLoading(titleText = 'در حال دریافت اطلاعات...', subText = 'لطفاً صبر کنید') {
@@ -4162,7 +4150,13 @@
         document.getElementById('loginPinRequiredBox')?.classList.toggle('hidden', !hasExistingPin);
         document.getElementById('legacyNoPinSetupBox')?.classList.toggle('hidden', hasExistingPin);
         navigateToStep('account');
-        setTimeout(() => document.getElementById('accountIdInput').focus(), 100);
+        setTimeout(() => {
+          if (hasExistingPin) {
+            document.getElementById('loginAccountPinInput')?.focus();
+          } else {
+            document.getElementById('legacyInitialPinInput')?.focus();
+          }
+        }, 100);
       } else {
         const enc = encodeURIComponent(`شماره تماس: ${rawInput}`);
         document.getElementById('modalWhatsAppErrorBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${enc}`;
@@ -4178,13 +4172,11 @@
 
     async function verifyAccount() {
       playSound('click');
-      const accIdInput = toEnglishDigits(document.getElementById('accountIdInput').value.trim());
-      const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-
-      if (sheetAccId.toLowerCase() !== accIdInput.toLowerCase()) {
-        alert('کد حساب صحیح نیست.');
+      if (!currentFoundUser) {
+        alert('ابتدا شماره تماس را بررسی کنید.');
         return;
       }
+      const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
 
       const existingPin = getStoredPinHashForAccount(currentFoundUser, sheetAccId);
       const legacyBox = document.getElementById('legacyNoPinSetupBox');
@@ -4589,37 +4581,35 @@
       else if (allCurrs.includes('IQD')) sel.value = 'IQD';
     }
 
-    function findRecipientByIdAndPhone(accIdRaw, phoneRaw) {
+    function findRecipientByAccountId(accIdRaw) {
       if (!currentFoundUser) return null;
       const idQ = toEnglishDigits(String(accIdRaw || '')).trim().toLowerCase();
-      const phLast9 = getLast9Digits(phoneRaw);
-      if (!idQ || phLast9.length < 9) return null;
+      if (!idQ) return null;
 
       const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase();
 
       return accountsList.find(acc => {
-        const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase();
+        const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
         if (!accId || accId === myAccId) return false;
-        const accPhoneLast9 = getLast9Digits(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']));
-        return accId === idQ && accPhoneLast9 === phLast9;
+        return accId === idQ;
       }) || null;
     }
 
     function previewTransferRecipient() {
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
-      const phQ = document.getElementById('transferTargetPhoneInput').value.trim();
       const box = document.getElementById('transferRecipientPreview');
+      if (!box) return null;
 
-      if (!idQ || getLast9Digits(phQ).length < 9) {
+      if (!idQ) {
         box.className = 'recipient-preview-box invalid';
-        box.innerHTML = '<span>مقصد</span><span>کد حساب و شماره تماس را وارد کنید</span>';
+        box.innerHTML = '<span>مقصد</span><span>کد حساب مقصد (Account ID) را وارد کنید</span>';
         return null;
       }
 
-      const target = findRecipientByIdAndPhone(idQ, phQ);
+      const target = findRecipientByAccountId(idQ);
       if (!target) {
         box.className = 'recipient-preview-box invalid';
-        box.innerHTML = '<span>مقصد</span><span>حساب با این کد و شماره یافت نشد</span>';
+        box.innerHTML = '<span>مقصد</span><span>حسابی با این Account ID یافت نشد</span>';
         return null;
       }
 
@@ -4678,15 +4668,14 @@
       const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(myAccId);
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
-      const phQ = document.getElementById('transferTargetPhoneInput').value.trim();
-      const targetAcc = findRecipientByIdAndPhone(idQ, phQ);
+      const targetAcc = findRecipientByAccountId(idQ);
       const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
       const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
       const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
       const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
 
       if (!targetAcc) {
-        alert('کد حساب و شماره تماس مقصد باید هر دو صحیح باشند.');
+        alert('کد حساب مقصد (Account ID) صحیح نیست یا حسابی با این شناسه وجود ندارد.');
         return;
       }
       if (isNaN(amt) || amt <= 0) {
