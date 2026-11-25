@@ -2385,7 +2385,7 @@
         <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
-        <div class="receipt-row" style="align-items:flex-start;"><span class="receipt-label">شرح</span><span class="receipt-val" style="white-space:pre-line; font-size:0.76rem; line-height:1.55;">${descStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">شرح</span><span class="receipt-val">${descStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
       `;
       const adminWaBtn = document.getElementById('receiptSendAdminWaBtn');
@@ -4356,9 +4356,6 @@
       const nowIso = new Date().toISOString();
       const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
       const prevIds = getUserTransactionIds(payload.accId);
-      const accountHolderName = String(
-        payload.accName || getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری'
-      ).trim();
 
       if (payload.mode === 'afn') {
         showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط با سرور شارژ');
@@ -4375,7 +4372,6 @@
         let apiOk = false;
         let apiRef = txId;
         let lastErr = '';
-        let rawCompanyResponseText = '';
 
         const endpointUrl = appSettingsState.afn_api_endpoint || '/api/iimobile-topup';
         const modeVal = appSettingsState.afn_api_mode || 'telegram_relay';
@@ -4383,7 +4379,6 @@
         if (!appSettingsState.afn_api_enabled) {
           apiOk = true;
           apiRef = `MANUAL-${txId}`;
-          rawCompanyResponseText = 'MANUAL_MODE_OK';
         } else {
           try {
             const resp = await fetch(endpointUrl, {
@@ -4400,24 +4395,12 @@
               })
             });
             const rawText = await resp.text();
-            rawCompanyResponseText = (rawText && rawText.trim()) ? rawText.trim() : `HTTP ${resp.status}`;
             let json = null;
             try { json = JSON.parse(rawText); } catch (e) { json = null; }
 
             if (resp.ok && json && json.ok) {
               apiOk = true;
               if (json.txid) apiRef = `REF-${json.txid}`;
-              const companyRawSuccess = json && (
-                json.company_message ||
-                json.initiate_company_message ||
-                (json.raw && (json.raw.msg || json.raw.message || json.raw.error || json.raw.detail)) ||
-                (json.execute_raw && (json.execute_raw.msg || json.execute_raw.message || json.execute_raw.error || json.execute_raw.detail))
-              );
-              if (companyRawSuccess) {
-                rawCompanyResponseText = typeof companyRawSuccess === 'string'
-                  ? companyRawSuccess
-                  : JSON.stringify(companyRawSuccess);
-              }
             } else {
               const companyRaw = json && (
                 json.company_message ||
@@ -4437,7 +4420,6 @@
             }
           } catch (err) {
             lastErr = err && err.message ? String(err.message) : 'Network Error';
-            rawCompanyResponseText = lastErr;
           }
         }
 
@@ -4448,28 +4430,6 @@
           return;
         }
 
-        const dateOnlyReceipt = extractDateOnly(nowIso);
-        const timeOnlyReceipt = extractTimeOnly(nowIso) || '';
-        const formattedReceiptBlock = [
-          'امانت‌داری کریمی',
-          `نام: ${accountHolderName}`,
-          `عملیات: ارسال کردیت`,
-          `شبکه: ${resolvedNetwork}`,
-          `شماره مقصد: ${payload.targetPhone}`,
-          `مبلغ کردیت: ${formatEnMoney(payload.afnAmt)} AFN`,
-          `مبلغ کسر شده: ${formatEnMoney(payload.requiredIqd)} IQD`,
-          `کد پیگیری: ${apiRef}`,
-          `کد سند: ${txId}`,
-          `تاریخ: ${dateOnlyReceipt}${timeOnlyReceipt ? ' ' + timeOnlyReceipt : ''}`
-        ].join('\n');
-
-        const unifiedDescription = [
-          'شارژ با موفقیت ارسال شد',
-          `پاسخ شرکت: ${rawCompanyResponseText}`,
-          '--- رسید ---',
-          formattedReceiptBlock
-        ].join('\n');
-
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -4478,7 +4438,7 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'ارسال کردیت',
-          Description: unifiedDescription,
+          Description: `${resolvedNetwork} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
           AssignedUserEmail: assigned,
           Status: appSettingsState.afn_api_enabled ? 'تایید شده' : 'ثبت شده'
         };
@@ -4508,35 +4468,11 @@
         const apiResult = await callExternalTopupApi({
           txId,
           accountId: payload.accId,
-          accountName: accountHolderName,
+          accountName: payload.accName,
           network: payload.network,
           amount: Number(payload.cardAmt),
           currency: 'IQD'
         });
-        const dateOnlyIq = extractDateOnly(nowIso);
-        const timeOnlyIq = extractTimeOnly(nowIso) || '';
-        const iqDescBase = apiResult.handledByExternalApi && apiResult.referenceId
-          ? `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD) - ${apiResult.referenceId}`
-          : `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`;
-        const iqRawResp = apiResult.handledByExternalApi
-          ? (apiResult.raw ? JSON.stringify(apiResult.raw) : (apiResult.error || (apiResult.ok ? 'OK' : 'FAILED')))
-          : 'MANUAL_IQ_TOPUP';
-        const iqReceiptBlock = [
-          'امانت‌داری کریمی',
-          `نام: ${accountHolderName}`,
-          `عملیات: شارژ عراق`,
-          `جزئیات: ${iqDescBase}`,
-          `مبلغ: ${formatEnMoney(payload.cardAmt)} IQD`,
-          `کد سند: ${txId}`,
-          `تاریخ: ${dateOnlyIq}${timeOnlyIq ? ' ' + timeOnlyIq : ''}`
-        ].join('\n');
-        const unifiedIqDescription = [
-          'شارژ با موفقیت ارسال شد',
-          `پاسخ شرکت: ${iqRawResp}`,
-          '--- رسید ---',
-          iqReceiptBlock
-        ].join('\n');
-
         const iqTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -4545,7 +4481,9 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
-          Description: unifiedIqDescription,
+          Description: apiResult.handledByExternalApi && apiResult.referenceId
+            ? `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD) - ${apiResult.referenceId}`
+            : `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
           AssignedUserEmail: assigned,
           Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
         };
@@ -4573,7 +4511,7 @@
         const dateOnlyNow = extractDateOnly(nowIso);
         const timeOnlyNow = extractTimeOnly(nowIso) || '';
         const waAdminUrl = buildIraqTopupAdminWhatsAppUrl({
-          accName: accountHolderName,
+          accName: payload.accName,
           accId: payload.accId,
           accPhone: payload.accPhone || toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---'),
           network: payload.network,
@@ -4936,7 +4874,7 @@
       const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
       const tid = getVal(tx, ['TransID', 'transid', 'id']) || '---';
       const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
-      const name = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
       const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
