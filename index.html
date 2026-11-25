@@ -448,6 +448,11 @@
       border-radius: 12px;
     }
 
+    .quick-tile:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     .quick-icon-box {
       width: 44px;
       height: 44px;
@@ -515,7 +520,7 @@
       margin-bottom: 4px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 11px 12px;
       background: var(--slate-50);
@@ -528,7 +533,7 @@
       outline: none;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       background: var(--white);
       border-color: var(--emerald-600);
     }
@@ -803,12 +808,14 @@
     .center-dialog-box {
       background: var(--white);
       width: 100%;
-      max-width: 370px;
+      max-width: 390px;
       border-radius: var(--radius-xl);
       padding: 20px 16px;
       text-align: center;
       box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
       border: 1.5px solid #bbf7d0;
+      max-height: 90dvh;
+      overflow-y: auto;
     }
 
     .fullscreen-modal {
@@ -924,7 +931,6 @@
       color: var(--emerald-900);
     }
 
-
     .admin-notice-card {
       background: var(--white);
       border: 1.5px solid #a7f3d0;
@@ -1017,6 +1023,13 @@
       background: var(--emerald-50);
     }
 
+    .fancy-menu-option.disabled-service {
+      opacity: 0.55;
+      cursor: not-allowed;
+      border-color: var(--slate-200);
+      background: var(--slate-50);
+    }
+
     .fancy-opt-left {
       display: flex;
       align-items: center;
@@ -1093,6 +1106,38 @@
       cursor: pointer;
       white-space: nowrap;
       flex-shrink: 0;
+    }
+
+    .admin-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--slate-800);
+    }
+
+    .admin-toggle-row input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--emerald-600);
+      cursor: pointer;
+    }
+
+    .admin-badge-pill {
+      display: inline-block;
+      background: var(--emerald-50);
+      color: var(--emerald-800);
+      border: 1px solid #6ee7b7;
+      border-radius: 999px;
+      padding: 2px 9px;
+      font-size: 0.68rem;
+      font-weight: 900;
     }
 
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
@@ -1272,7 +1317,7 @@
               </button>
               <button type="button" class="quick-tile" id="qTileAfn" onclick="openServiceForm('afn')">
                 <div class="quick-icon-box">📲</div>
-                <span class="quick-label">میتیکو افغانستان</span>
+                <span class="quick-label">ارسال کردیت</span>
               </button>
               <button type="button" class="quick-tile" id="qTileIq" onclick="openServiceForm('iq')">
                 <div class="quick-icon-box">🇮🇶</div>
@@ -1296,7 +1341,7 @@
                   <div class="fancy-opt-badge">⇄</div>
                   <div>
                     <span class="fancy-opt-title">انتقال موجودی</span>
-                    <span class="fancy-opt-sub">برای باز شدن فرم انتقال موجودی لمس کنید</span>
+                    <span class="fancy-opt-sub" id="homeTransferSub">برای باز شدن فرم انتقال موجودی لمس کنید</span>
                   </div>
                 </div>
                 <span class="fancy-opt-cta">باز کردن فرم ↑</span>
@@ -1306,8 +1351,8 @@
                 <div class="fancy-opt-left">
                   <div class="fancy-opt-badge">🇦🇫</div>
                   <div>
-                    <span class="fancy-opt-title">میتیکو به شماره‌های افغانستان</span>
-                    <span class="fancy-opt-sub">اتصالات، روشن، سلام — باز شدن فرم ارسال شارژ</span>
+                    <span class="fancy-opt-title">ارسال کردیت</span>
+                    <span class="fancy-opt-sub" id="homeAfnSub">ام‌تی‌ان، افغان بی‌سیم، سلام، روشن، اتصالات</span>
                   </div>
                 </div>
                 <span class="fancy-opt-cta">باز کردن فرم ↑</span>
@@ -1318,7 +1363,7 @@
                   <div class="fancy-opt-badge">🇮🇶</div>
                   <div>
                     <span class="fancy-opt-title">شارژ عراق</span>
-                    <span class="fancy-opt-sub">باز شدن فرم ثبت شارژ زین و آسیاسل</span>
+                    <span class="fancy-opt-sub" id="homeIqSub">باز شدن فرم ثبت شارژ زین و آسیاسل</span>
                   </div>
                 </div>
                 <span class="fancy-opt-cta">باز کردن فرم ↑</span>
@@ -1342,7 +1387,7 @@
         <div id="tabServicesView" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
           <div class="currency-switcher">
             <button type="button" class="curr-pill-btn" id="srvSubTransfer" onclick="openServiceForm('transfer')">⇄ انتقال موجودی</button>
-            <button type="button" class="curr-pill-btn" id="srvSubAfn" onclick="openServiceForm('afn')">🇦🇫 میتیکو افغانستان</button>
+            <button type="button" class="curr-pill-btn" id="srvSubAfn" onclick="openServiceForm('afn')">🇦🇫 ارسال کردیت</button>
             <button type="button" class="curr-pill-btn" id="srvSubIq" onclick="openServiceForm('iq')">🇮🇶 شارژ عراق</button>
           </div>
 
@@ -1352,7 +1397,7 @@
               <span>فرم بسته است</span>
             </div>
             <div class="three-option-menu">
-              <button type="button" class="fancy-menu-option" onclick="openServiceForm('transfer')">
+              <button type="button" class="fancy-menu-option" id="srvMenuOptTransfer" onclick="openServiceForm('transfer')">
                 <div class="fancy-opt-left">
                   <div class="fancy-opt-badge">⇄</div>
                   <div>
@@ -1363,18 +1408,18 @@
                 <span class="fancy-opt-cta">باز کردن فرم</span>
               </button>
 
-              <button type="button" class="fancy-menu-option" onclick="openServiceForm('afn')">
+              <button type="button" class="fancy-menu-option" id="srvMenuOptAfn" onclick="openServiceForm('afn')">
                 <div class="fancy-opt-left">
                   <div class="fancy-opt-badge">🇦🇫</div>
                   <div>
-                    <span class="fancy-opt-title">فرم میتیکو به شماره‌های افغانستان</span>
-                    <span class="fancy-opt-sub">انتخاب شبکه (اتصالات، روشن، سلام) و ارسال</span>
+                    <span class="fancy-opt-title">فرم ارسال کردیت</span>
+                    <span class="fancy-opt-sub">ام‌تی‌ان، افغان بی‌سیم، سلام، روشن، اتصالات</span>
                   </div>
                 </div>
                 <span class="fancy-opt-cta">باز کردن فرم</span>
               </button>
 
-              <button type="button" class="fancy-menu-option" onclick="openServiceForm('iq')">
+              <button type="button" class="fancy-menu-option" id="srvMenuOptIq" onclick="openServiceForm('iq')">
                 <div class="fancy-opt-left">
                   <div class="fancy-opt-badge">🇮🇶</div>
                   <div>
@@ -1434,10 +1479,10 @@
             </button>
           </div>
 
-          <!-- پنل ۲: میتیکو به شماره‌های افغانستان -->
+          <!-- پنل ۲: ارسال کردیت (افغانستان) -->
           <div id="panelTopupAfn" class="action-panel collapsed">
             <div class="panel-banner-header">
-              <h4>میتیکو به شماره‌های افغانستان</h4>
+              <h4>ارسال کردیت</h4>
               <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
             </div>
 
@@ -1447,11 +1492,13 @@
             </div>
 
             <div class="form-group">
-              <label for="afnNetworkSelect">انتخاب شبکه (اتصالات، روشن، سلام)</label>
-              <select id="afnNetworkSelect">
-                <option value="اتصالات">اتصالات</option>
-                <option value="روشن">روشن</option>
+              <label for="afnNetworkSelect">انتخاب شبکه</label>
+              <select id="afnNetworkSelect" onchange="recalcTopupCost()">
+                <option value="ام‌تی‌ان">ام‌تی‌ان</option>
+                <option value="افغان بی‌سیم">افغان بی‌سیم</option>
                 <option value="سلام">سلام</option>
+                <option value="روشن">روشن</option>
+                <option value="اتصالات">اتصالات</option>
               </select>
             </div>
 
@@ -1472,7 +1519,7 @@
             <div id="topupAfnEligibilityMsg" style="font-size:0.72rem; font-weight:800; color:var(--danger); text-align:center; margin-bottom:6px;"></div>
 
             <button type="button" class="btn btn-primary" id="btnExecuteTopupAfn" onclick="executeCustomerTopup('afn')">
-              تایید و ارسال شارژ
+              تایید و ارسال کردیت
             </button>
           </div>
 
@@ -1544,6 +1591,17 @@
           </div>
 
           <div class="menu-stack-card">
+            <button type="button" class="menu-row-item" onclick="openManagementModal()">
+              <div class="menu-row-right">
+                <div class="menu-row-icon">⚙️</div>
+                <div>
+                  <span id="mgmtMenuTitle" class="menu-row-title">بخش مدیریت و تنظیمات (app_settings)</span>
+                  <span id="mgmtMenuSub" class="menu-row-sub">ورود مدیر و کنترل نرخ و وضعیت خدمات</span>
+                </div>
+              </div>
+              <span class="admin-badge-pill" id="mgmtSessionBadge">مدیریت</span>
+            </button>
+
             <button type="button" class="menu-row-item" onclick="openSetPinModal()">
               <div class="menu-row-right">
                 <div class="menu-row-icon">🔒</div>
@@ -1621,6 +1679,83 @@
         <span class="nav-text">حساب کاربری</span>
       </button>
     </nav>
+  </div>
+
+  <!-- مودال بخش مدیریت عملیاتی و تنظیمات دیتابیس -->
+  <div id="managementModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box" style="text-align:right;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="font-size:0.96rem; font-weight:900; color:var(--emerald-950);">بخش مدیریت عملیاتی</h3>
+        <span class="admin-badge-pill" id="mgmtActiveAdminLabel">قفل</span>
+      </div>
+
+      <!-- فرم ورود مدیر -->
+      <div id="mgmtLoginBox">
+        <p style="font-size:0.74rem; color:var(--slate-600); margin-bottom:10px; line-height:1.5;">
+          برای دسترسی به تنظیمات فعال/غیرفعال بودن بخش‌ها و نرخ تبدیل در جدول <code>app_settings</code>، شناسه/ایمیل مدیر و رمز را وارد کنید.
+        </p>
+        <div class="form-group">
+          <label for="mgmtIdentifierInput">ایمیل یا شناسه مدیر (Admins / Owner)</label>
+          <input type="text" id="mgmtIdentifierInput" placeholder="admin@example.com یا ADM-01" dir="ltr">
+        </div>
+        <div class="form-group">
+          <label for="mgmtPinInput">رمز مدیر (Pin)</label>
+          <input type="password" id="mgmtPinInput" placeholder="رمز مدیریت" dir="ltr" onkeydown="if(event.key==='Enter') verifyManagementLogin()">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="verifyManagementLogin()" style="margin-bottom:6px;">ورود به پنل مدیریت</button>
+      </div>
+
+      <!-- پنل کنترل تنظیمات پس از ورود مدیر -->
+      <div id="mgmtControlsBox" class="hidden">
+        <div class="admin-toggle-row">
+          <span>فعال بودن انتقال موجودی (transfer_enabled)</span>
+          <input type="checkbox" id="cfgTransferEnabled">
+        </div>
+        <div class="admin-toggle-row">
+          <span>فعال بودن ارسال کردیت (topup_afn_enabled)</span>
+          <input type="checkbox" id="cfgTopupAfnEnabled">
+        </div>
+        <div class="admin-toggle-row">
+          <span>فعال بودن شارژ عراق (topup_iq_enabled)</span>
+          <input type="checkbox" id="cfgTopupIqEnabled">
+        </div>
+        <div class="admin-toggle-row">
+          <span>فعال بودن API شارژ (afn_api_enabled)</span>
+          <input type="checkbox" id="cfgAfnApiEnabled">
+        </div>
+
+        <div class="form-group">
+          <label for="cfgAfnToIqdRate">نرخ تبدیل افغانی به دینار (afn_to_iqd_rate)</label>
+          <input type="number" step="0.01" id="cfgAfnToIqdRate" dir="ltr">
+        </div>
+
+        <div class="form-group">
+          <label for="cfgAfnApiEndpoint">آدرس API ارسال کردیت (afn_api_endpoint)</label>
+          <input type="text" id="cfgAfnApiEndpoint" placeholder="/api/iimobile-topup" dir="ltr">
+        </div>
+
+        <div class="form-group">
+          <label for="cfgAfnApiMode">حالت اتصال API (afn_api_mode)</label>
+          <input type="text" id="cfgAfnApiMode" placeholder="telegram_relay" dir="ltr">
+        </div>
+
+        <div class="form-group">
+          <label for="cfgIqNetworksJson">شبکه‌های عراق (iq_networks - JSON Array)</label>
+          <textarea id="cfgIqNetworksJson" rows="2" dir="ltr" style="font-size:0.75rem;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="cfgIqPackagesJson">بسته‌های عراق (iq_packages - JSON Array)</label>
+          <textarea id="cfgIqPackagesJson" rows="3" dir="ltr" style="font-size:0.72rem;"></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="saveAppSettingsToSupabase()" style="margin-bottom:6px;">ذخیره در دیتابیس (app_settings)</button>
+        <button type="button" class="btn btn-soft-emerald" onclick="reloadAppSettingsFromDb()" style="margin-bottom:6px;">خواندن مجدد از دیتابیس</button>
+        <button type="button" class="btn btn-outline" onclick="logoutManagementSession()" style="margin-bottom:6px;">خروج از حالت مدیریت</button>
+      </div>
+
+      <button type="button" class="btn btn-outline" onclick="closeManagementModal()">بستن</button>
+    </div>
   </div>
 
   <!-- مودال انتخاب وضعیت اعلان‌ها -->
@@ -1715,7 +1850,7 @@
     </div>
   </div>
 
-    <!-- مودال نمایش دقیق پیام انگلیسی سرور شارژ -->
+  <!-- مودال نمایش دقیق پیام انگلیسی سرور شارژ -->
   <div id="topupRawErrorModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
       <h3 style="font-size:0.96rem; font-weight:900; color:var(--danger); margin-bottom:8px;">خطا در انجام شارژ</h3>
@@ -1745,6 +1880,455 @@
   </div>
 
   <script>
+    const OWNER_NAME_DISPLAY = "محمد شریف";
+    const OWNER_EMAIL = "";
+    const OWNER_WHATSAPP = "9647721878997";
+
+    const DEFAULT_AFN_NETWORKS = [
+      "ام‌تی‌ان",
+      "افغان بی‌سیم",
+      "سلام",
+      "روشن",
+      "اتصالات"
+    ];
+
+    const DEFAULT_IQ_NETWORKS = [
+      "Zain (زین عراق)",
+      "AsiaCell (آسیاسل)"
+    ];
+
+    const DEFAULT_IQ_PACKAGES = [
+      { id: "iq-1000", label: "1,000", active: true, card_amount: 1000, charge_amount: 1000 },
+      { id: "iq-2000", label: "2,000", active: true, card_amount: 2000, charge_amount: 2000 },
+      { id: "iq-3000", label: "3,000", active: true, card_amount: 3000, charge_amount: 3000 },
+      { id: "iq-5000", label: "5,000", active: true, card_amount: 5000, charge_amount: 5000 },
+      { id: "iq-10000", label: "10,000", active: true, card_amount: 10000, charge_amount: 10000 },
+      { id: "iq-15000", label: "15,000", active: true, card_amount: 15000, charge_amount: 15000 },
+      { id: "iq-25000", label: "25,000", active: true, card_amount: 25000, charge_amount: 25000 }
+    ];
+
+    const DEFAULT_APP_SETTINGS = {
+      id: "default",
+      transfer_enabled: true,
+      topup_afn_enabled: true,
+      topup_iq_enabled: true,
+      afn_to_iqd_rate: 26.5,
+      iq_networks: DEFAULT_IQ_NETWORKS,
+      iq_packages: DEFAULT_IQ_PACKAGES,
+      afn_api_enabled: false,
+      afn_api_endpoint: "/api/iimobile-topup",
+      afn_api_mode: "telegram_relay"
+    };
+
+    let appSettingsState = { ...DEFAULT_APP_SETTINGS };
+    let adminsList = [];
+    let ownerSettingsList = [];
+    let activeManagementAdmin = null;
+    let realtimeSettingsChannel = null;
+
+    function parseJsonIfNeeded(rawVal, fallback) {
+      if (Array.isArray(rawVal) || (rawVal && typeof rawVal === 'object')) return rawVal;
+      if (typeof rawVal === 'string' && rawVal.trim()) {
+        try {
+          return JSON.parse(rawVal);
+        } catch (e) {
+          return fallback;
+        }
+      }
+      return fallback;
+    }
+
+    function normalizeAppSettingsRow(row) {
+      const src = row || {};
+      const parsedRate = parseFloat(toEnglishDigits(getVal(src, ['afn_to_iqd_rate'])));
+      const rateVal = (!isNaN(parsedRate) && parsedRate > 0) ? parsedRate : DEFAULT_APP_SETTINGS.afn_to_iqd_rate;
+
+      const rawNets = parseJsonIfNeeded(getVal(src, ['iq_networks']), DEFAULT_IQ_NETWORKS);
+      const cleanNets = Array.isArray(rawNets) && rawNets.length > 0
+        ? rawNets.map(n => String(n).trim()).filter(Boolean)
+        : DEFAULT_IQ_NETWORKS;
+
+      const rawPkgs = parseJsonIfNeeded(getVal(src, ['iq_packages']), DEFAULT_IQ_PACKAGES);
+      const cleanPkgs = Array.isArray(rawPkgs) && rawPkgs.length > 0
+        ? rawPkgs.filter(p => p && p.active !== false)
+        : DEFAULT_IQ_PACKAGES;
+
+      const endpointVal = String(getVal(src, ['afn_api_endpoint']) || '').trim() || DEFAULT_APP_SETTINGS.afn_api_endpoint;
+      const modeVal = String(getVal(src, ['afn_api_mode']) || '').trim() || DEFAULT_APP_SETTINGS.afn_api_mode;
+
+      return {
+        id: String(getVal(src, ['id']) || 'default').trim() || 'default',
+        transfer_enabled: getVal(src, ['transfer_enabled']) !== false && String(getVal(src, ['transfer_enabled'])).toLowerCase() !== 'false',
+        topup_afn_enabled: getVal(src, ['topup_afn_enabled']) !== false && String(getVal(src, ['topup_afn_enabled'])).toLowerCase() !== 'false',
+        topup_iq_enabled: getVal(src, ['topup_iq_enabled']) !== false && String(getVal(src, ['topup_iq_enabled'])).toLowerCase() !== 'false',
+        afn_to_iqd_rate: rateVal,
+        iq_networks: cleanNets,
+        iq_packages: cleanPkgs,
+        afn_api_enabled: getVal(src, ['afn_api_enabled']) === true || String(getVal(src, ['afn_api_enabled'])).toLowerCase() === 'true',
+        afn_api_endpoint: endpointVal,
+        afn_api_mode: modeVal
+      };
+    }
+
+    function getAfnExchangeRate() {
+      const r = parseFloat(appSettingsState.afn_to_iqd_rate);
+      return (!isNaN(r) && r > 0) ? r : DEFAULT_APP_SETTINGS.afn_to_iqd_rate;
+    }
+
+    function populateAfnAndIqSelectorsFromSettings() {
+      const afnSel = document.getElementById('afnNetworkSelect');
+      if (afnSel) {
+        const prev = afnSel.value;
+        afnSel.innerHTML = DEFAULT_AFN_NETWORKS.map(net => `<option value="${net}">${net}</option>`).join('');
+        if (prev && DEFAULT_AFN_NETWORKS.includes(prev)) afnSel.value = prev;
+        else afnSel.selectedIndex = 0;
+      }
+
+      const iqNetSel = document.getElementById('iqNetworkSelect');
+      if (iqNetSel) {
+        const prevNet = iqNetSel.value;
+        const nets = appSettingsState.iq_networks || DEFAULT_IQ_NETWORKS;
+        iqNetSel.innerHTML = nets.map(net => `<option value="${net}">${net}</option>`).join('');
+        if (prevNet && nets.includes(prevNet)) iqNetSel.value = prevNet;
+        else iqNetSel.selectedIndex = 0;
+      }
+
+      const iqCardSel = document.getElementById('iqCardSelect');
+      if (iqCardSel) {
+        const prevCard = iqCardSel.value;
+        const pkgs = appSettingsState.iq_packages || DEFAULT_IQ_PACKAGES;
+        iqCardSel.innerHTML = pkgs.map(pkg => {
+          const cardAmt = parseFloat(pkg.card_amount ?? pkg.charge_amount ?? pkg.amount) || 0;
+          const labelTxt = pkg.label ? String(pkg.label) : formatEnMoney(cardAmt);
+          return `<option value="${cardAmt}">${labelTxt}</option>`;
+        }).join('');
+        if (prevCard && Array.from(iqCardSel.options).some(o => o.value === String(prevCard))) {
+          iqCardSel.value = String(prevCard);
+        } else if (iqCardSel.options.length > 0) {
+          iqCardSel.selectedIndex = 0;
+        }
+      }
+    }
+
+    function applyAppSettingsToUi() {
+      populateAfnAndIqSelectorsFromSettings();
+
+      const tEnabled = Boolean(appSettingsState.transfer_enabled);
+      const aEnabled = Boolean(appSettingsState.topup_afn_enabled);
+      const iEnabled = Boolean(appSettingsState.topup_iq_enabled);
+      const rateVal = getAfnExchangeRate();
+
+      const qT = document.getElementById('qTileTransfer');
+      const qA = document.getElementById('qTileAfn');
+      const qI = document.getElementById('qTileIq');
+      if (qT) qT.disabled = !tEnabled;
+      if (qA) qA.disabled = !aEnabled;
+      if (qI) qI.disabled = !iEnabled;
+
+      const sT = document.getElementById('srvSubTransfer');
+      const sA = document.getElementById('srvSubAfn');
+      const sI = document.getElementById('srvSubIq');
+      if (sT) sT.disabled = !tEnabled;
+      if (sA) sA.disabled = !aEnabled;
+      if (sI) sI.disabled = !iEnabled;
+
+      const hmT = document.getElementById('homeMenuOptTransfer');
+      const hmA = document.getElementById('homeMenuOptAfn');
+      const hmI = document.getElementById('homeMenuOptIq');
+      const smT = document.getElementById('srvMenuOptTransfer');
+      const smA = document.getElementById('srvMenuOptAfn');
+      const smI = document.getElementById('srvMenuOptIq');
+
+      [hmT, smT].forEach(el => {
+        if (!el) return;
+        el.disabled = !tEnabled;
+        el.classList.toggle('disabled-service', !tEnabled);
+      });
+      [hmA, smA].forEach(el => {
+        if (!el) return;
+        el.disabled = !aEnabled;
+        el.classList.toggle('disabled-service', !aEnabled);
+      });
+      [hmI, smI].forEach(el => {
+        if (!el) return;
+        el.disabled = !iEnabled;
+        el.classList.toggle('disabled-service', !iEnabled);
+      });
+
+      const hSubT = document.getElementById('homeTransferSub');
+      const hSubA = document.getElementById('homeAfnSub');
+      const hSubI = document.getElementById('homeIqSub');
+      if (hSubT) hSubT.innerText = tEnabled ? 'برای باز شدن فرم انتقال موجودی لمس کنید' : 'این بخش توسط مدیریت غیرفعال است';
+      if (hSubA) hSubA.innerText = aEnabled ? `نرخ: ${rateVal} IQD — ام‌تی‌ان، افغان بی‌سیم، سلام، روشن، اتصالات` : 'ارسال کردیت توسط مدیریت غیرفعال است';
+      if (hSubI) hSubI.innerText = iEnabled ? 'برای باز شدن فرم ثبت شارژ عراق لمس کنید' : 'شارژ عراق توسط مدیریت غیرفعال است';
+
+      if (activeServiceMode === 'transfer' && !tEnabled) collapseServiceForms();
+      if (activeServiceMode === 'afn' && !aEnabled) collapseServiceForms();
+      if (activeServiceMode === 'iq' && !iEnabled) collapseServiceForms();
+
+      recalcTransferBox();
+      recalcTopupCost();
+      updateManagementBadgeUi();
+    }
+
+    async function fetchAppSettingsFromSupabase() {
+      try {
+        localStorage.setItem('karimi_cache_app_settings', JSON.stringify(appSettingsState));
+      } catch (e) {}
+
+      const ready = await initSupabaseFromEnv();
+      if (!ready || !_supabase) {
+        applyAppSettingsToUi();
+        return appSettingsState;
+      }
+
+      try {
+        const [setRes, admRes, ownRes] = await Promise.all([
+          _supabase.from('app_settings').select('*').eq('id', 'default').limit(1),
+          _supabase.from('admins').select('*'),
+          _supabase.from('owner_settings').select('*')
+        ]);
+
+        if (setRes.data && setRes.data.length > 0) {
+          appSettingsState = normalizeAppSettingsRow(setRes.data[0]);
+          try {
+            localStorage.setItem('karimi_cache_app_settings', JSON.stringify(appSettingsState));
+          } catch (e) {}
+        } else {
+          const anySet = await _supabase.from('app_settings').select('*').limit(1);
+          if (anySet.data && anySet.data.length > 0) {
+            appSettingsState = normalizeAppSettingsRow(anySet.data[0]);
+            try {
+              localStorage.setItem('karimi_cache_app_settings', JSON.stringify(appSettingsState));
+            } catch (e) {}
+          }
+        }
+
+        if (admRes.data) adminsList = admRes.data;
+        if (ownRes.data) ownerSettingsList = ownRes.data;
+      } catch (e) {}
+
+      applyAppSettingsToUi();
+      return appSettingsState;
+    }
+
+    function subscribeRealtimeSettings() {
+      if (!_supabase) return;
+      if (realtimeSettingsChannel) {
+        try { _supabase.removeChannel(realtimeSettingsChannel); } catch (e) {}
+        realtimeSettingsChannel = null;
+      }
+      try {
+        realtimeSettingsChannel = _supabase
+          .channel('karimi-app-settings-live')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'app_settings' },
+            async () => {
+              await fetchAppSettingsFromSupabase();
+            }
+          )
+          .subscribe();
+      } catch (e) {}
+    }
+
+    function updateManagementBadgeUi() {
+      const badge = document.getElementById('mgmtSessionBadge');
+      const sub = document.getElementById('mgmtMenuSub');
+      if (!badge || !sub) return;
+      if (activeManagementAdmin) {
+        badge.innerText = 'باز است';
+        sub.innerText = `مدیر: ${activeManagementAdmin.name} — نرخ افغانی: ${getAfnExchangeRate()} IQD`;
+      } else {
+        badge.innerText = 'ورود مدیر';
+        sub.innerText = `نرخ فعلی: ${getAfnExchangeRate()} IQD | کنترل خدمات`;
+      }
+    }
+
+    function populateManagementFormFields() {
+      document.getElementById('cfgTransferEnabled').checked = Boolean(appSettingsState.transfer_enabled);
+      document.getElementById('cfgTopupAfnEnabled').checked = Boolean(appSettingsState.topup_afn_enabled);
+      document.getElementById('cfgTopupIqEnabled').checked = Boolean(appSettingsState.topup_iq_enabled);
+      document.getElementById('cfgAfnApiEnabled').checked = Boolean(appSettingsState.afn_api_enabled);
+      document.getElementById('cfgAfnToIqdRate').value = String(getAfnExchangeRate());
+      document.getElementById('cfgAfnApiEndpoint').value = String(appSettingsState.afn_api_endpoint || '');
+      document.getElementById('cfgAfnApiMode').value = String(appSettingsState.afn_api_mode || '');
+      document.getElementById('cfgIqNetworksJson').value = JSON.stringify(appSettingsState.iq_networks || DEFAULT_IQ_NETWORKS);
+      document.getElementById('cfgIqPackagesJson').value = JSON.stringify(appSettingsState.iq_packages || DEFAULT_IQ_PACKAGES);
+    }
+
+    async function openManagementModal() {
+      playSound('click');
+      await fetchAppSettingsFromSupabase();
+      const modal = document.getElementById('managementModal');
+      const loginBox = document.getElementById('mgmtLoginBox');
+      const ctrlBox = document.getElementById('mgmtControlsBox');
+      const lbl = document.getElementById('mgmtActiveAdminLabel');
+
+      if (activeManagementAdmin) {
+        loginBox.classList.add('hidden');
+        ctrlBox.classList.remove('hidden');
+        lbl.innerText = activeManagementAdmin.name;
+        populateManagementFormFields();
+      } else {
+        loginBox.classList.remove('hidden');
+        ctrlBox.classList.add('hidden');
+        lbl.innerText = 'نیاز به رمز';
+        document.getElementById('mgmtIdentifierInput').value = '';
+        document.getElementById('mgmtPinInput').value = '';
+      }
+
+      modal.classList.remove('hidden');
+      ensureSentinelHistory();
+    }
+
+    function closeManagementModal() {
+      playSound('click');
+      document.getElementById('managementModal').classList.add('hidden');
+    }
+
+    function logoutManagementSession() {
+      playSound('click');
+      activeManagementAdmin = null;
+      updateManagementBadgeUi();
+      openManagementModal();
+    }
+
+    async function verifyManagementLogin() {
+      playSound('click');
+      const idVal = toEnglishDigits(document.getElementById('mgmtIdentifierInput').value.trim()).toLowerCase();
+      const pinVal = toEnglishDigits(document.getElementById('mgmtPinInput').value.trim());
+
+      if (!idVal || !pinVal) {
+        alert('شناسه/ایمیل و رمز مدیریت را وارد کنید.');
+        return;
+      }
+
+      showRealLoading('در حال بررسی دسترسی مدیریت...', 'بررسی جداول admins و owner_settings');
+      await fetchAppSettingsFromSupabase();
+      hideRealLoading();
+
+      const matchedOwner = ownerSettingsList.find(o => {
+        const em = String(getVal(o, ['email']) || '').trim().toLowerCase();
+        const oid = String(getVal(o, ['id']) || '').trim().toLowerCase();
+        const opin = toEnglishDigits(String(getVal(o, ['pin']) || '')).trim();
+        return (idVal === em || idVal === oid) && pinVal === opin;
+      });
+
+      if (matchedOwner) {
+        activeManagementAdmin = {
+          name: String(getVal(matchedOwner, ['name']) || 'مالک سامانه').trim(),
+          role: 'owner'
+        };
+        document.getElementById('mgmtLoginBox').classList.add('hidden');
+        document.getElementById('mgmtControlsBox').classList.remove('hidden');
+        document.getElementById('mgmtActiveAdminLabel').innerText = activeManagementAdmin.name;
+        populateManagementFormFields();
+        updateManagementBadgeUi();
+        return;
+      }
+
+      const matchedAdmin = adminsList.find(a => {
+        const em = String(getVal(a, ['Email', 'email']) || '').trim().toLowerCase();
+        const aid = String(getVal(a, ['AdminID', 'adminid']) || '').trim().toLowerCase();
+        const apin = toEnglishDigits(String(getVal(a, ['Pin', 'pin']) || '')).trim();
+        return (idVal === em || idVal === aid) && pinVal === apin;
+      });
+
+      if (matchedAdmin) {
+        activeManagementAdmin = {
+          name: String(getVal(matchedAdmin, ['Name', 'name']) || 'ادمین').trim(),
+          role: 'admin'
+        };
+        document.getElementById('mgmtLoginBox').classList.add('hidden');
+        document.getElementById('mgmtControlsBox').classList.remove('hidden');
+        document.getElementById('mgmtActiveAdminLabel').innerText = activeManagementAdmin.name;
+        populateManagementFormFields();
+        updateManagementBadgeUi();
+        return;
+      }
+
+      alert('اطلاعات ورود مدیریت صحیح نیست.');
+    }
+
+    async function reloadAppSettingsFromDb() {
+      playSound('click');
+      showRealLoading('در حال دریافت تنظیمات از دیتابیس...', 'خواندن app_settings');
+      await fetchAppSettingsFromSupabase();
+      populateManagementFormFields();
+      hideRealLoading();
+      alert('تنظیمات جدول app_settings به‌روزرسانی شد.');
+    }
+
+    async function saveAppSettingsToSupabase() {
+      if (!activeManagementAdmin) {
+        alert('ابتدا وارد بخش مدیریت شوید.');
+        return;
+      }
+
+      const rateNum = parseFloat(toEnglishDigits(document.getElementById('cfgAfnToIqdRate').value));
+      if (isNaN(rateNum) || rateNum <= 0) {
+        alert('نرخ تبدیل افغانی به دینار باید عدد مثبت باشد.');
+        return;
+      }
+
+      let parsedNets = DEFAULT_IQ_NETWORKS;
+      let parsedPkgs = DEFAULT_IQ_PACKAGES;
+      try {
+        const nRaw = JSON.parse(document.getElementById('cfgIqNetworksJson').value);
+        if (!Array.isArray(nRaw) || nRaw.length === 0) throw new Error('Invalid networks');
+        parsedNets = nRaw;
+      } catch (e) {
+        alert('فرمت JSON شبکه‌های عراق صحیح نیست.');
+        return;
+      }
+
+      try {
+        const pRaw = JSON.parse(document.getElementById('cfgIqPackagesJson').value);
+        if (!Array.isArray(pRaw) || pRaw.length === 0) throw new Error('Invalid packages');
+        parsedPkgs = pRaw;
+      } catch (e) {
+        alert('فرمت JSON بسته‌های عراق صحیح نیست.');
+        return;
+      }
+
+      const payload = {
+        id: 'default',
+        transfer_enabled: Boolean(document.getElementById('cfgTransferEnabled').checked),
+        topup_afn_enabled: Boolean(document.getElementById('cfgTopupAfnEnabled').checked),
+        topup_iq_enabled: Boolean(document.getElementById('cfgTopupIqEnabled').checked),
+        afn_api_enabled: Boolean(document.getElementById('cfgAfnApiEnabled').checked),
+        afn_to_iqd_rate: rateNum,
+        afn_api_endpoint: String(document.getElementById('cfgAfnApiEndpoint').value || '').trim(),
+        afn_api_mode: String(document.getElementById('cfgAfnApiMode').value || '').trim() || 'telegram_relay',
+        iq_networks: parsedNets,
+        iq_packages: parsedPkgs,
+        updated_at: new Date().toISOString()
+      };
+
+      showRealLoading('در حال ذخیره در app_settings...', 'ثبت تغییرات در دیتابیس');
+      const ready = await initSupabaseFromEnv();
+      if (!ready || !_supabase) {
+        hideRealLoading();
+        alert('اتصال به دیتابیس برقرار نیست.');
+        return;
+      }
+
+      const { error } = await _supabase
+        .from('app_settings')
+        .upsert([payload], { onConflict: 'id' });
+
+      await fetchAppSettingsFromSupabase();
+      hideRealLoading();
+
+      if (error) {
+        alert('خطا در ذخیره تنظیمات: ' + error.message);
+        return;
+      }
+
+      playSound('success');
+      alert('تنظیمات با موفقیت در جدول app_settings ذخیره و اعمال شد.');
+    }
 
     function showReceiptForTransactionData(txData) {
       if (!txData || !currentFoundUser) return;
@@ -1823,7 +2407,6 @@
       ensureSentinelHistory();
     }
 
-
     function showTopupRawErrorModal(rawEnglishMsg) {
       const box = document.getElementById('topupRawErrorEnglishText');
       if (box) box.textContent = String(rawEnglishMsg || 'Unknown error');
@@ -1851,21 +2434,17 @@
         tPrev.innerHTML = '<span>مقصد</span><span>کد حساب و شماره تماس را وارد کنید</span>';
       }
 
-      const afnNet = document.getElementById('afnNetworkSelect');
       const afnPhone = document.getElementById('afnTargetPhone');
       const afnAmt = document.getElementById('afnAmountInput');
       const afnErr = document.getElementById('topupAfnEligibilityMsg');
-      if (afnNet && afnNet.options.length > 0) afnNet.selectedIndex = 0;
       if (afnPhone) afnPhone.value = '';
       if (afnAmt) afnAmt.value = '';
       if (afnErr) afnErr.innerText = '';
 
-      const iqNet = document.getElementById('iqNetworkSelect');
-      const iqCard = document.getElementById('iqCardSelect');
       const iqErr = document.getElementById('topupIqEligibilityMsg');
-      if (iqNet && iqNet.options.length > 0) iqNet.selectedIndex = 0;
-      if (iqCard && iqCard.options.length > 0) iqCard.selectedIndex = 0;
       if (iqErr) iqErr.innerText = '';
+
+      populateAfnAndIqSelectorsFromSettings();
 
       const pinInput = document.getElementById('txVerifyPinInput');
       if (pinInput) pinInput.value = '';
@@ -1911,7 +2490,6 @@
       copyTextValue(String(OWNER_WHATSAPP || '').trim(), 'شماره تماس ادمین');
     }
 
-    // Hook for external top-up API integration
     const TOPUP_API_CONFIG = {
       enabled: false,
       endpoint: '',
@@ -1972,13 +2550,6 @@
       return false;
     }
 
-    const OWNER_NAME_DISPLAY = "محمد شریف";
-    const OWNER_EMAIL = "";
-    const OWNER_WHATSAPP = "9647721878997";
-    const AFN_TO_IQD_RATE = 26.5;
-
-    const AFN_TOPUP_API_ENDPOINT = "/api/iimobile-topup";
-
     let accountsList = [];
     let transactionsList = [];
     let currentFoundUser = null;
@@ -2000,8 +2571,10 @@
       try {
         const cAcc = localStorage.getItem('karimi_cache_accounts');
         const cTx = localStorage.getItem('karimi_cache_transactions');
+        const cSet = localStorage.getItem('karimi_cache_app_settings');
         if (cAcc) accountsList = JSON.parse(cAcc);
         if (cTx) transactionsList = JSON.parse(cTx);
+        if (cSet) appSettingsState = normalizeAppSettingsRow(JSON.parse(cSet));
       } catch (e) {}
     }
     loadCachedData();
@@ -2441,7 +3014,7 @@
         selectedTxItem = null;
         return true;
       }
-      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal'];
+      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
@@ -2551,6 +3124,7 @@
         ensureSentinelHistory();
         initAdminContactFromDataCode();
         updateNotifModeLabel();
+        applyAppSettingsToUi();
         requestExternalNotificationPermission();
         setTimeout(bindCap, 300);
         setTimeout(bindCap, 1200);
@@ -2739,9 +3313,22 @@
       ensureSentinelHistory();
     }
 
+    function isServiceEnabledBySettings(mode) {
+      if (mode === 'transfer') return Boolean(appSettingsState.transfer_enabled);
+      if (mode === 'afn') return Boolean(appSettingsState.topup_afn_enabled);
+      if (mode === 'iq') return Boolean(appSettingsState.topup_iq_enabled);
+      return true;
+    }
+
     function openServiceForm(mode) {
       playSound('click');
       requestExternalNotificationPermission();
+
+      if (!isServiceEnabledBySettings(mode)) {
+        alert('این بخش در حال حاضر توسط مدیریت غیرفعال است.');
+        return;
+      }
+
       activeServiceMode = mode;
 
       if (activeBottomTab !== 'services') {
@@ -2817,12 +3404,13 @@
         if (accountsList.length > 0) {
           autoLogin(savedPhone, savedAccId, false);
         }
-        showRealLoading('در حال همگام‌سازی حساب...', 'دریافت آخرین اطلاعات');
+        showRealLoading('در حال همگام‌سازی حساب...', 'دریافت آخرین اطلاعات و تنظیمات');
         const prevIds = getUserTransactionIds(savedAccId);
         await initSupabaseFromEnv();
-        await fetchDataFromSupabaseFresh();
+        await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
         autoLogin(savedPhone, savedAccId, false);
         subscribeRealtimeAccountEvents(savedAccId);
+        subscribeRealtimeSettings();
         hideRealLoading();
         updateLastSyncLabel();
         checkAndAnnounceNewTransactions(savedAccId, prevIds, true);
@@ -2833,6 +3421,8 @@
         }
         await initSupabaseFromEnv();
         fetchDataFromSupabaseFresh();
+        fetchAppSettingsFromSupabase();
+        subscribeRealtimeSettings();
       }
     });
 
@@ -2865,8 +3455,8 @@
         (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
       const prevIds = getUserTransactionIds(savedAccId);
 
-      showRealLoading('در حال بروزرسانی...', 'دریافت آخرین تراکنش‌ها');
-      await fetchDataFromSupabaseFresh();
+      showRealLoading('در حال بروزرسانی...', 'دریافت آخرین تراکنش‌ها و نرخ‌ها');
+      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
 
       if (savedAccId) {
         const found = accountsList.find(u =>
@@ -2876,6 +3466,7 @@
         processDashboard(savedAccId, false);
         subscribeRealtimeAccountEvents(savedAccId);
       }
+      subscribeRealtimeSettings();
       hideRealLoading();
       updateLastSyncLabel();
       checkAndAnnounceNewTransactions(savedAccId, prevIds, false);
@@ -2894,7 +3485,7 @@
       }
 
       showRealLoading('در حال بررسی شماره...', 'جستجو در سامانه');
-      await fetchDataFromSupabaseFresh();
+      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       hideRealLoading();
 
       const found = accountsList.find(u =>
@@ -2934,7 +3525,7 @@
       }
 
       showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
-      await fetchDataFromSupabaseFresh();
+      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       hideRealLoading();
 
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
@@ -2948,6 +3539,7 @@
       playSound('success');
       processDashboard(sheetAccId, true);
       subscribeRealtimeAccountEvents(sheetAccId);
+      subscribeRealtimeSettings();
       updateLastSyncLabel();
     }
 
@@ -3096,6 +3688,7 @@
       updateBioStatusLabel();
       updateTxBioStatusLabel();
       updateNotifModeLabel();
+      applyAppSettingsToUi();
       renderCurrencyTabs();
       renderTransactionsList();
       populateTransferCurrencies();
@@ -3176,7 +3769,7 @@
       if (accId) {
         await forceSyncBeforeOperation(accId);
       } else {
-        await fetchDataFromSupabaseFresh();
+        await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       }
       if (mode) openServiceForm(mode);
     }
@@ -3208,8 +3801,8 @@
     }
 
     async function forceSyncBeforeOperation(accId) {
-      showRealLoading('در حال تازه‌سازی اجباری حساب...', 'بررسی آخرین موجودی و تغییرات');
-      await fetchDataFromSupabaseFresh();
+      showRealLoading('در حال تازه‌سازی اجباری حساب...', 'بررسی آخرین موجودی و نرخ‌ها');
+      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       if (accId) {
         const found = accountsList.find(u =>
           String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === String(accId).trim().toLowerCase()
@@ -3222,7 +3815,6 @@
       hideRealLoading();
     }
 
-    // ================= انتقال موجودی =================
     function populateTransferCurrencies() {
       const sel = document.getElementById('transferCurrencySelect');
       if (!sel) return;
@@ -3281,16 +3873,23 @@
       const box = document.getElementById('transferCalcBox');
       const btn = document.getElementById('btnExecuteTransfer');
 
+      if (!appSettingsState.transfer_enabled) {
+        box.className = 'calc-summary-box error';
+        box.innerHTML = 'انتقال موجودی در جدول تنظیمات غیرفعال است';
+        if (btn) btn.disabled = true;
+        return;
+      }
+
       if (avail <= 0 || amt > avail) {
         box.className = 'calc-summary-box error';
         box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
-        btn.disabled = true;
+        if (btn) btn.disabled = true;
         return;
       }
 
       box.className = 'calc-summary-box';
       box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
-      btn.disabled = false;
+      if (btn) btn.disabled = false;
     }
 
     function openOperationAuthModal(headingText, summaryHtml, actionObj) {
@@ -3309,6 +3908,10 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
+      if (!appSettingsState.transfer_enabled) {
+        alert('انتقال موجودی توسط مدیریت غیرفعال است.');
+        return;
+      }
       const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(myAccId);
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
@@ -3354,22 +3957,27 @@
 
     function recalcTopupCost() {
       const netIqd = getNetIqdBalance();
+      const rate = getAfnExchangeRate();
 
       const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
-      const reqIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+      const reqIqd = Math.round(afnAmt * rate);
       const afnBox = document.getElementById('afnCalcBox');
       const afnErr = document.getElementById('topupAfnEligibilityMsg');
       const afnBtn = document.getElementById('btnExecuteTopupAfn');
       document.getElementById('afnCalculatedIqd').innerText = formatEnMoney(reqIqd);
 
-      if (netIqd <= 0 || reqIqd > netIqd) {
+      if (!appSettingsState.topup_afn_enabled) {
+        afnBox.classList.add('error');
+        afnErr.innerText = 'ارسال کردیت در جدول تنظیمات غیرفعال است.';
+        if (afnBtn) afnBtn.disabled = true;
+      } else if (netIqd <= 0 || reqIqd > netIqd) {
         afnBox.classList.add('error');
         afnErr.innerText = 'موجودی دینار کافی نیست.';
-        afnBtn.disabled = true;
+        if (afnBtn) afnBtn.disabled = true;
       } else {
         afnBox.classList.remove('error');
         afnErr.innerText = '';
-        afnBtn.disabled = false;
+        if (afnBtn) afnBtn.disabled = false;
       }
 
       const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
@@ -3378,29 +3986,43 @@
       const iqBtn = document.getElementById('btnExecuteTopupIq');
       document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
 
-      if (netIqd <= 0 || cardAmt > netIqd) {
+      if (!appSettingsState.topup_iq_enabled) {
+        iqBox.classList.add('error');
+        iqErr.innerText = 'شارژ عراق در جدول تنظیمات غیرفعال است.';
+        if (iqBtn) iqBtn.disabled = true;
+      } else if (netIqd <= 0 || cardAmt > netIqd) {
         iqBox.classList.add('error');
         iqErr.innerText = 'موجودی دینار کافی نیست.';
-        iqBtn.disabled = true;
+        if (iqBtn) iqBtn.disabled = true;
       } else {
         iqBox.classList.remove('error');
         iqErr.innerText = '';
-        iqBtn.disabled = false;
+        if (iqBtn) iqBtn.disabled = false;
       }
     }
 
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
+      if (mode === 'afn' && !appSettingsState.topup_afn_enabled) {
+        alert('ارسال کردیت توسط مدیریت غیرفعال است.');
+        return;
+      }
+      if (mode === 'iq' && !appSettingsState.topup_iq_enabled) {
+        alert('شارژ عراق توسط مدیریت غیرفعال است.');
+        return;
+      }
+
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(accId);
       const netIqd = getNetIqdBalance();
+      const rate = getAfnExchangeRate();
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
       const accPhone = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
 
       let payloadData = null;
       let summaryHtml = '';
       if (mode === 'afn') {
-        const afnNetwork = document.getElementById('afnNetworkSelect')?.value || 'اتصالات';
+        const afnNetwork = document.getElementById('afnNetworkSelect')?.value || 'ام‌تی‌ان';
         const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
         if (!/^07\d{8}$/.test(targetPhone)) {
@@ -3411,13 +4033,13 @@
           alert('مبلغ را وارد کنید.');
           return;
         }
-        const requiredIqd = Math.round(afnAmt * AFN_TO_IQD_RATE);
+        const requiredIqd = Math.round(afnAmt * rate);
         if (requiredIqd > netIqd || netIqd <= 0) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, afnNetwork, targetPhone, afnAmt, requiredIqd };
-        summaryHtml = `میتیکو (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
+        payloadData = { mode: 'afn', accId, accName, afnNetwork, targetPhone, afnAmt, requiredIqd, rate };
+        summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
         const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
@@ -3567,7 +4189,7 @@
       const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال...', 'ارتباط با سرور شارژ');
+        showRealLoading('در حال ارسال کردیت...', 'ارتباط با سرور شارژ');
         const intlPhone = payload.targetPhone.startsWith('0')
           ? '93' + payload.targetPhone.slice(1)
           : payload.targetPhone;
@@ -3576,39 +4198,49 @@
         let apiRef = txId;
         let lastErr = '';
 
-        try {
-          const resp = await fetch(AFN_TOPUP_API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              operator: payload.operator || 'atoma',
-              network: payload.afnNetwork || 'اتصالات',
-              phone: intlPhone,
-              bundle_id: payload.bundle_id || undefined,
-              amount: Number(payload.afnAmt)
-            })
-          });
-          const rawText = await resp.text();
-          let json = null;
-          try { json = JSON.parse(rawText); } catch (e) { json = null; }
+        const endpointUrl = appSettingsState.afn_api_endpoint || '/api/iimobile-topup';
+        const modeVal = appSettingsState.afn_api_mode || 'telegram_relay';
 
-          if (resp.ok && json && json.ok) {
-            apiOk = true;
-            if (json.txid) apiRef = `REF-${json.txid}`;
-          } else {
-            const exactServerMsg =
-              (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) ||
-              (rawText && rawText.trim()) ||
-              `HTTP ${resp.status} ${resp.statusText || ''}`.trim();
-            lastErr = typeof exactServerMsg === 'string' ? exactServerMsg : JSON.stringify(exactServerMsg);
+        if (!appSettingsState.afn_api_enabled) {
+          apiOk = true;
+          apiRef = `MANUAL-${txId}`;
+        } else {
+          try {
+            const resp = await fetch(endpointUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                operator: 'atoma',
+                mode: modeVal,
+                network: payload.afnNetwork || 'ام‌تی‌ان',
+                phone: intlPhone,
+                bundle_id: payload.bundle_id || undefined,
+                amount: Number(payload.afnAmt),
+                rate: Number(payload.rate || getAfnExchangeRate())
+              })
+            });
+            const rawText = await resp.text();
+            let json = null;
+            try { json = JSON.parse(rawText); } catch (e) { json = null; }
+
+            if (resp.ok && json && json.ok) {
+              apiOk = true;
+              if (json.txid) apiRef = `REF-${json.txid}`;
+            } else {
+              const exactServerMsg =
+                (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) ||
+                (rawText && rawText.trim()) ||
+                `HTTP ${resp.status} ${resp.statusText || ''}`.trim();
+              lastErr = typeof exactServerMsg === 'string' ? exactServerMsg : JSON.stringify(exactServerMsg);
+            }
+          } catch (err) {
+            lastErr = err && err.message ? String(err.message) : 'Network Error';
           }
-        } catch (err) {
-          lastErr = err && err.message ? String(err.message) : 'Network Error';
         }
 
         if (!apiOk) {
           hideRealLoading();
-          notifyAccountEvent('ارسال شارژ ناموفق', lastErr);
+          notifyAccountEvent('ارسال کردیت ناموفق', lastErr);
           showTopupRawErrorModal(lastErr);
           return;
         }
@@ -3620,10 +4252,10 @@
           Amount: Number(payload.requiredIqd),
           Currency: 'IQD',
           Direction: 'بدهکار',
-          OperationType: 'میتیکو به شماره‌های افغانستان',
-          Description: `${payload.afnNetwork || 'اتصالات'} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
+          OperationType: 'ارسال کردیت',
+          Description: `${payload.afnNetwork || 'ام‌تی‌ان'} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
           AssignedUserEmail: assigned,
-          Status: 'تایید شده'
+          Status: appSettingsState.afn_api_enabled ? 'تایید شده' : 'ثبت شده'
         };
         const { error } = await _supabase.from('transactions').insert([afnTxRow]);
         hideRealLoading();
@@ -3643,7 +4275,7 @@
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
         if (curIds.length > prevIds.length) {
-          notifyAccountEvent('میتیکو به شماره‌های افغانستان ثبت شد', `کد پیگیری: ${apiRef}`);
+          notifyAccountEvent('ارسال کردیت ثبت شد', `کد پیگیری: ${apiRef}`);
         }
         showReceiptForTransactionData(afnTxRow);
       } else {
@@ -3893,10 +4525,11 @@
         return;
       }
       showRealLoading('در حال ورود...', 'دریافت اطلاعات');
-      await fetchDataFromSupabaseFresh();
+      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       hideRealLoading();
       autoLogin(bioPhone, bioAccId, true);
       subscribeRealtimeAccountEvents(bioAccId);
+      subscribeRealtimeSettings();
       updateLastSyncLabel();
     }
 
@@ -3970,6 +4603,7 @@
       updateBioStatusLabel();
       updateTxBioStatusLabel();
       updateNotifModeLabel();
+      updateManagementBadgeUi();
     }
 
     function renderTransactionsList() {
@@ -4036,61 +4670,7 @@
       playSound('click');
       selectedTxItem = customerTransactions[idx];
       if (!selectedTxItem) return;
-
-      const tx = selectedTxItem;
-      const dir = String(getVal(tx, ['Direction', 'direction'])).trim();
-      const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
-      const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
-      const amountVal = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
-      const transId = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
-      const opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-      const dateStr = getVal(tx, ['Date', 'date', 'created_at']) || '---';
-      const dateOnly = extractDateOnly(dateStr);
-      const timeStr = extractTimeOnly(dateStr) || '---';
-      const currStr = getVal(tx, ['Currency', 'currency']) || 'IQD';
-      const statusStr = getVal(tx, ['Status', 'status']) || 'ثبت شده';
-      const descStr = String(getVal(tx, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
-      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
-      const cpName = resolveCounterpartyName(currentFoundUser);
-
-      document.getElementById('receiptDateStr').innerText = dateOnly;
-
-      const txCurr = currStr.toUpperCase();
-      const allChron = sortChronologically(customerTransactions, true);
-      let runningBalance = 0, balBefore = 0, balAfter = 0;
-
-      allChron.forEach(t => {
-        const c = String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase();
-        const tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-        if (c === txCurr) {
-          const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
-          const d = String(getVal(t, ['Direction', 'direction'])).trim();
-          if (tidItem === transId || t === tx) {
-            balBefore = runningBalance;
-            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
-            balAfter = runningBalance;
-          } else {
-            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
-          }
-        }
-      });
-
-      document.getElementById('modalBody').innerHTML = `
-        <div class="receipt-row"><span class="receipt-label">صاحب حساب</span><span class="receipt-val">${nameVal}</span></div>
-        <div class="receipt-row"><span class="receipt-label">طرف حساب</span><span class="receipt-val">${cpName}</span></div>
-        <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت</span><span class="receipt-val eng-num">${dateOnly} ${timeStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">عملیات</span><span class="receipt-val">${opType}</span></div>
-        <div class="receipt-row"><span class="receipt-label">کد سند</span><span class="receipt-val eng-num">${transId}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">شرح</span><span class="receipt-val">${descStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
-      `;
-      document.getElementById('txDetailModal').classList.add('open');
-      ensureSentinelHistory();
+      showReceiptForTransactionData(selectedTxItem);
     }
 
     function closeTxDetailModal() {
