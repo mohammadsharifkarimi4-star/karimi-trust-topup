@@ -36,9 +36,25 @@ export default async function handler(req, res) {
     amount: numAmount
   };
 
-  function extractCompanyMessage(data, fallbackText = '') {
-    if (typeof data === 'string') return data.trim();
-    if (!data || typeof data !== 'object') return String(fallbackText || '').trim();
+  function cleanHtmlMessage(text, fallbackStatus) {
+    const str = String(text || '').trim();
+    if (!str) return fallbackStatus ? `HTTP ${fallbackStatus}` : '';
+    const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(str);
+    if (!looksLikeHtml) return str;
+
+    const titleMatch = str.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    const h1Match = str.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+    const summary = (h1Match?.[1] || titleMatch?.[1] || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return summary ? `${summary} (پاسخ HTML از سرور)` : `خطای HTTP ${fallbackStatus || ''} (پاسخ HTML از سرور)`.trim();
+  }
+
+  function extractCompanyMessage(data, rawText = '', httpStatus = '') {
+    if (typeof data === 'string') {
+      return cleanHtmlMessage(data, httpStatus);
+    }
+    if (!data || typeof data !== 'object') {
+      return cleanHtmlMessage(rawText, httpStatus);
+    }
 
     const msg =
       data.msg ??
@@ -48,11 +64,17 @@ export default async function handler(req, res) {
       data?.data?.msg ??
       data?.data?.message ??
       data?.data?.error ??
-      data.rawText ??
-      fallbackText ??
       '';
 
-    return typeof msg === 'object' ? JSON.stringify(msg) : String(msg).trim();
+    if (msg) {
+      return typeof msg === 'object' ? JSON.stringify(msg) : cleanHtmlMessage(String(msg), httpStatus);
+    }
+
+    if (data.rawText) {
+      return cleanHtmlMessage(data.rawText, httpStatus);
+    }
+
+    return cleanHtmlMessage(rawText, httpStatus);
   }
 
   function isPositiveStatus(data) {
@@ -78,9 +100,6 @@ export default async function handler(req, res) {
 
   function buildTargetUrl(endpointPath) {
     const cleanPath = `/${String(endpointPath).replace(/^\/+/, '')}`;
-    if (apiBase.endsWith('/v1/apis') && cleanPath.startsWith('/v1/api/')) {
-      return `${apiBase.slice(0, -'/apis'.length)}${cleanPath}`;
-    }
     return `${apiBase}${cleanPath}`;
   }
 
@@ -106,7 +125,7 @@ export default async function handler(req, res) {
       raw = { rawText: text };
     }
 
-    const companyMessage = extractCompanyMessage(raw, text || resp.statusText);
+    const companyMessage = extractCompanyMessage(raw, text || resp.statusText, resp.status);
     return { resp, raw, targetUrl, companyMessage };
   }
 
