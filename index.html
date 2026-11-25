@@ -2388,9 +2388,29 @@
       ensureSentinelHistory();
     }
 
+    function formatErrorDisplayText(msg) {
+      const str = String(msg || 'Unknown error').trim();
+      const jsonMatch = str.match(/(\{[\s\S]*\})$/);
+      if (jsonMatch) {
+        try {
+          const parsed = JSON.parse(jsonMatch[1]);
+          const prefix = str.slice(0, jsonMatch.index).trim();
+          const pretty = JSON.stringify(parsed, null, 2);
+          return prefix ? `${prefix}\n${pretty}` : pretty;
+        } catch (e) {}
+      }
+      return str;
+    }
+
     function showTopupRawErrorModal(rawEnglishMsg) {
       const box = document.getElementById('topupRawErrorEnglishText');
-      if (box) box.textContent = String(rawEnglishMsg || 'Unknown error');
+      if (box) {
+        box.style.whiteSpace = 'pre-wrap';
+        box.style.unicodeBidi = 'plaintext';
+        box.style.direction = 'ltr';
+        box.style.textAlign = 'left';
+        box.textContent = formatErrorDisplayText(rawEnglishMsg);
+      }
       const modal = document.getElementById('topupRawErrorModal');
       if (modal) modal.classList.remove('hidden');
       ensureSentinelHistory();
@@ -3991,8 +4011,8 @@
       '073': { code: 'etisalat', label: 'اتصالات' },
       '078': { code: 'etisalat', label: 'اتصالات' },
       '074': { code: 'salam', label: 'سلام' },
-      '077': { code: 'mtn', label: 'ام‌تی‌ان' },
-      '076': { code: 'mtn', label: 'ام‌تی‌ان' }
+      '077': { code: 'atoma', label: 'ام‌تی‌ان' },
+      '076': { code: 'atoma', label: 'ام‌تی‌ان' }
     };
 
     function detectAfnOperatorFromPhone(rawPhone) {
