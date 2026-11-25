@@ -1,12 +1,13 @@
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
+
   if (req.method !== 'POST') {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
   const proxyBase = (process.env.PROXY_BASE_URL || 'http://161.97.150.196:1001').replace(/\/+$/, '');
-  const apiBase = (process.env.IIMOBILE_API_BASE || 'https://recharge-apis.iimobile.af').replace(/\/+$/, '');
-  const defaultBundleId = process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506';
+  const apiBase = (process.env.IIMOBILE_API_BASE || 'https://recharge-apis.iimobile.af/v1/apis').replace(/\/+$/, '');
+  const defaultBundleId = String(process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506').trim();
 
   const { operator, phone, bundle_id, amount } = req.body || {};
   if (!operator || !phone) {
@@ -15,15 +16,21 @@ export default async function handler(req, res) {
 
   const normalizedOperator = String(operator).trim().toLowerCase();
   const normalizedPhone = String(phone).trim();
-  const effectiveBundleId = bundle_id ? String(bundle_id).trim() : String(defaultBundleId).trim();
+  const effectiveBundleId = bundle_id !== undefined && bundle_id !== null && String(bundle_id).trim() !== ''
+    ? String(bundle_id).trim()
+    : defaultBundleId;
 
   const payload = {
     operator: normalizedOperator,
     phone: normalizedPhone,
     bundle_id: effectiveBundleId
   };
-  if (amount !== undefined && amount !== null && amount !== '') {
-    payload.amount = Number(amount);
+
+  if (amount !== undefined && amount !== null && String(amount).trim() !== '') {
+    const numAmount = Number(amount);
+    if (!Number.isNaN(numAmount) && numAmount > 0) {
+      payload.amount = numAmount;
+    }
   }
 
   function isPositiveStatus(data) {
@@ -54,19 +61,37 @@ export default async function handler(req, res) {
     return rawMsg || 'درخواست شارژ توسط سرویس مقصد تایید نشد.';
   }
 
+  function buildTargetUrl(endpointPath) {
+    const cleanPath = `/${String(endpointPath).replace(/^\/+/, '')}`;
+    if (apiBase.endsWith('/v1/apis') && cleanPath.startsWith('/v1/apis/')) {
+      return `${apiBase}${cleanPath.slice('/v1/apis'.length)}`;
+    }
+    return `${apiBase}${cleanPath}`;
+  }
+
   async function postViaProxy(endpointPath, bodyObj) {
-    const targetUrl = `${apiBase}${endpointPath}`;
+    const targetUrl = buildTargetUrl(endpointPath);
     const proxyUrl = `${proxyBase}/?url=${encodeURIComponent(targetUrl)}`;
+
     const resp = await fetch(proxyUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-target-url': targetUrl
       },
-      body: JSON.stringify(bodyObj)
+      body: JSON.stringify(bodyObj),
+      signal: AbortSignal.timeout(15000)
     });
-    const raw = await resp.json().catch(() => ({}));
-    return { resp, raw };
+
+    const text = await resp.text();
+    let raw = {};
+    try {
+      raw = text ? JSON.parse(text) : {};
+    } catch {
+      raw = { rawText: text };
+    }
+
+    return { resp, raw, targetUrl };
   }
 
   try {
@@ -80,7 +105,8 @@ export default async function handler(req, res) {
 
     if (!initRes.resp.ok || (!isPositiveStatus(initData) && !txId)) {
       const friendlyError = formatFriendlyError(initData, 'Initiate transaction failed');
-      return res.status(initRes.resp.status >= 400 ? initRes.resp.status : 400).json({
+      const statusCode = initRes.resp.status >= 400 ? initRes.resp.status : 400;
+      return res.status(statusCode).json({
         ok: false,
         stage: 'initiate',
         no_balance: friendlyError.includes('موجودی'),
@@ -97,8 +123,9 @@ export default async function handler(req, res) {
       const execData = execRes.raw || {};
       const execOk = execRes.resp.ok && (isPositiveStatus(execData) || execData.status === undefined);
       const friendlyError = execOk ? undefined : formatFriendlyError(execData, 'Execute transaction failed');
+      const statusCode = execOk ? 200 : (execRes.resp.status >= 400 ? execRes.resp.status : 400);
 
-      return res.status(execRes.resp.status || 200).json({
+      return res.status(statusCode).json({
         ok: execOk,
         stage: 'execute',
         txid: txId,
@@ -109,15 +136,18 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(initRes.resp.status || 200).json({
+    return res.status(200).json({
       ok: true,
       stage: 'initiate',
       raw: initData
     });
   } catch (err) {
-    return res.status(502).json({
+    const isTimeout = err && (err.name === 'TimeoutError' || err.name === 'AbortError');
+    return res.status(isTimeout ? 504 : 502).json({
       ok: false,
-      error: err && err.message ? err.message : 'Proxy request failed'
+      error: isTimeout
+        ? 'پاسخ‌گویی پروکسی یا سرویس مقصد زمان‌بر شد.'
+        : (err && err.message ? err.message : 'Proxy request failed')
     });
   }
 }
