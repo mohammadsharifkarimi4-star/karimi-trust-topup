@@ -1140,6 +1140,117 @@
       font-weight: 900;
     }
 
+
+    .info-callout-box {
+      background: var(--emerald-50);
+      border: 1px solid #a7f3d0;
+      border-radius: var(--radius-md);
+      padding: 9px 11px;
+      margin-bottom: 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--emerald-900);
+      line-height: 1.55;
+      text-align: right;
+    }
+
+    .warn-callout-box {
+      background: var(--warning-soft);
+      border: 1px solid #fcd34d;
+      border-radius: var(--radius-md);
+      padding: 9px 11px;
+      margin-bottom: 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #92400e;
+      line-height: 1.55;
+      text-align: right;
+    }
+
+    .afn-mode-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: var(--slate-100);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--slate-200);
+      margin-bottom: 10px;
+    }
+
+    .afn-mode-btn {
+      padding: 8px 6px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--slate-600);
+      font-size: 0.76rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .afn-mode-btn.active {
+      background: var(--white);
+      color: var(--emerald-800);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+    }
+
+    .admin-report-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin: 8px 0 10px 0;
+    }
+
+    .admin-report-stat {
+      background: var(--emerald-50);
+      border: 1px solid #a7f3d0;
+      border-radius: 12px;
+      padding: 9px 10px;
+      text-align: right;
+    }
+
+    .admin-report-stat small {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 800;
+      color: var(--emerald-700);
+    }
+
+    .admin-report-stat strong {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 900;
+      color: var(--emerald-950);
+      margin-top: 2px;
+    }
+
+    .admin-mini-list {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+      text-align: right;
+    }
+
+    .admin-mini-item {
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--slate-200);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--slate-800);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .admin-mini-item:last-child {
+      border-bottom: none;
+    }
+
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
     .hidden { display: none !important; }
   </style>
@@ -1188,6 +1299,8 @@
           </div>
           <button type="button" class="btn btn-primary" onclick="checkPhone()">ادامه</button>
 
+          <button type="button" class="btn btn-soft-emerald" style="margin-top:8px;" onclick="openSelfRegister()">افتتاح حساب جدید</button>
+
           <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
             <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
           </div>
@@ -1205,6 +1318,17 @@
             <label for="accountIdInput">کد حساب (Account ID)</label>
             <input type="text" id="accountIdInput" placeholder="Account ID" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
+          <div id="legacyNoPinSetupBox" class="warn-callout-box hidden">
+            <div style="margin-bottom:6px;">این حساب قدیمی رمز فعالی ندارد. لطفاً یک رمز ثابت برای ورود و تایید تراکنش‌ها تعیین کنید؛ این رمز را فراموش نکنید و در اختیار کسی قرار ندهید.</div>
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="legacyInitialPinInput">تعیین رمز ثابت جدید</label>
+              <input type="password" id="legacyInitialPinInput" placeholder="حداقل ۴ کاراکتر" dir="ltr">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="legacyInitialPinConfirmInput">تکرار رمز ثابت جدید</label>
+              <input type="password" id="legacyInitialPinConfirmInput" placeholder="تکرار رمز" dir="ltr">
+            </div>
+          </div>
           <button type="button" class="btn btn-primary" onclick="verifyAccount()">ورود</button>
           <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">بازگشت</button>
         </div>
@@ -1215,6 +1339,12 @@
         <div class="quick-grid-card">
           <div class="panel-banner-header">
             <h4>افتتاح حساب جدید</h4>
+          </div>
+          <div class="info-callout-box">
+            شناسه حساب به‌صورت خودکار تولید می‌شود و یک رمز ثابت برای شما ساخته خواهد شد که هم برای ورود به حساب و هم برای تایید تراکنش‌ها به کار می‌رود.
+          </div>
+          <div class="warn-callout-box">
+            لطفاً رمزی قوی و مطمئن انتخاب کنید، آن را با هیچ‌کس به اشتراک نگذارید و در حفظ آن کوشا باشید؛ مسئولیت نگهداری و عدم افشای رمز بر عهده خودتان است.
           </div>
           <div class="form-group">
             <label for="regAccId">شناسه حساب (Account ID)</label>
@@ -1229,7 +1359,7 @@
             <input type="tel" id="regPhone" dir="ltr">
           </div>
           <div class="form-group">
-            <label for="regPin">رمز ثابت</label>
+            <label for="regPin">رمز ثابت واحد (ورود و تایید تراکنش)</label>
             <input type="password" id="regPin" dir="ltr">
           </div>
           <div class="form-group">
@@ -1300,7 +1430,7 @@
               <h3>دسترسی سریع</h3>
               <span id="lastSyncTimeText">آماده</span>
             </div>
-            <div class="quick-grid">
+            <div class="quick-grid" style="grid-template-columns: repeat(5, 1fr);">
               <button type="button" class="quick-tile" id="qTileTransfer" onclick="openServiceForm('transfer')">
                 <div class="quick-icon-box">⇄</div>
                 <span class="quick-label">انتقال موجودی</span>
@@ -1312,6 +1442,10 @@
               <button type="button" class="quick-tile" id="qTileIq" onclick="openServiceForm('iq')">
                 <div class="quick-icon-box">🇮🇶</div>
                 <span class="quick-label">شارژ عراق</span>
+              </button>
+              <button type="button" class="quick-tile" id="qTileChargeAcc" onclick="openChargeAccountModal()">
+                <div class="quick-icon-box">💳</div>
+                <span class="quick-label">شارژ کردن حساب</span>
               </button>
               <button type="button" class="quick-tile" id="qTileTxQuick" onclick="switchBottomTab('tx')">
                 <div class="quick-icon-box">🧾</div>
@@ -1419,6 +1553,17 @@
                 </div>
                 <span class="fancy-opt-cta">باز کردن فرم</span>
               </button>
+
+              <button type="button" class="fancy-menu-option" id="srvMenuOptChargeAcc" onclick="openChargeAccountModal()">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">💳</div>
+                  <div>
+                    <span class="fancy-opt-title">شارژ کردن حساب</span>
+                    <span class="fancy-opt-sub">دریافت موجودی از طریق فرد دارای حساب در امانت‌داری کریمی و پیام به ادمین</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">راهنما و پیام</span>
+              </button>
             </div>
           </div>
 
@@ -1432,6 +1577,10 @@
             <div class="mandatory-sync-banner" id="mandatoryBannerTransfer">
               <span class="mandatory-sync-text" id="mandatoryBannerTextTransfer">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnTransfer" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
+            </div>
+
+            <div class="info-callout-box">
+              انتقال موجودی فقط از طریق <b>شماره تماس</b> یا <b>کد حساب (Account ID)</b> و صرفاً به کسی که در سامانه حساب داشته باشد امکان‌پذیر است.
             </div>
 
             <div class="form-group">
@@ -1481,6 +1630,25 @@
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
             </div>
 
+            <div class="info-callout-box">
+              راهنمای ارسال کردیت افغانستان: شماره ۱۰ رقمی مقصد (مانند 077، 070، 079، 078، 074) را وارد کنید تا شبکه به‌صورت خودکار تشخیص داده شود و معادل دینار (IQD) از موجودی شما کسر گردد. ابتدا نوع سرویس را انتخاب کنید: <b>تماس</b> یا <b>اینترنت</b>.
+            </div>
+
+            <div class="afn-mode-switch" role="tablist">
+              <button type="button" class="afn-mode-btn active" id="afnServiceTypeCallBtn" onclick="selectAfnServiceType('call')">📞 تماس (کردیت آزاد)</button>
+              <button type="button" class="afn-mode-btn" id="afnServiceTypeInternetBtn" onclick="selectAfnServiceType('internet')">🌐 اینترنت (بسته دیتا)</button>
+            </div>
+
+            <div id="afnInternetPackageGroup" class="form-group hidden">
+              <label for="afnInternetPackageSelect">انتخاب بسته اینترنت افغانستان</label>
+              <select id="afnInternetPackageSelect" onchange="onAfnInternetPackageChange()">
+                <option value="50" data-bundle-id="afn-net-1gb" data-label="بسته اینترنت 1GB (هفتگی)">بسته اینترنت 1GB (هفتگی) — 50 AFN</option>
+                <option value="120" data-bundle-id="afn-net-3gb" data-label="بسته اینترنت 3GB (ماهانه)">بسته اینترنت 3GB (ماهانه) — 120 AFN</option>
+                <option value="220" data-bundle-id="afn-net-7gb" data-label="بسته اینترنت 7GB (ماهانه)">بسته اینترنت 7GB (ماهانه) — 220 AFN</option>
+                <option value="350" data-bundle-id="afn-net-15gb" data-label="بسته اینترنت 15GB (ماهانه)">بسته اینترنت 15GB (ماهانه) — 350 AFN</option>
+              </select>
+            </div>
+
             <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
               <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
@@ -1512,6 +1680,10 @@
             <div class="mandatory-sync-banner" id="mandatoryBannerIq">
               <span class="mandatory-sync-text" id="mandatoryBannerTextIq">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnIq" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی اجباری</button>
+            </div>
+
+            <div class="warn-callout-box">
+              توجه: خرید شارژ عراق مستقیم و آنی نیست و مستقیماً به شماره فرستاده نمی‌شود؛ با ثبت درخواست، پیام برای ادمین ارسال می‌گردد تا <b>رمز شارژ (PIN)</b> را در اختیار شما قرار دهد. قیمت و کسر مبلغ کاملاً مطابق تنظیمات مدیریت است.
             </div>
 
             <div class="form-group">
@@ -1739,12 +1911,76 @@
           <textarea id="cfgIqPackagesJson" rows="3" dir="ltr" style="font-size:0.72rem;"></textarea>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="saveAppSettingsToSupabase()" style="margin-bottom:6px;">ذخیره در دیتابیس (app_settings)</button>
-        <button type="button" class="btn btn-soft-emerald" onclick="reloadAppSettingsFromDb()" style="margin-bottom:6px;">خواندن مجدد از دیتابیس</button>
+        <button type="button" class="btn btn-primary" onclick="saveAppSettingsToSupabase()" style="margin-bottom:10px;">ذخیره در دیتابیس (app_settings)</button>
+        <button type="button" class="btn btn-soft-emerald" onclick="reloadAppSettingsFromDb()" style="margin-bottom:10px;">خواندن مجدد از دیتابیس</button>
+
+        <div class="info-callout-box" style="margin-top:8px;">
+          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px;">ریست نمودن رمز طرف و تولیدش</div>
+          <div style="font-size:0.7rem; margin-bottom:6px;">شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید تا رمز جدید تولید و در حساب ذخیره شود:</div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <input type="text" id="mgmtResetAccOrPhoneInput" placeholder="مثلاً ACC-1001 یا 077xxxxxxxx" dir="ltr">
+          </div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <input type="text" id="mgmtCustomOrGeneratedPinInput" placeholder="رمز دلخواه یا خالی برای تولید خودکار ۶ رقمی" dir="ltr">
+          </div>
+          <button type="button" class="btn btn-soft-emerald" onclick="adminResetAndGenerateAccountPin()">ریست نمودن رمز طرف و تولیدش</button>
+          <div id="mgmtGeneratedPinResult" dir="ltr" style="margin-top:6px; font-size:0.76rem; font-weight:900; color:var(--emerald-900); text-align:center;"></div>
+        </div>
+
+        <div class="info-callout-box" style="margin-top:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:0.82rem; font-weight:900;">گزارش موجودی و فروش شرکت (معیار: AFN)</span>
+            <button type="button" class="mini-copy-btn" onclick="renderAdminAfnReports()">به‌روزرسانی گزارش</button>
+          </div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <label for="mgmtAfnCompanyStockInput">موجودی کل شارژ شرکت (AFN)</label>
+            <input type="number" id="mgmtAfnCompanyStockInput" value="50000" dir="ltr" oninput="renderAdminAfnReports()">
+          </div>
+          <div class="admin-report-grid">
+            <div class="admin-report-stat">
+              <small>میزان فروش کل (AFN)</small>
+              <strong id="mgmtTotalSalesAfn" class="eng-num">0 AFN</strong>
+            </div>
+            <div class="admin-report-stat">
+              <small>مجموع فروش امروز (AFN)</small>
+              <strong id="mgmtTodaySalesAfn" class="eng-num">0 AFN</strong>
+            </div>
+            <div class="admin-report-stat">
+              <small>شارژ مانده شرکت (AFN)</small>
+              <strong id="mgmtRemainingStockAfn" class="eng-num">0 AFN</strong>
+            </div>
+            <div class="admin-report-stat">
+              <small>وضعیت شارژ شرکت</small>
+              <strong id="mgmtStockStatusAfn">در دسترس</strong>
+            </div>
+          </div>
+          <div style="font-size:0.72rem; font-weight:900; margin-bottom:4px;">حساب‌هایی که خرید داشته‌اند (به AFN):</div>
+          <div id="mgmtBuyersListBox" class="admin-mini-list">---</div>
+          <div style="font-size:0.72rem; font-weight:900; margin-bottom:4px;">حساب‌هایی که خرید نداشته‌اند:</div>
+          <div id="mgmtNonBuyersListBox" class="admin-mini-list">---</div>
+        </div>
+
         <button type="button" class="btn btn-outline" onclick="logoutManagementSession()" style="margin-bottom:6px;">خروج از حالت مدیریت</button>
       </div>
 
       <button type="button" class="btn btn-outline" onclick="closeManagementModal()">بستن</button>
+    </div>
+  </div>
+
+
+  <!-- مودال شارژ کردن حساب -->
+  <div id="chargeAccountModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box" style="text-align:right;">
+      <h3 style="font-size:0.96rem; font-weight:900; color:var(--emerald-950); margin-bottom:8px;">شارژ کردن حساب</h3>
+      <div class="info-callout-box">
+        برای شارژ کردن حساب خود، می‌توانید مبلغ را به فردی که در <b>امانت‌داری کریمی</b> موجودی یا حساب دارد پرداخت کنید تا به حساب شما منتقل شود، یا مستقیماً برای هماهنگی شارژ حساب به ادمین پیام دهید.
+      </div>
+      <div class="admin-phone-box">
+        <span style="font-size:0.74rem; font-weight:800; color:var(--emerald-900);">شماره تماس ادمین:</span>
+        <strong id="chargeAccAdminPhone" class="eng-num" style="font-size:0.84rem; color:var(--emerald-950);">9647721878997</strong>
+      </div>
+      <a id="chargeAccountWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:6px;">پیام به ادمین در واتساپ برای شارژ حساب</a>
+      <button type="button" class="btn btn-outline" onclick="closeChargeAccountModal()">بستن</button>
     </div>
   </div>
 
@@ -2238,6 +2474,7 @@
         ctrlBox.classList.remove('hidden');
         lbl.innerText = activeManagementAdmin.name;
         populateManagementFormFields();
+        renderAdminAfnReports();
       } else {
         loginBox.classList.remove('hidden');
         ctrlBox.classList.add('hidden');
@@ -2292,6 +2529,7 @@
         document.getElementById('mgmtControlsBox').classList.remove('hidden');
         document.getElementById('mgmtActiveAdminLabel').innerText = activeManagementAdmin.name;
         populateManagementFormFields();
+        renderAdminAfnReports();
         updateManagementBadgeUi();
         return;
       }
@@ -2312,6 +2550,7 @@
         document.getElementById('mgmtControlsBox').classList.remove('hidden');
         document.getElementById('mgmtActiveAdminLabel').innerText = activeManagementAdmin.name;
         populateManagementFormFields();
+        renderAdminAfnReports();
         updateManagementBadgeUi();
         return;
       }
@@ -3706,6 +3945,39 @@
         return;
       }
 
+      const existingPin = getStoredPinHashForAccount(currentFoundUser, sheetAccId);
+      const legacyBox = document.getElementById('legacyNoPinSetupBox');
+      if (!existingPin) {
+        if (legacyBox) legacyBox.classList.remove('hidden');
+        const p1 = toEnglishDigits((document.getElementById('legacyInitialPinInput')?.value || '').trim());
+        const p2 = toEnglishDigits((document.getElementById('legacyInitialPinConfirmInput')?.value || '').trim());
+        if (!p1 && !p2) {
+          alert('این حساب قدیمی رمز فعالی ندارد. لطفاً یک رمز ثابت تعیین کنید (رمز را فراموش نکنید و در اختیار کسی قرار ندهید).');
+          return;
+        }
+        if (p1.length < 4) {
+          alert('رمز ثابت باید حداقل ۴ کاراکتر باشد.');
+          return;
+        }
+        if (p1 !== p2) {
+          alert('رمز تعیین‌شده و تکرار آن یکسان نیست.');
+          return;
+        }
+        showRealLoading('در حال ثبت رمز حساب...', 'ذخیره رمز جدید');
+        await initSupabaseFromEnv();
+        const newHashed = await hashPin(p1);
+        await persistPinHashInSupabase(sheetAccId, newHashed);
+        await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
+        const refreshedAcc = accountsList.find(u =>
+          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === sheetAccId.toLowerCase()
+        );
+        if (refreshedAcc) currentFoundUser = refreshedAcc;
+        hideRealLoading();
+        alert('رمز ثابت شما ثبت شد. لطفاً رمز خود را به خاطر بسپارید و در اختیار کسی قرار ندهید.');
+      } else if (legacyBox) {
+        legacyBox.classList.add('hidden');
+      }
+
       showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
       await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       hideRealLoading();
@@ -3784,7 +4056,9 @@
       }
 
       playSound('success');
-      alert(`حساب ثبت شد. کد حساب: ${accId}`);
+      alert(`حساب شما با موفقیت ثبت شد.
+کد حساب: ${accId}
+رمز ثابت انتخابی شما هم برای ورود و هم برای تایید تراکنش‌ها استفاده می‌شود. لطفاً رمز را به خاطر بسپارید و در اختیار کسی قرار ندهید.`);
       document.getElementById('phoneInput').value = phone;
       navigateToStep('phone');
     }
@@ -4311,7 +4585,8 @@
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
+        const afnBundleMeta = getSelectedAfnBundleMeta();
+        payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate, bundle_id: afnBundleMeta.bundle_id, serviceLabel: afnBundleMeta.label };
         summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
@@ -5012,6 +5287,231 @@
       const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
+    let selectedAfnServiceMode = 'call';
+
+    function selectAfnServiceType(mode) {
+      playSound('click');
+      selectedAfnServiceMode = (mode === 'internet') ? 'internet' : 'call';
+      const callBtn = document.getElementById('afnServiceTypeCallBtn');
+      const netBtn = document.getElementById('afnServiceTypeInternetBtn');
+      const netGroup = document.getElementById('afnInternetPackageGroup');
+      const amtInput = document.getElementById('afnAmountInput');
+
+      if (callBtn) callBtn.classList.toggle('active', selectedAfnServiceMode === 'call');
+      if (netBtn) netBtn.classList.toggle('active', selectedAfnServiceMode === 'internet');
+      if (netGroup) netGroup.classList.toggle('hidden', selectedAfnServiceMode !== 'internet');
+
+      if (selectedAfnServiceMode === 'internet') {
+        if (amtInput) amtInput.readOnly = true;
+        onAfnInternetPackageChange();
+      } else {
+        if (amtInput) amtInput.readOnly = false;
+        recalcTopupCost();
+      }
+    }
+
+    function onAfnInternetPackageChange() {
+      const pkgSel = document.getElementById('afnInternetPackageSelect');
+      const amtInput = document.getElementById('afnAmountInput');
+      if (!pkgSel || !amtInput) return;
+      const val = parseFloat(toEnglishDigits(pkgSel.value)) || 0;
+      if (val > 0) {
+        amtInput.value = String(val);
+      }
+      recalcTopupCost();
+    }
+
+    function getSelectedAfnBundleMeta() {
+      if (selectedAfnServiceMode !== 'internet') {
+        return { serviceType: 'call', bundle_id: undefined, label: 'کردیت تماس' };
+      }
+      const pkgSel = document.getElementById('afnInternetPackageSelect');
+      const opt = pkgSel && pkgSel.selectedIndex >= 0 ? pkgSel.options[pkgSel.selectedIndex] : null;
+      return {
+        serviceType: 'internet',
+        bundle_id: opt ? (opt.getAttribute('data-bundle-id') || undefined) : undefined,
+        label: opt ? (opt.getAttribute('data-label') || opt.textContent.trim()) : 'بسته اینترنت'
+      };
+    }
+
+    function openChargeAccountModal() {
+      playSound('click');
+      const phoneEl = document.getElementById('chargeAccAdminPhone');
+      const waBtn = document.getElementById('chargeAccountWhatsAppBtn');
+      if (phoneEl) phoneEl.innerText = OWNER_WHATSAPP;
+
+      const accName = currentFoundUser ? (getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری') : 'مشتری';
+      const accId = currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim() : (localStorage.getItem('karimi_accId') || '---');
+      const accPhone = currentFoundUser ? toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '') : (localStorage.getItem('karimi_phone') || '');
+      const msg = `درخواست شارژ کردن حساب — امانت‌داری کریمی
+نام: ${accName}
+کد حساب: ${accId}
+شماره: ${accPhone || '---'}
+توضیح: لطفاً نحوه واریز وجه از طریق فرد دارای حساب یا هماهنگی شارژ حساب را اعلام فرمایید.`;
+
+      if (waBtn) {
+        waBtn.href = `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+      }
+      const modal = document.getElementById('chargeAccountModal');
+      if (modal) modal.classList.remove('hidden');
+      ensureSentinelHistory();
+    }
+
+    function closeChargeAccountModal() {
+      playSound('click');
+      const modal = document.getElementById('chargeAccountModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function parseAfnAmountFromTx(tx) {
+      const desc = String(getVal(tx, ['Description', 'description', 'desc']) || '');
+      const matchAfn = toEnglishDigits(desc).match(/مبلغ\s*([0-9,.]+)\s*AFN/i);
+      if (matchAfn && matchAfn[1]) {
+        const n = parseFloat(matchAfn[1].replace(/,/g, ''));
+        if (!isNaN(n) && n > 0) return n;
+      }
+      const curr = String(getVal(tx, ['Currency', 'currency']) || '').toUpperCase();
+      const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
+      if (curr === 'AFN') return amt > 0 ? amt : 0;
+      if (curr === 'IQD' && amt > 0) {
+        const rate = getAfnExchangeRate();
+        return rate > 0 ? Math.round((amt / rate) * 100) / 100 : amt;
+      }
+      return 0;
+    }
+
+    function renderAdminAfnReports() {
+      const stockInput = document.getElementById('mgmtAfnCompanyStockInput');
+      const totalSalesEl = document.getElementById('mgmtTotalSalesAfn');
+      const todaySalesEl = document.getElementById('mgmtTodaySalesAfn');
+      const remStockEl = document.getElementById('mgmtRemainingStockAfn');
+      const statusEl = document.getElementById('mgmtStockStatusAfn');
+      const buyersBox = document.getElementById('mgmtBuyersListBox');
+      const nonBuyersBox = document.getElementById('mgmtNonBuyersListBox');
+      if (!totalSalesEl || !todaySalesEl || !remStockEl || !buyersBox || !nonBuyersBox) return;
+
+      const initialStock = parseFloat(toEnglishDigits(stockInput ? stockInput.value : '50000')) || 0;
+      const todayStr = extractDateOnly(new Date().toISOString());
+
+      let totalSalesAfn = 0;
+      let todaySalesAfn = 0;
+      const buyerTotalsByAcc = {};
+
+      transactionsList.forEach(tx => {
+        const op = String(getVal(tx, ['OperationType', 'operationtype', 'type']) || '').trim();
+        const isTopup = isChargeTransaction(tx) || op.includes('شارژ') || op.includes('کردیت');
+        if (!isTopup) return;
+        const afnVal = parseAfnAmountFromTx(tx);
+        if (afnVal <= 0) return;
+
+        totalSalesAfn += afnVal;
+        const txDate = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '');
+        if (txDate === todayStr) {
+          todaySalesAfn += afnVal;
+        }
+        const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
+        if (accId) {
+          buyerTotalsByAcc[accId] = (buyerTotalsByAcc[accId] || 0) + afnVal;
+        }
+      });
+
+      const remainingStockAfn = initialStock - totalSalesAfn;
+      totalSalesEl.innerText = `${formatEnMoney(Math.round(totalSalesAfn * 100) / 100)} AFN`;
+      todaySalesEl.innerText = `${formatEnMoney(Math.round(todaySalesAfn * 100) / 100)} AFN`;
+      remStockEl.innerText = `${formatEnMoney(Math.round(remainingStockAfn * 100) / 100)} AFN`;
+
+      if (statusEl) {
+        if (remainingStockAfn > 0) {
+          statusEl.innerText = 'شارژ مانده است';
+          statusEl.style.color = 'var(--emerald-800)';
+        } else {
+          statusEl.innerText = 'شارژ تمام شده (نمانده)';
+          statusEl.style.color = 'var(--danger)';
+        }
+      }
+
+      const buyers = [];
+      const nonBuyers = [];
+
+      accountsList.forEach(acc => {
+        const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        const name = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
+        const spentAfn = buyerTotalsByAcc[accId.toLowerCase()] || 0;
+        if (spentAfn > 0) {
+          buyers.push({ name, accId, spentAfn });
+        } else {
+          nonBuyers.push({ name, accId });
+        }
+      });
+
+      buyers.sort((a, b) => b.spentAfn - a.spentAfn);
+
+      buyersBox.innerHTML = buyers.length
+        ? buyers.map(b => `<div class="admin-mini-item"><span>${b.name} (${b.accId})</span><span class="eng-num">${formatEnMoney(Math.round(b.spentAfn * 100) / 100)} AFN</span></div>`).join('')
+        : '<div style="font-size:0.72rem; color:var(--slate-500);">هنوز خریدی ثبت نشده است.</div>';
+
+      nonBuyersBox.innerHTML = nonBuyers.length
+        ? nonBuyers.map(nb => `<div class="admin-mini-item"><span>${nb.name} (${nb.accId})</span><span>بدون خرید</span></div>`).join('')
+        : '<div style="font-size:0.72rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
+    }
+
+    async function adminResetAndGenerateAccountPin() {
+      playSound('click');
+      if (!activeManagementAdmin) {
+        alert('ابتدا وارد بخش مدیریت شوید.');
+        return;
+      }
+      const queryVal = toEnglishDigits(document.getElementById('mgmtResetAccOrPhoneInput').value.trim());
+      const customPin = toEnglishDigits(document.getElementById('mgmtCustomOrGeneratedPinInput').value.trim());
+      const resBox = document.getElementById('mgmtGeneratedPinResult');
+
+      if (!queryVal) {
+        alert('شناسه حساب یا شماره تماس مشتری را وارد کنید.');
+        return;
+      }
+
+      showRealLoading('در حال ریست و تولید رمز...', 'به‌روزرسانی حساب در دیتابیس');
+      await fetchDataFromSupabaseFresh();
+
+      const qLower = queryVal.toLowerCase();
+      const qLast9 = getLast9Digits(queryVal);
+      const targetAcc = accountsList.find(acc => {
+        const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
+        const phLast9 = getLast9Digits(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']));
+        return aid === qLower || (qLast9.length >= 9 && phLast9 === qLast9);
+      });
+
+      if (!targetAcc) {
+        hideRealLoading();
+        alert('حسابی با این شناسه یا شماره پیدا نشد.');
+        return;
+      }
+
+      const targetAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+      const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const newPin = customPin.length >= 4
+        ? customPin
+        : String(Math.floor(100000 + Math.random() * 900000));
+
+      const hashed = await hashPin(newPin);
+      const ok = await persistPinHashInSupabase(targetAccId, hashed);
+      await fetchDataFromSupabaseFresh();
+      hideRealLoading();
+
+      if (!ok) {
+        alert('خطا در ذخیره رمز جدید در دیتابیس.');
+        return;
+      }
+
+      playSound('success');
+      if (resBox) {
+        resBox.innerHTML = `رمز جدید برای <b>${targetName}</b> (${targetAccId}): <span style="user-select:all; background:var(--white); padding:2px 6px; border-radius:6px; border:1px solid #86efac;">${newPin}</span>`;
+      }
+      alert(`رمز جدید برای ${targetName} (${targetAccId}) تولید و ذخیره شد:
+${newPin}
+لطفاً این رمز را به صورت امن به صاحب حساب تحویل دهید.`);
+    }
+
   </script>
 </body>
 </html>
