@@ -1309,27 +1309,31 @@
 
       </div>
 
-      <!-- گام ۲: تایید کد حساب -->
+      <!-- گام ۲: ورود با پین / پسورد یا ایجاد رمز برای حساب بدون رمز -->
       <div id="accountSection" class="hidden" style="margin:auto 0;">
         <div class="quick-grid-card" style="text-align:center; padding:20px 16px;">
           <div id="greetingMsg" style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:4px;"></div>
-          <div id="candidateManagerHint" style="font-size:0.74rem; color:var(--emerald-700); font-weight:800; margin-bottom:12px;"></div>
+          <div id="candidateManagerHint" style="font-size:0.74rem; color:var(--emerald-700); font-weight:800; margin-bottom:10px;"></div>
           <div class="form-group">
             <label for="accountIdInput">کد حساب (Account ID)</label>
             <input type="text" id="accountIdInput" placeholder="Account ID" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
+          <div id="loginPinRequiredBox" class="form-group">
+            <label for="loginAccountPinInput">پین / پسورد حساب (الزامی برای ورود)</label>
+            <input type="password" id="loginAccountPinInput" placeholder="پین یا پسورد خود را وارد کنید" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
+          </div>
           <div id="legacyNoPinSetupBox" class="warn-callout-box hidden">
-            <div style="margin-bottom:6px;">این حساب قدیمی رمز فعالی ندارد. لطفاً یک رمز ثابت برای ورود و تایید تراکنش‌ها تعیین کنید؛ این رمز را فراموش نکنید و در اختیار کسی قرار ندهید.</div>
+            <div style="margin-bottom:6px;">این حساب رمز یا پسورد فعالی ندارد و برای ادامه ملزم به ایجاد پسورد/پین است. لطفاً رمز ثابت خود را تعیین کنید (حداقل ۶ کاراکتر شامل حروف کوچک، بزرگ و عدد یا پین امن).</div>
             <div class="form-group" style="margin-bottom:6px;">
-              <label for="legacyInitialPinInput">تعیین رمز ثابت جدید</label>
-              <input type="password" id="legacyInitialPinInput" placeholder="حداقل ۴ کاراکتر" dir="ltr">
+              <label for="legacyInitialPinInput">ایجاد پسورد / پین جدید</label>
+              <input type="password" id="legacyInitialPinInput" placeholder="پسورد جدید" dir="ltr">
             </div>
             <div class="form-group" style="margin-bottom:0;">
-              <label for="legacyInitialPinConfirmInput">تکرار رمز ثابت جدید</label>
-              <input type="password" id="legacyInitialPinConfirmInput" placeholder="تکرار رمز" dir="ltr">
+              <label for="legacyInitialPinConfirmInput">تکرار پسورد / پین جدید</label>
+              <input type="password" id="legacyInitialPinConfirmInput" placeholder="تکرار پسورد" dir="ltr">
             </div>
           </div>
-          <button type="button" class="btn btn-primary" onclick="verifyAccount()">ورود</button>
+          <button type="button" class="btn btn-primary" onclick="verifyAccount()">ورود با پین / پسورد</button>
           <button type="button" class="btn btn-outline" style="margin-top:8px;" onclick="navigateToStep('phone')">بازگشت</button>
         </div>
       </div>
@@ -2047,23 +2051,26 @@
     </div>
   </div>
 
-  <!-- مودال تایید عملیات (اثر انگشت/قفل گوشی + گزینه رمز ثابت پشتیبان) -->
+  <!-- مودال تایید تراکنش: اولویت با پسورد/پین؛ اثر انگشت اختیاری و هر بار نیاز به تایید مجدد -->
   <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
-      <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید عملیات</h3>
-      <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--slate-700); line-height:1.6; margin-bottom:10px;"></p>
-
-      <div id="txBiometricActionBox" style="margin-bottom:10px;">
-        <button type="button" class="btn btn-primary" onclick="confirmOperationWithDeviceLock()">
-          تایید با اثر انگشت / قفل گوشی
-        </button>
+      <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید تراکنش با پسورد / پین</h3>
+      <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--slate-700); line-height:1.6; margin-bottom:8px;"></p>
+      <div class="warn-callout-box" style="font-size:0.69rem; margin-bottom:10px;">
+        تایید تراکنش بر اساس <b>پسورد / پین حساب</b> در اولویت است تا در صورت باز بودن حساب در دستگاه دیگر، از اثر انگشت آن گوشی استفاده نشود. گزینه اثر انگشت اختیاری است و در هر بار خروج/اقدام نیاز به تایید مجدد دارد.
       </div>
 
       <div id="txFallbackPinBox">
         <div class="form-group">
-          <input type="password" id="txVerifyPinInput" placeholder="رمز ثابت (پشتیبان)" dir="ltr" onkeydown="if(event.key==='Enter') confirmPendingOperation()">
+          <input type="password" id="txVerifyPinInput" placeholder="پسورد / پین حساب (اولویت اصلی)" dir="ltr" onkeydown="if(event.key==='Enter') confirmPendingOperation()">
         </div>
-        <button type="button" class="btn btn-soft-emerald" onclick="confirmPendingOperation()" style="margin-bottom:6px;">تایید با رمز ثابت</button>
+        <button type="button" class="btn btn-primary" onclick="confirmPendingOperation()" style="margin-bottom:8px;">تایید تراکنش با پسورد / پین</button>
+      </div>
+
+      <div id="txBiometricActionBox" style="margin-bottom:8px;">
+        <button type="button" class="btn btn-soft-emerald" onclick="confirmOperationWithDeviceLock()">
+          تایید اختیاری با اثر انگشت / قفل گوشی
+        </button>
       </div>
 
       <button type="button" class="btn btn-outline" onclick="closeTxPinConfirmModal()">انصراف</button>
@@ -4139,11 +4146,21 @@
 
       if (found) {
         currentFoundUser = found;
+        const accIdVal = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        const hasExistingPin = Boolean(getStoredPinHashForAccount(currentFoundUser, accIdVal));
         const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
         const cpName = resolveCounterpartyName(currentFoundUser);
         document.getElementById('greetingMsg').innerText = `${nameVal}`;
         document.getElementById('candidateManagerHint').innerText = `طرف حساب: ${cpName}`;
         document.getElementById('accountIdInput').value = '';
+        const loginPinInp = document.getElementById('loginAccountPinInput');
+        if (loginPinInp) loginPinInp.value = '';
+        const lPin1 = document.getElementById('legacyInitialPinInput');
+        const lPin2 = document.getElementById('legacyInitialPinConfirmInput');
+        if (lPin1) lPin1.value = '';
+        if (lPin2) lPin2.value = '';
+        document.getElementById('loginPinRequiredBox')?.classList.toggle('hidden', !hasExistingPin);
+        document.getElementById('legacyNoPinSetupBox')?.classList.toggle('hidden', hasExistingPin);
         navigateToStep('account');
         setTimeout(() => document.getElementById('accountIdInput').focus(), 100);
       } else {
@@ -4171,23 +4188,25 @@
 
       const existingPin = getStoredPinHashForAccount(currentFoundUser, sheetAccId);
       const legacyBox = document.getElementById('legacyNoPinSetupBox');
+      const loginPinBox = document.getElementById('loginPinRequiredBox');
       if (!existingPin) {
         if (legacyBox) legacyBox.classList.remove('hidden');
+        if (loginPinBox) loginPinBox.classList.add('hidden');
         const p1 = toEnglishDigits((document.getElementById('legacyInitialPinInput')?.value || '').trim());
         const p2 = toEnglishDigits((document.getElementById('legacyInitialPinConfirmInput')?.value || '').trim());
         if (!p1 && !p2) {
-          alert('این حساب قدیمی رمز فعالی ندارد. لطفاً یک رمز ثابت تعیین کنید (رمز را فراموش نکنید و در اختیار کسی قرار ندهید).');
+          alert('این حساب رمز یا پسورد فعالی ندارد. لطفاً یک پسورد/پین جدید ایجاد کنید.');
           return;
         }
-        if (p1.length < 4) {
-          alert('رمز ثابت باید حداقل ۴ کاراکتر باشد.');
+        if (p1.length < 6 || !/[a-z]/.test(p1) || !/[A-Z]/.test(p1) || !/[0-9]/.test(p1)) {
+          alert('پسورد جدید باید حداقل ۶ کاراکتر و شامل حروف کوچک، حروف بزرگ و عدد باشد.');
           return;
         }
         if (p1 !== p2) {
-          alert('رمز تعیین‌شده و تکرار آن یکسان نیست.');
+          alert('پسورد تعیین‌شده و تکرار آن یکسان نیست.');
           return;
         }
-        showRealLoading('در حال ثبت رمز حساب...', 'ذخیره رمز جدید');
+        showRealLoading('در حال ثبت پسورد حساب...', 'ذخیره پسورد جدید');
         await initSupabaseFromEnv();
         const newHashed = await hashPin(p1);
         await persistPinHashInSupabase(sheetAccId, newHashed);
@@ -4197,9 +4216,20 @@
         );
         if (refreshedAcc) currentFoundUser = refreshedAcc;
         hideRealLoading();
-        alert('رمز ثابت شما ثبت شد. لطفاً رمز خود را به خاطر بسپارید و در اختیار کسی قرار ندهید.');
-      } else if (legacyBox) {
-        legacyBox.classList.add('hidden');
+        alert('پسورد حساب شما با موفقیت ایجاد و ثبت شد. لطفاً آن را حفظ کنید و در اختیار دیگران قرار ندهید.');
+      } else {
+        if (legacyBox) legacyBox.classList.add('hidden');
+        if (loginPinBox) loginPinBox.classList.remove('hidden');
+        const enteredPin = toEnglishDigits((document.getElementById('loginAccountPinInput')?.value || '').trim());
+        if (!enteredPin) {
+          alert('ورود این حساب از طریق پین/پسورد است. لطفاً پسورد یا پین خود را وارد کنید.');
+          return;
+        }
+        const hashedEntered = await hashPin(enteredPin);
+        if (hashedEntered !== existingPin && enteredPin !== existingPin) {
+          alert('پین یا پسورد واردشده صحیح نیست.');
+          return;
+        }
       }
 
       showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
@@ -4635,9 +4665,7 @@
       document.getElementById('txVerifyPinInput').value = '';
       document.getElementById('txPinConfirmModal').classList.remove('hidden');
       ensureSentinelHistory();
-      if (!txBioEnabled) {
-        setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
-      }
+      setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
     }
 
     async function prepareTransferWithPin() {
