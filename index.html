@@ -4198,27 +4198,42 @@
         let apiRef = txId;
         let lastErr = '';
 
+
+        const AFN_OPERATOR_MAP = {
+          'ام‌تی‌ان': 'atoma',
+          'افغان بی‌سیم': 'awcc',
+          'سلام': 'salam',
+          'روشن': 'roshan',
+          'اتصالات': 'etisalat'
+        };
+
+        function resolveAfnOperatorCode(netLabel) {
+          const clean = String(netLabel || '').trim();
+          const lower = clean.toLowerCase();
+          if (AFN_OPERATOR_MAP[clean]) return AFN_OPERATOR_MAP[clean];
+          if (['atoma', 'awcc', 'salam', 'roshan', 'etisalat'].includes(lower)) return lower;
+          return 'atoma';
+        }
+
         const endpointUrl = appSettingsState.afn_api_endpoint || '/api/iimobile-topup';
         const modeVal = appSettingsState.afn_api_mode || 'telegram_relay';
+        const resolvedOp = resolveAfnOperatorCode(payload.afnNetwork);
+        const resolvedBundleId = String(payload.bundle_id || '543212506').trim();
 
-        if (!appSettingsState.afn_api_enabled) {
-          apiOk = true;
-          apiRef = `MANUAL-${txId}`;
-        } else {
-          try {
-            const resp = await fetch(endpointUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                operator: 'atoma',
-                mode: modeVal,
-                network: payload.afnNetwork || 'ام‌تی‌ان',
-                phone: intlPhone,
-                bundle_id: payload.bundle_id || undefined,
-                amount: Number(payload.afnAmt),
-                rate: Number(payload.rate || getAfnExchangeRate())
-              })
-            });
+        try {
+          const resp = await fetch(endpointUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              operator: resolvedOp,
+              mode: modeVal,
+              network: payload.afnNetwork || 'ام‌تی‌ان',
+              phone: intlPhone,
+              bundle_id: resolvedBundleId,
+              amount: Number(payload.afnAmt),
+              rate: Number(payload.rate || getAfnExchangeRate())
+            })
+          });
             const rawText = await resp.text();
             let json = null;
             try { json = JSON.parse(rawText); } catch (e) { json = null; }
