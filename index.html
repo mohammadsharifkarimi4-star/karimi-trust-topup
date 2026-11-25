@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -1477,6 +1478,15 @@
     </div>
   </div>
 
+    <!-- مودال نمایش دقیق پیام انگلیسی سرور شارژ -->
+  <div id="topupRawErrorModal" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box">
+      <h3 style="font-size:0.96rem; font-weight:900; color:var(--danger); margin-bottom:8px;">خطا در انجام شارژ</h3>
+      <div id="topupRawErrorEnglishText" dir="ltr" style="background:var(--danger-soft); border:1.5px solid #fca5a5; color:#991b1b; border-radius:12px; padding:12px; font-family:monospace, sans-serif; font-size:0.84rem; font-weight:700; text-align:left; word-break:break-word; margin-bottom:12px; line-height:1.5;"></div>
+      <button type="button" class="btn btn-primary" onclick="closeTopupRawErrorModal()">بستن</button>
+    </div>
+  </div>
+
   <!-- مودال رسید تراکنش -->
   <div id="txDetailModal" class="fullscreen-modal">
     <div class="modal-header">
@@ -1491,7 +1501,8 @@
         </div>
         <div id="modalBody" style="display:flex; flex-direction:column; gap:9px;"></div>
       </div>
-      <button type="button" class="btn btn-whatsapp" onclick="shareReceiptToWhatsApp()">ارسال در واتساپ</button>
+      <button type="button" id="receiptSendAdminWaBtn" class="btn btn-whatsapp hidden" onclick="sendCurrentIraqTopupToAdminWhatsApp()">ارسال درخواست به واتساپ ادمین</button>
+      <button type="button" class="btn btn-whatsapp" onclick="shareReceiptToWhatsApp()">ارسال رسید در واتساپ</button>
       <button type="button" class="btn btn-primary" onclick="closeTxDetailModal()">تایید و بستن رسید</button>
     </div>
   </div>
@@ -1552,8 +1563,98 @@
         <div class="receipt-row"><span class="receipt-label">شرح</span><span class="receipt-val">${descStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
       `;
+      const adminWaBtn = document.getElementById('receiptSendAdminWaBtn');
+      if (adminWaBtn) {
+        const isIqTopup = String(opType).trim() === 'شارژ عراق';
+        if (isIqTopup) {
+          const phoneVal = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
+          lastIraqTopupAdminUrl = buildIraqTopupAdminWhatsAppUrl({
+            accName: nameVal,
+            accId: String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '---'),
+            accPhone: phoneVal,
+            network: descStr,
+            cardAmt: amountVal,
+            txId: transId,
+            dateStr: `${dateOnly} ${timeStr}`
+          });
+          adminWaBtn.classList.remove('hidden');
+        } else {
+          adminWaBtn.classList.add('hidden');
+        }
+      }
       document.getElementById('txDetailModal').classList.add('open');
       ensureSentinelHistory();
+    }
+
+
+    function showTopupRawErrorModal(rawEnglishMsg) {
+      const box = document.getElementById('topupRawErrorEnglishText');
+      if (box) box.textContent = String(rawEnglishMsg || 'Unknown error');
+      const modal = document.getElementById('topupRawErrorModal');
+      if (modal) modal.classList.remove('hidden');
+      ensureSentinelHistory();
+    }
+
+    function closeTopupRawErrorModal() {
+      playSound('click');
+      const modal = document.getElementById('topupRawErrorModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function resetAllOperationForms() {
+      const tAcc = document.getElementById('transferTargetAccIdInput');
+      const tPhone = document.getElementById('transferTargetPhoneInput');
+      const tAmt = document.getElementById('transferAmountInput');
+      if (tAcc) tAcc.value = '';
+      if (tPhone) tPhone.value = '';
+      if (tAmt) tAmt.value = '';
+      const tPrev = document.getElementById('transferRecipientPreview');
+      if (tPrev) {
+        tPrev.className = 'recipient-preview-box invalid';
+        tPrev.innerHTML = '<span>مقصد</span><span>کد حساب و شماره تماس را وارد کنید</span>';
+      }
+
+      const afnPhone = document.getElementById('afnTargetPhone');
+      const afnAmt = document.getElementById('afnAmountInput');
+      const afnErr = document.getElementById('topupAfnEligibilityMsg');
+      if (afnPhone) afnPhone.value = '';
+      if (afnAmt) afnAmt.value = '';
+      if (afnErr) afnErr.innerText = '';
+
+      const iqNet = document.getElementById('iqNetworkSelect');
+      const iqCard = document.getElementById('iqCardSelect');
+      const iqErr = document.getElementById('topupIqEligibilityMsg');
+      if (iqNet && iqNet.options.length > 0) iqNet.selectedIndex = 0;
+      if (iqCard && iqCard.options.length > 0) iqCard.selectedIndex = 0;
+      if (iqErr) iqErr.innerText = '';
+
+      const pinInput = document.getElementById('txVerifyPinInput');
+      if (pinInput) pinInput.value = '';
+
+      recalcTransferBox();
+      recalcTopupCost();
+    }
+
+    function buildIraqTopupAdminWhatsAppUrl(data) {
+      const msgLines = [
+        'درخواست شارژ عراق — امانت‌داری کریمی',
+        `نام مشتری: ${data.accName}`,
+        `کد حساب: ${data.accId}`,
+        `شماره مشتری: ${data.accPhone || '---'}`,
+        `شبکه: ${data.network}`,
+        `مبلغ شارژ: ${formatEnMoney(data.cardAmt)} IQD`,
+        `کد سند: ${data.txId}`,
+        `تاریخ و ساعت: ${data.dateStr}`
+      ];
+      return `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msgLines.join('\n'))}`;
+    }
+
+    let lastIraqTopupAdminUrl = '';
+
+    function sendCurrentIraqTopupToAdminWhatsApp() {
+      playSound('click');
+      if (!lastIraqTopupAdminUrl) return;
+      window.open(lastIraqTopupAdminUrl, '_blank');
     }
 
     function initAdminContactFromDataCode() {
@@ -2106,7 +2207,7 @@
         selectedTxItem = null;
         return true;
       }
-      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal'];
+      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
@@ -2121,6 +2222,7 @@
     function collapseServiceForms() {
       if (!activeServiceMode) return false;
       activeServiceMode = null;
+      resetAllOperationForms();
       document.getElementById('panelTransfer')?.classList.add('collapsed');
       document.getElementById('panelTopupAfn')?.classList.add('collapsed');
       document.getElementById('panelTopupIq')?.classList.add('collapsed');
@@ -2444,6 +2546,7 @@
       document.getElementById('qTileAfn').classList.toggle('active-mode', mode === 'afn');
       document.getElementById('qTileIq').classList.toggle('active-mode', mode === 'iq');
 
+      resetAllOperationForms();
       if (mode === 'transfer') {
         populateTransferCurrencies();
         previewTransferRecipient();
@@ -2819,6 +2922,47 @@
       }
     }
 
+    function recomputeCustomerBalances(sheetAccId) {
+      const rawUserTxs = getUserVisibleTransactions(sheetAccId);
+      customerTransactions = sortChronologically(rawUserTxs, false);
+      customerBalances = {};
+      customerTransactions.forEach(tx => {
+        const curr = String(getVal(tx, ['Currency', 'currency']) || 'IQD').toUpperCase();
+        const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
+        const dir = String(getVal(tx, ['Direction', 'direction'])).trim();
+        if (!customerBalances[curr]) customerBalances[curr] = { credit: 0, debit: 0, net: 0 };
+        if (dir.includes('بستانکار') || dir.includes('دریافت')) customerBalances[curr].credit += amt;
+        else if (dir.includes('بدهکار') || dir.includes('پرداخت')) customerBalances[curr].debit += amt;
+      });
+      for (let c in customerBalances) {
+        customerBalances[c].net = customerBalances[c].credit - customerBalances[c].debit;
+      }
+      currencyList = Object.keys(customerBalances);
+      if (currencyList.length === 0) {
+        currencyList = ['IQD'];
+        customerBalances['IQD'] = { credit: 0, debit: 0, net: 0 };
+      }
+      if (activeCurrencyIndex >= currencyList.length) activeCurrencyIndex = 0;
+      renderCurrencyTabs();
+      recalcTransferBox();
+      recalcTopupCost();
+    }
+
+    async function forceSyncBeforeOperation(accId) {
+      showRealLoading('در حال تازه‌سازی اجباری حساب...', 'بررسی آخرین موجودی و تغییرات');
+      await fetchDataFromSupabaseFresh();
+      if (accId) {
+        const found = accountsList.find(u =>
+          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === String(accId).trim().toLowerCase()
+        );
+        if (found) currentFoundUser = found;
+        recomputeCustomerBalances(accId);
+        renderTransactionsList();
+        updateLastSyncLabel();
+      }
+      hideRealLoading();
+    }
+
     // ================= انتقال موجودی =================
     function populateTransferCurrencies() {
       const sel = document.getElementById('transferCurrencySelect');
@@ -2906,13 +3050,14 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
+      const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      await forceSyncBeforeOperation(myAccId);
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
       const phQ = document.getElementById('transferTargetPhoneInput').value.trim();
       const targetAcc = findRecipientByIdAndPhone(idQ, phQ);
       const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
       const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
       const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
-      const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
 
       if (!targetAcc) {
@@ -2987,9 +3132,11 @@
 
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
-      const netIqd = getNetIqdBalance();
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      await forceSyncBeforeOperation(accId);
+      const netIqd = getNetIqdBalance();
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const accPhone = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
 
       let payloadData = null;
       let summaryHtml = '';
@@ -3018,7 +3165,7 @@
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'iq', accId, accName, network, cardAmt };
+        payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt };
         summaryHtml = `شارژ <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>)`;
       }
 
@@ -3138,11 +3285,10 @@
         return;
       }
 
-      document.getElementById('transferAmountInput').value = '';
-      document.getElementById('transferTargetAccIdInput').value = '';
-      document.getElementById('transferTargetPhoneInput').value = '';
+      resetAllOperationForms();
       await fetchDataFromSupabaseFresh();
       processDashboard(d.fromId, false);
+      resetAllOperationForms();
       updateLastSyncLabel();
       const curIds = getUserTransactionIds(d.fromId);
       try { localStorage.setItem(`karimi_seen_tx_ids_${d.fromId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
@@ -3179,21 +3325,28 @@
               amount: Number(payload.afnAmt)
             })
           });
-          const json = await resp.json().catch(() => ({}));
+          const rawText = await resp.text();
+          let json = null;
+          try { json = JSON.parse(rawText); } catch (e) { json = null; }
+
           if (resp.ok && json && json.ok) {
             apiOk = true;
             if (json.txid) apiRef = `REF-${json.txid}`;
           } else {
-            lastErr = (json && json.error) ? json.error : `HTTP ${resp.status}`;
+            const exactServerMsg =
+              (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) ||
+              (rawText && rawText.trim()) ||
+              `HTTP ${resp.status} ${resp.statusText || ''}`.trim();
+            lastErr = typeof exactServerMsg === 'string' ? exactServerMsg : JSON.stringify(exactServerMsg);
           }
         } catch (err) {
-          lastErr = err && err.message ? err.message : 'خطای ارتباط با سرور';
+          lastErr = err && err.message ? String(err.message) : 'Network Error';
         }
 
         if (!apiOk) {
           hideRealLoading();
-          notifyAccountEvent('ارسال شارژ ناموفق', `${lastErr || 'پاسخ مثبت دریافت نشد'}`);
-          alert(lastErr || 'ارسال شارژ انجام نشد.');
+          notifyAccountEvent('ارسال شارژ ناموفق', lastErr);
+          showTopupRawErrorModal(lastErr);
           return;
         }
 
@@ -3217,10 +3370,10 @@
           return;
         }
 
-        document.getElementById('afnTargetPhone').value = '';
-        document.getElementById('afnAmountInput').value = '';
+        resetAllOperationForms();
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
+        resetAllOperationForms();
         updateLastSyncLabel();
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
@@ -3260,10 +3413,10 @@
           return;
         }
 
-        const iqSel = document.getElementById('iqCardSelect');
-        if (iqSel && iqSel.options.length > 0) iqSel.selectedIndex = 0;
+        resetAllOperationForms();
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
+        resetAllOperationForms();
         updateLastSyncLabel();
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
@@ -3271,7 +3424,21 @@
           notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
         }
 
+        const dateOnlyNow = extractDateOnly(nowIso);
+        const timeOnlyNow = extractTimeOnly(nowIso) || '';
+        const waAdminUrl = buildIraqTopupAdminWhatsAppUrl({
+          accName: payload.accName,
+          accId: payload.accId,
+          accPhone: payload.accPhone || toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---'),
+          network: payload.network,
+          cardAmt: payload.cardAmt,
+          txId: txId,
+          dateStr: `${dateOnlyNow} ${timeOnlyNow}`.trim()
+        });
+        lastIraqTopupAdminUrl = waAdminUrl;
+
         showReceiptForTransactionData(iqTxRow);
+        window.open(waAdminUrl, '_blank');
       }
     }
 
