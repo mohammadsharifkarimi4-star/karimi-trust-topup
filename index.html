@@ -1492,17 +1492,6 @@
             </div>
 
             <div class="form-group">
-              <label for="afnNetworkSelect">انتخاب شبکه</label>
-              <select id="afnNetworkSelect" onchange="recalcTopupCost()">
-                <option value="ام‌تی‌ان">ام‌تی‌ان</option>
-                <option value="افغان بی‌سیم">افغان بی‌سیم</option>
-                <option value="سلام">سلام</option>
-                <option value="روشن">روشن</option>
-                <option value="اتصالات">اتصالات</option>
-              </select>
-            </div>
-
-            <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
               <input type="tel" id="afnTargetPhone" maxlength="10" placeholder="07xxxxxxxx" dir="ltr" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
@@ -1976,14 +1965,6 @@
     }
 
     function populateAfnAndIqSelectorsFromSettings() {
-      const afnSel = document.getElementById('afnNetworkSelect');
-      if (afnSel) {
-        const prev = afnSel.value;
-        afnSel.innerHTML = DEFAULT_AFN_NETWORKS.map(net => `<option value="${net}">${net}</option>`).join('');
-        if (prev && DEFAULT_AFN_NETWORKS.includes(prev)) afnSel.value = prev;
-        else afnSel.selectedIndex = 0;
-      }
-
       const iqNetSel = document.getElementById('iqNetworkSelect');
       if (iqNetSel) {
         const prevNet = iqNetSel.value;
@@ -4001,6 +3982,41 @@
       }
     }
 
+    // تشخیص خودکار شبکه و پیش‌شماره معتبر شبکه‌های تایید شده افغانستان در پشت صحنه
+    const AFN_PREFIX_OPERATOR_MAP = {
+      '070': { code: 'awcc', label: 'افغان بی‌سیم' },
+      '071': { code: 'awcc', label: 'افغان بی‌سیم' },
+      '072': { code: 'roshan', label: 'روشن' },
+      '079': { code: 'roshan', label: 'روشن' },
+      '073': { code: 'etisalat', label: 'اتصالات' },
+      '078': { code: 'etisalat', label: 'اتصالات' },
+      '074': { code: 'salam', label: 'سلام' },
+      '077': { code: 'mtn', label: 'ام‌تی‌ان' },
+      '076': { code: 'mtn', label: 'ام‌تی‌ان' }
+    };
+
+    function detectAfnOperatorFromPhone(rawPhone) {
+      const digits = toEnglishDigits(String(rawPhone || '')).replace(/\D/g, '');
+      let localPhone = '';
+      if (/^07\d{8}$/.test(digits)) {
+        localPhone = digits;
+      } else if (/^937\d{8}$/.test(digits)) {
+        localPhone = '0' + digits.slice(2);
+      } else {
+        return null;
+      }
+      const prefix = localPhone.slice(0, 3);
+      const matched = AFN_PREFIX_OPERATOR_MAP[prefix];
+      if (!matched) return null;
+      return {
+        localPhone: localPhone,
+        intlPhone: '93' + localPhone.slice(1),
+        prefix: prefix,
+        operatorCode: matched.code,
+        networkLabel: matched.label
+      };
+    }
+
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
       if (mode === 'afn' && !appSettingsState.topup_afn_enabled) {
@@ -4022,13 +4038,16 @@
       let payloadData = null;
       let summaryHtml = '';
       if (mode === 'afn') {
-        const afnNetwork = document.getElementById('afnNetworkSelect')?.value || 'ام‌تی‌ان';
-        const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        const rawPhoneInput = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        const detectedOp = detectAfnOperatorFromPhone(rawPhoneInput);
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
-        if (!/^07\d{8}$/.test(targetPhone)) {
-          alert('شماره باید ۱۰ رقم و با 07 شروع شود.');
+        if (!detectedOp) {
+          alert('شماره واردشده باید شماره معتبر شبکه‌های تایید شده افغانستان باشد (مانند 070، 071، 072، 073، 074، 076، 077، 078، 079).');
           return;
         }
+        const targetPhone = detectedOp.localPhone;
+        const afnNetwork = detectedOp.networkLabel;
+        const operatorCode = detectedOp.operatorCode;
         if (isNaN(afnAmt) || afnAmt <= 0) {
           alert('مبلغ را وارد کنید.');
           return;
@@ -4038,7 +4057,7 @@
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, afnNetwork, targetPhone, afnAmt, requiredIqd, rate };
+        payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
         summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
@@ -4189,10 +4208,16 @@
       const prevIds = getUserTransactionIds(payload.accId);
 
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال کردیت...', 'ارتباط با سرور شارژ');
-        const intlPhone = payload.targetPhone.startsWith('0')
-          ? '93' + payload.targetPhone.slice(1)
-          : payload.targetPhone;
+        showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط با سرور شارژ');
+        const detectedOp = detectAfnOperatorFromPhone(payload.targetPhone);
+        if (!detectedOp) {
+          hideRealLoading();
+          showTopupRawErrorModal('Unsupported Afghan mobile prefix or network');
+          return;
+        }
+        const intlPhone = payload.intlPhone || detectedOp.intlPhone;
+        const resolvedNetwork = payload.afnNetwork || detectedOp.networkLabel;
+        const resolvedOperatorCode = payload.operatorCode || detectedOp.operatorCode;
 
         let apiOk = false;
         let apiRef = txId;
@@ -4210,9 +4235,9 @@
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                operator: 'atoma',
+                operator: resolvedOperatorCode,
                 mode: modeVal,
-                network: payload.afnNetwork || 'ام‌تی‌ان',
+                network: resolvedNetwork,
                 phone: intlPhone,
                 bundle_id: payload.bundle_id || undefined,
                 amount: Number(payload.afnAmt),
@@ -4253,7 +4278,7 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'ارسال کردیت',
-          Description: `${payload.afnNetwork || 'ام‌تی‌ان'} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
+          Description: `${resolvedNetwork} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
           AssignedUserEmail: assigned,
           Status: appSettingsState.afn_api_enabled ? 'تایید شده' : 'ثبت شده'
         };
