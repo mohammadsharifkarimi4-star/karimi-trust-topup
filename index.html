@@ -1140,7 +1140,6 @@
       font-weight: 900;
     }
 
-
     .info-callout-box {
       background: var(--emerald-50);
       border: 1px solid #a7f3d0;
@@ -1165,34 +1164,6 @@
       color: #92400e;
       line-height: 1.55;
       text-align: right;
-    }
-
-    .afn-mode-switch {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      background: var(--slate-100);
-      padding: 4px;
-      border-radius: 12px;
-      border: 1px solid var(--slate-200);
-      margin-bottom: 10px;
-    }
-
-    .afn-mode-btn {
-      padding: 8px 6px;
-      border: none;
-      border-radius: 9px;
-      background: transparent;
-      color: var(--slate-600);
-      font-size: 0.76rem;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .afn-mode-btn.active {
-      background: var(--white);
-      color: var(--emerald-800);
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
     }
 
     .admin-report-grid {
@@ -1305,11 +1276,9 @@
             <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
           </div>
         </div>
-
-
       </div>
 
-      <!-- گام ۲: ورود با پین / پسورد یا ایجاد رمز برای حساب بدون رمز (بدون نیاز به کد حساب) -->
+      <!-- گام ۲: ورود با پین / پسورد یا ایجاد رمز برای حساب بدون رمز -->
       <div id="accountSection" class="hidden" style="margin:auto 0;">
         <div class="quick-grid-card" style="text-align:center; padding:20px 16px;">
           <div id="greetingMsg" style="font-size:1rem; font-weight:900; color:var(--slate-900); margin-bottom:4px;"></div>
@@ -1452,8 +1421,6 @@
             </div>
           </div>
 
-
-
           <div class="admin-notice-card" id="homeAnnouncementCard">
             <div class="admin-notice-badge">📢 اطلاعیه و راهنمای مشتریان</div>
             <div id="homeAnnouncementText" style="font-size:0.8rem; font-weight:800; color:var(--emerald-950); line-height:1.75; text-align:right;">
@@ -1556,7 +1523,7 @@
             </div>
           </div>
 
-          <!-- پنل شارژ بسته‌ها (به‌زودی) -->
+          <!-- پنل شارژ بسته‌ها -->
           <div id="panelTopupBundles" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>شارژ بسته‌ها</h4>
@@ -1579,8 +1546,6 @@
               <span class="mandatory-sync-text" id="mandatoryBannerTextTransfer">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnTransfer" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
             </div>
-
-
 
             <div class="form-group">
               <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
@@ -1623,8 +1588,6 @@
               <span class="mandatory-sync-text" id="mandatoryBannerTextAfn">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
             </div>
-
-
 
             <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
@@ -1885,7 +1848,7 @@
         </div>
 
         <input type="hidden" id="cfgAfnApiEndpoint" value="/api/iimobile-topup">
-        <input type="hidden" id="cfgAfnApiMode" value="telegram_relay">
+        <input type="hidden" id="cfgAfnApiMode" value="proxy_api">
         <textarea id="cfgIqNetworksJson" class="hidden" rows="1"></textarea>
         <textarea id="cfgIqPackagesJson" class="hidden" rows="1"></textarea>
 
@@ -1894,9 +1857,9 @@
 
         <div class="info-callout-box" style="margin-top:8px;">
           <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px;">ریست نمودن رمز طرف و تولیدش</div>
-          <div style="font-size:0.7rem; margin-bottom:6px;">شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید تا رمز جدید تولید و در حساب ذخیره شود:</div>
+          <div style="font-size:0.7rem; margin-bottom:6px;">شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید تا رمز جدید تولید و در ستون PinHash حساب ذخیره شود:</div>
           <div class="form-group" style="margin-bottom:6px;">
-            <input type="text" id="mgmtResetAccOrPhoneInput" placeholder="مثلاً ACC-1001 یا 077xxxxxxxx" dir="ltr">
+            <input type="text" id="mgmtResetAccOrPhoneInput" placeholder="مثلاً ACC-983244 یا 077xxxxxxxx" dir="ltr">
           </div>
           <div class="form-group" style="margin-bottom:6px;">
             <input type="text" id="mgmtCustomOrGeneratedPinInput" placeholder="رمز دلخواه یا خالی برای تولید خودکار ۶ رقمی" dir="ltr">
@@ -1945,7 +1908,6 @@
     </div>
   </div>
 
-
   <!-- مودال شارژ کردن حساب -->
   <div id="chargeAccountModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box" style="text-align:right;">
@@ -1989,12 +1951,11 @@
     </div>
   </div>
 
-  <!-- مودال تایید تراکنش: اولویت با پسورد/پین؛ اثر انگشت اختیاری و هر بار نیاز به تایید مجدد -->
+  <!-- مودال تایید تراکنش -->
   <div id="txPinConfirmModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box">
       <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید تراکنش با پسورد / پین</h3>
       <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--slate-700); line-height:1.6; margin-bottom:8px;"></p>
-
 
       <div id="txFallbackPinBox">
         <div class="form-group">
@@ -2106,14 +2067,6 @@
     const OWNER_EMAIL = "";
     const OWNER_WHATSAPP = "9647721878997";
 
-    const DEFAULT_AFN_NETWORKS = [
-      "ام‌تی‌ان",
-      "افغان بی‌سیم",
-      "سلام",
-      "روشن",
-      "اتصالات"
-    ];
-
     const DEFAULT_IQ_NETWORKS = [
       "Zain (زین عراق)",
       "AsiaCell (آسیاسل)"
@@ -2128,13 +2081,13 @@
       transfer_enabled: true,
       topup_afn_enabled: true,
       topup_iq_enabled: true,
-      afn_to_iqd_rate: 26.5,
+      afn_to_iqd_rate: 24.5,
       home_announcement: DEFAULT_HOME_ANNOUNCEMENT,
       iq_networks: DEFAULT_IQ_NETWORKS,
       iq_packages: DEFAULT_IQ_PACKAGES,
-      afn_api_enabled: false,
+      afn_api_enabled: true,
       afn_api_endpoint: "/api/iimobile-topup",
-      afn_api_mode: "telegram_relay"
+      afn_api_mode: "proxy_api"
     };
 
     let appSettingsState = { ...DEFAULT_APP_SETTINGS };
@@ -2183,7 +2136,7 @@
         home_announcement: rawAnn || DEFAULT_HOME_ANNOUNCEMENT,
         iq_networks: cleanNets,
         iq_packages: cleanPkgs,
-        afn_api_enabled: getVal(src, ['afn_api_enabled']) === true || String(getVal(src, ['afn_api_enabled'])).toLowerCase() === 'true',
+        afn_api_enabled: getVal(src, ['afn_api_enabled']) !== false && String(getVal(src, ['afn_api_enabled'])).toLowerCase() !== 'false',
         afn_api_endpoint: endpointVal,
         afn_api_mode: modeVal
       };
@@ -2300,7 +2253,6 @@
       const tEnabled = Boolean(appSettingsState.transfer_enabled);
       const aEnabled = Boolean(appSettingsState.topup_afn_enabled);
       const iEnabled = Boolean(appSettingsState.topup_iq_enabled);
-      const rateVal = getAfnExchangeRate();
 
       const qT = document.getElementById('qTileTransfer');
       const qA = document.getElementById('qTileAfn');
@@ -2316,39 +2268,26 @@
       if (sA) sA.disabled = !aEnabled;
       if (sI) sI.disabled = !iEnabled;
 
-      const hmT = document.getElementById('homeMenuOptTransfer');
-      const hmA = document.getElementById('homeMenuOptAfn');
-      const hmI = document.getElementById('homeMenuOptIq');
       const smT = document.getElementById('srvMenuOptTransfer');
       const smA = document.getElementById('srvMenuOptAfn');
       const smI = document.getElementById('srvMenuOptIq');
 
-      [hmT, smT].forEach(el => {
+      [smT].forEach(el => {
         if (!el) return;
         el.disabled = !tEnabled;
         el.classList.toggle('disabled-service', !tEnabled);
       });
-      [hmA, smA].forEach(el => {
+      [smA].forEach(el => {
         if (!el) return;
         el.disabled = !aEnabled;
         el.classList.toggle('disabled-service', !aEnabled);
       });
-      [hmI, smI].forEach(el => {
+      [smI].forEach(el => {
         if (!el) return;
         el.disabled = !iEnabled;
         el.classList.toggle('disabled-service', !iEnabled);
       });
 
-      const hSubT = document.getElementById('homeTransferSub');
-      const hSubA = document.getElementById('homeAfnSub');
-      const hSubI = document.getElementById('homeIqSub');
-      if (hSubT) hSubT.innerText = tEnabled ? 'برای باز شدن فرم انتقال موجودی لمس کنید' : 'این بخش توسط مدیریت غیرفعال است';
-      if (hSubA) hSubA.innerText = aEnabled ? `شما با این برنامه می‌توانید خودتان در هر زمان به شماره‌های افغانستان کردیت ارسال کنید (نرخ: ${rateVal} IQD)` : 'ارسال کردیت توسط مدیریت غیرفعال است';
-      if (hSubI) hSubI.innerText = iEnabled ? 'برای باز شدن فرم ثبت شارژ عراق لمس کنید' : 'شارژ عراق توسط مدیریت غیرفعال است';
-      const rateGuideEl = document.getElementById('homeRateGuideNote');
-      if (rateGuideEl) {
-        rateGuideEl.innerText = `نرخ تبدیل افغانی به دینار: ${rateVal} IQD | انتقال موجودی: ${tEnabled ? 'فعال' : 'غیرفعال'} | کردیت: ${aEnabled ? 'فعال' : 'غیرفعال'} | شارژ عراق: ${iEnabled ? 'فعال' : 'غیرفعال'}`;
-      }
       const annEl = document.getElementById('homeAnnouncementText');
       if (annEl) {
         annEl.innerText = appSettingsState.home_announcement || DEFAULT_HOME_ANNOUNCEMENT;
@@ -2570,7 +2509,7 @@
       const annInp = document.getElementById('cfgHomeAnnouncementInput');
       if (annInp) annInp.value = String(appSettingsState.home_announcement || DEFAULT_HOME_ANNOUNCEMENT);
       document.getElementById('cfgAfnApiEndpoint').value = String(appSettingsState.afn_api_endpoint || '/api/iimobile-topup');
-      document.getElementById('cfgAfnApiMode').value = String(appSettingsState.afn_api_mode || 'telegram_relay');
+      document.getElementById('cfgAfnApiMode').value = String(appSettingsState.afn_api_mode || 'proxy_api');
       syncHiddenIqJsonInputs();
       clearAdminIqItemForm();
       renderAdminIqItemsList();
@@ -2709,9 +2648,8 @@
         topup_iq_enabled: Boolean(document.getElementById('cfgTopupIqEnabled').checked),
         afn_api_enabled: Boolean(document.getElementById('cfgAfnApiEnabled').checked),
         afn_to_iqd_rate: rateNum,
-        home_announcement: annVal,
         afn_api_endpoint: String(document.getElementById('cfgAfnApiEndpoint').value || '').trim() || '/api/iimobile-topup',
-        afn_api_mode: String(document.getElementById('cfgAfnApiMode').value || '').trim() || 'telegram_relay',
+        afn_api_mode: String(document.getElementById('cfgAfnApiMode').value || '').trim() || 'proxy_api',
         iq_networks: parsedNets,
         iq_packages: parsedPkgs,
         updated_at: new Date().toISOString()
@@ -2729,7 +2667,10 @@
         .from('app_settings')
         .upsert([payload], { onConflict: 'id' });
 
+      appSettingsState.home_announcement = annVal;
       await fetchAppSettingsFromSupabase();
+      appSettingsState.home_announcement = annVal;
+      applyAppSettingsToUi();
       hideRealLoading();
 
       if (error) {
@@ -2857,15 +2798,13 @@
 
     function resetAllOperationForms() {
       const tAcc = document.getElementById('transferTargetAccIdInput');
-      const tPhone = document.getElementById('transferTargetPhoneInput');
       const tAmt = document.getElementById('transferAmountInput');
       if (tAcc) tAcc.value = '';
-      if (tPhone) tPhone.value = '';
       if (tAmt) tAmt.value = '';
       const tPrev = document.getElementById('transferRecipientPreview');
       if (tPrev) {
         tPrev.className = 'recipient-preview-box invalid';
-        tPrev.innerHTML = '<span>مقصد</span><span>کد حساب و شماره تماس را وارد کنید</span>';
+        tPrev.innerHTML = '<span>مقصد</span><span>کد حساب مقصد (Account ID) را وارد کنید</span>';
       }
 
       const afnPhone = document.getElementById('afnTargetPhone');
@@ -2910,18 +2849,17 @@
     }
 
     function initAdminContactFromDataCode() {
-      const phoneEl = document.getElementById('adminDataCodePhone');
-      const waBtn = document.getElementById('adminDirectWhatsAppBtn');
+      const waBtn = document.getElementById('headerSupportWaBtn');
       const adminPhone = String(OWNER_WHATSAPP || '').trim();
-      if (phoneEl) phoneEl.innerText = adminPhone || '---';
       if (waBtn && adminPhone) {
-        const msg = encodeURIComponent('سلام، لطفاً جهت افتتاح حساب جدید در امانت‌داری کریمی راهنمایی بفرمایید.');
-        waBtn.href = `https://wa.me/${adminPhone}?text=${msg}`;
+        waBtn.href = `https://wa.me/${adminPhone}`;
       }
     }
 
-    function copyAdminPhone() {
-      copyTextValue(String(OWNER_WHATSAPP || '').trim(), 'شماره تماس ادمین');
+    function copyTextValue(val, label) {
+      if (!val || val === '---') return;
+      navigator.clipboard?.writeText(String(val));
+      playSound('success');
     }
 
     const TOPUP_API_CONFIG = {
@@ -2998,7 +2936,6 @@
     let currentStep = 'phone';
     let pendingAction = null;
     let isHandlingBack = false;
-    let exitDialogOpen = false;
     let realtimeTxChannel = null;
 
     function loadCachedData() {
@@ -3223,68 +3160,104 @@
       return found ? String(getVal(found, ['PinHash', 'pinhash', 'pin_hash']) || '').trim() : '';
     }
 
-    async function persistPinHashInSupabase(accId, pinValue) {
+    // ذخیره و بررسی رمز مستقیم در ستون PinHash جدول accounts از طریق RPC سوپابیس و ستون PinHash
+    async function setPinInDatabaseColumn(accId, pinValue) {
       const cleanId = String(accId || '').trim();
       const cleanVal = String(pinValue || '').trim();
       if (!cleanId || !cleanVal) return false;
       const ready = await initSupabaseFromEnv();
       if (!ready || !_supabase) return false;
 
-      let res = await _supabase
-        .from('accounts')
-        .update({ PinHash: cleanVal })
-        .eq('AccountID', cleanId)
-        .select('AccountID, PinHash');
-
-      if (res.error) {
-        const alt = await _supabase
-          .from('accounts')
-          .update({ pin_hash: cleanVal })
-          .eq('AccountID', cleanId)
-          .select('AccountID, pin_hash');
-        if (alt.error) {
-          console.error('Supabase PinHash update error:', res.error, alt.error);
-          return false;
+      let rpcSucceeded = false;
+      try {
+        const { data, error } = await _supabase.rpc('set_account_pin', {
+          p_account_id: cleanId,
+          p_new_pin: cleanVal
+        });
+        if (!error && data === true) {
+          rpcSucceeded = true;
         }
-        res = alt;
-      }
+      } catch (e) {}
 
-      if (!Array.isArray(res.data) || res.data.length === 0) {
-        const phoneVal = currentFoundUser ? String(getVal(currentFoundUser, ['Phone', 'phone']) || '').trim() : '';
-        const nameVal = currentFoundUser ? String(getVal(currentFoundUser, ['Name', 'name']) || '').trim() : '';
-        if (phoneVal) {
-          const byPhone = await _supabase
+      if (!rpcSucceeded) {
+        let res = await _supabase
+          .from('accounts')
+          .update({ PinHash: cleanVal })
+          .eq('AccountID', cleanId)
+          .select('AccountID, PinHash');
+
+        if (res.error) {
+          const alt = await _supabase
             .from('accounts')
-            .update({ PinHash: cleanVal })
-            .eq('Phone', phoneVal)
-            .select('AccountID, PinHash');
-          if (!byPhone.error && Array.isArray(byPhone.data) && byPhone.data.length > 0) {
-            res = byPhone;
-          } else if (nameVal) {
-            const ins = await _supabase
+            .update({ pin_hash: cleanVal })
+            .eq('AccountID', cleanId)
+            .select('AccountID, pin_hash');
+          if (alt.error) {
+            return false;
+          }
+          res = alt;
+        }
+
+        if (!Array.isArray(res.data) || res.data.length === 0) {
+          const phoneVal = currentFoundUser ? String(getVal(currentFoundUser, ['Phone', 'phone']) || '').trim() : '';
+          const nameVal = currentFoundUser ? String(getVal(currentFoundUser, ['Name', 'name']) || '').trim() : '';
+          if (phoneVal) {
+            const byPhone = await _supabase
               .from('accounts')
-              .insert([{ AccountID: cleanId, Name: nameVal, Phone: phoneVal, PinHash: cleanVal }])
+              .update({ PinHash: cleanVal })
+              .eq('Phone', phoneVal)
               .select('AccountID, PinHash');
-            if (!ins.error && Array.isArray(ins.data) && ins.data.length > 0) {
-              res = ins;
+            if (!byPhone.error && Array.isArray(byPhone.data) && byPhone.data.length > 0) {
+              res = byPhone;
+            } else if (nameVal) {
+              const ins = await _supabase
+                .from('accounts')
+                .insert([{ AccountID: cleanId, Name: nameVal, Phone: phoneVal, PinHash: cleanVal }])
+                .select('AccountID, PinHash');
+              if (!ins.error && Array.isArray(ins.data) && ins.data.length > 0) {
+                res = ins;
+              }
             }
           }
         }
+        if (!Array.isArray(res.data) || res.data.length === 0) {
+          return false;
+        }
       }
 
-      if (Array.isArray(res.data) && res.data.length > 0) {
-        const savedColVal = String(res.data[0].PinHash ?? res.data[0].pin_hash ?? cleanVal).trim();
-        accountsList = accountsList.map(a => {
-          const aid = String(getVal(a, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-          return aid.toLowerCase() === cleanId.toLowerCase() ? { ...a, PinHash: savedColVal } : a;
-        });
-        try { localStorage.setItem('karimi_cache_accounts', JSON.stringify(accountsList)); } catch (e) {}
-        if (currentFoundUser && String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === cleanId.toLowerCase()) {
-          currentFoundUser = { ...currentFoundUser, PinHash: savedColVal };
-        }
-        return true;
+      accountsList = accountsList.map(a => {
+        const aid = String(getVal(a, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        return aid.toLowerCase() === cleanId.toLowerCase() ? { ...a, PinHash: cleanVal } : a;
+      });
+      try { localStorage.setItem('karimi_cache_accounts', JSON.stringify(accountsList)); } catch (e) {}
+      if (currentFoundUser && String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === cleanId.toLowerCase()) {
+        currentFoundUser = { ...currentFoundUser, PinHash: cleanVal };
       }
-      return false;
+      return true;
+    }
+
+    async function verifyPinAgainstDatabaseColumn(accId, inputPin, accObj = null) {
+      const cleanId = String(accId || '').trim();
+      const cleanPin = String(inputPin || '').trim();
+      if (!cleanId || !cleanPin) return false;
+
+      const ready = await initSupabaseFromEnv();
+      if (ready && _supabase) {
+        try {
+          const { data, error } = await _supabase.rpc('verify_account_pin', {
+            p_account_id: cleanId,
+            p_pin: cleanPin
+          });
+          if (!error && typeof data === 'boolean') {
+            if (data === true) return true;
+          }
+        } catch (e) {}
+      }
+
+      const storedHash = getStoredPinHashForAccount(accObj || currentFoundUser, cleanId);
+      if (!storedHash) return false;
+      const hashedInput = await hashPin(cleanPin);
+      return (cleanPin === storedHash || hashedInput === storedHash);
     }
 
     function showRealLoading(titleText = 'در حال دریافت اطلاعات...', subText = 'لطفاً صبر کنید') {
@@ -3517,77 +3490,8 @@
     function updateChargeTransactionsBadge() {
       const list = getCustomerChargeTransactions();
       const cntStr = toEnglishDigits(list.length);
-      const b1 = document.getElementById('chargeTxCountBadge');
       const b2 = document.getElementById('chargeModalCountBadge');
-      if (b1) b1.innerText = cntStr;
       if (b2) b2.innerText = cntStr;
-    }
-
-    function renderChargeTransactionsList() {
-      const container = document.getElementById('chargeTransactionsContainer');
-      const list = getCustomerChargeTransactions();
-      updateChargeTransactionsBadge();
-      if (!container) return;
-
-      if (list.length === 0) {
-        container.innerHTML = `<div class="empty-state-box"><div style="font-size:0.86rem; font-weight:800; color:var(--slate-500);">تراکنش شارژی ثبت نشده است</div></div>`;
-        return;
-      }
-
-      const groups = [];
-      const groupMap = {};
-      list.forEach(tx => {
-        const dayKey = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '');
-        if (!groupMap[dayKey]) {
-          groupMap[dayKey] = { date: dayKey, items: [] };
-          groups.push(groupMap[dayKey]);
-        }
-        groupMap[dayKey].items.push(tx);
-      });
-
-      let html = '';
-      groups.forEach(group => {
-        const dayName = getPersianDayName(group.date);
-        const dayTitle = dayName ? `${dayName} — ${toEnglishDigits(group.date)}` : toEnglishDigits(group.date);
-        html += `<div class="day-divider"><span>${dayTitle}</span><span class="eng-num">${toEnglishDigits(group.items.length)}</span></div>`;
-
-        group.items.forEach(tx => {
-          const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-          const dir = String(getVal(tx, ['Direction', 'direction']));
-          const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
-          const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
-          const opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'شارژ';
-          const timeStr = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at'])) || '';
-          const descStr = String(getVal(tx, ['Description', 'description', 'desc']) || '').replaceAll('+', ' ');
-          const currStr = getVal(tx, ['Currency', 'currency']) || 'IQD';
-
-          const origIdx = tid
-            ? customerTransactions.findIndex(item => String(getVal(item, ['TransID', 'transid', 'id', 'transaction_id'])) === tid)
-            : customerTransactions.indexOf(tx);
-
-          html += `
-            <div class="tx-item-row" onclick="openDetailModal(${origIdx >= 0 ? origIdx : 0})">
-              <div class="tx-badge-icon ${isCredit ? 'credit' : 'debit'}">${isCredit ? '↓' : '↑'}</div>
-              <div class="tx-main-info">
-                <div class="tx-op-title">${opType}</div>
-                <div class="tx-desc-sub">${descStr}</div>
-              </div>
-              <div class="tx-amount-col">
-                <span class="tx-amt-val ${isCredit ? 'credit' : 'debit'} eng-num">${isCredit ? '+' : '-'}${formatEnMoney(amt)} ${currStr}</span>
-                <span class="tx-time-meta eng-num">${timeStr}</span>
-              </div>
-            </div>`;
-        });
-      });
-
-      container.innerHTML = html;
-    }
-
-    function openChargeTransactionsView() {
-      playSound('click');
-      renderChargeTransactionsList();
-      document.getElementById('chargeTxModal')?.classList.add('open');
-      ensureSentinelHistory();
     }
 
     function closeChargeTransactionsView() {
@@ -3607,7 +3511,7 @@
         chargeModal.classList.remove('open');
         return true;
       }
-      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal'];
+      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal', 'chargeAccountModal'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
@@ -3625,6 +3529,7 @@
       resetAllOperationForms();
       document.getElementById('panelTransfer')?.classList.add('collapsed');
       document.getElementById('panelTopupAfn')?.classList.add('collapsed');
+      document.getElementById('panelTopupBundles')?.classList.add('collapsed');
       document.getElementById('panelTopupIq')?.classList.add('collapsed');
       document.getElementById('serviceEmptyPlaceholder')?.classList.remove('hidden');
       document.getElementById('qTileTransfer')?.classList.remove('active-mode');
@@ -3829,7 +3734,7 @@
         document.getElementById('headerSubtitleText').innerText = 'ورود به حساب';
       } else if (step === 'account') {
         document.getElementById('accountSection').classList.remove('hidden');
-        document.getElementById('headerSubtitleText').innerText = 'تایید کد حساب';
+        document.getElementById('headerSubtitleText').innerText = 'تایید رمز حساب';
       } else if (step === 'register') {
         document.getElementById('registerSection').classList.remove('hidden');
         document.getElementById('headerSubtitleText').innerText = 'افتتاح حساب جدید';
@@ -3977,11 +3882,13 @@
         activeBottomTab = 'services';
         document.getElementById('tabHomeView').classList.add('hidden');
         document.getElementById('tabTxView').classList.add('hidden');
+        document.getElementById('tabChargeTxView')?.classList.add('hidden');
         document.getElementById('tabServicesView').classList.remove('hidden');
         document.getElementById('tabProfileView').classList.add('hidden');
 
         document.getElementById('navHomeBtn').classList.remove('active');
         document.getElementById('navTxBtn').classList.remove('active');
+        document.getElementById('navChargeTxBtn')?.classList.remove('active');
         document.getElementById('navServicesBtn').classList.add('active');
         document.getElementById('navProfileBtn').classList.remove('active');
         document.getElementById('headerSubtitleText').innerText = 'انتقال و شارژ';
@@ -4023,12 +3930,6 @@
       balanceHidden = !balanceHidden;
       document.getElementById('eyeToggleIcon').innerText = balanceHidden ? '🙈' : '👁️';
       updateBalanceDisplay();
-    }
-
-    function copyTextValue(val, label) {
-      if (!val || val === '---') return;
-      navigator.clipboard?.writeText(String(val));
-      playSound('success');
     }
 
     function copyAccountId() {
@@ -4202,9 +4103,9 @@
           alert('پسورد تعیین‌شده و تکرار آن یکسان نیست.');
           return;
         }
-        showRealLoading('در حال ثبت پسورد حساب...', 'ذخیره پسورد جدید');
+        showRealLoading('در حال ثبت پسورد حساب...', 'ذخیره پسورد جدید در ستون PinHash');
         await initSupabaseFromEnv();
-        const savedOk = await persistPinHashInSupabase(sheetAccId, p1);
+        const savedOk = await setPinInDatabaseColumn(sheetAccId, p1);
         if (!savedOk) {
           hideRealLoading();
           alert('خطا در ذخیره رمز در ستون PinHash دیتابیس. لطفاً اتصال یا دسترسی جدول accounts را بررسی کنید.');
@@ -4225,8 +4126,8 @@
           alert('ورود این حساب از طریق پین/پسورد است. لطفاً پسورد یا پین خود را وارد کنید.');
           return;
         }
-        const hashedEntered = await hashPin(enteredPin);
-        if (enteredPin !== existingPin && hashedEntered !== existingPin) {
+        const isValidPin = await verifyPinAgainstDatabaseColumn(sheetAccId, enteredPin, currentFoundUser);
+        if (!isValidPin) {
           alert('پین یا پسورد واردشده صحیح نیست.');
           return;
         }
@@ -4273,7 +4174,7 @@
         return;
       }
       if (!/^\+\d{7,16}$/.test(phone)) {
-        alert('شماره همراه باید با علامت مثبت (+) و کد کشور وارد شود (بدون نمونه واقعی).');
+        alert('شماره همراه باید با علامت مثبت (+) و کد کشور وارد شود.');
         return;
       }
       if (pin.length < 6 || !/[a-z]/.test(pin) || !/[A-Z]/.test(pin) || !/[0-9]/.test(pin)) {
@@ -4285,7 +4186,7 @@
         return;
       }
 
-      showRealLoading('در حال ثبت حساب...', 'ذخیره اطلاعات');
+      showRealLoading('در حال ثبت حساب...', 'ذخیره اطلاعات در ستون PinHash');
       await fetchDataFromSupabaseFresh();
 
       const last9 = getLast9Digits(phone);
@@ -4299,10 +4200,13 @@
         AccountID: accId,
         Name: name,
         Phone: phone,
-        PinHash: pin,
         AssignedUserEmail: OWNER_EMAIL,
         CreatedBy: OWNER_EMAIL
       }]);
+
+      if (!error) {
+        await setPinInDatabaseColumn(accId, pin);
+      }
 
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
@@ -4443,35 +4347,6 @@
       document.getElementById('odometerValue').innerText = formatBalanceDisplay(b.net);
       document.getElementById('odometerCredit').innerText = formatBalanceDisplay(b.credit);
       document.getElementById('odometerDebit').innerText = formatBalanceDisplay(b.debit);
-
-      const statusBox = document.getElementById('accountPsychologyMsg');
-      if (statusBox) {
-        if (b.net > 0) {
-          statusBox.className = 'calc-summary-box';
-          statusBox.innerHTML = `بستانکار: <b class="eng-num">${formatBalanceDisplay(b.net)} ${currName}</b>`;
-        } else if (b.net < 0) {
-          statusBox.className = 'calc-summary-box error';
-          statusBox.innerHTML = `بدهکار: <b class="eng-num">${formatBalanceDisplay(Math.abs(b.net))} ${currName}</b>`;
-        } else {
-          statusBox.className = 'calc-summary-box';
-          statusBox.innerHTML = `مانده: <b class="eng-num">0 ${currName}</b>`;
-        }
-      }
-    }
-
-    function launchOperationForm(mode) {
-      openServiceForm(mode);
-      setTimeout(() => {
-        const panelMap = {
-          transfer: 'panelTransfer',
-          afn: 'panelTopupAfn',
-          iq: 'panelTopupIq'
-        };
-        const targetEl = document.getElementById(panelMap[mode]);
-        if (targetEl && typeof targetEl.scrollIntoView === 'function') {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 60);
     }
 
     let mandatorySyncCompletedForMode = { transfer: false, afn: false, iq: false };
@@ -4837,8 +4712,7 @@
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        const afnBundleMeta = getSelectedAfnBundleMeta();
-        payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate, bundle_id: afnBundleMeta.bundle_id, serviceLabel: afnBundleMeta.label };
+        payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
         summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
@@ -4916,10 +4790,8 @@
         return;
       }
 
-      const storedHash = getStoredPinHashForAccount(currentFoundUser, accId);
-      const hashedInput = await hashPin(pinRaw);
-
-      if (pinRaw !== storedHash && hashedInput !== storedHash) {
+      const isValidPin = await verifyPinAgainstDatabaseColumn(accId, pinRaw, currentFoundUser);
+      if (!isValidPin) {
         alert('رمز ثابت اشتباه است.');
         return;
       }
@@ -5026,7 +4898,7 @@
         let lastErr = '';
 
         const endpointUrl = appSettingsState.afn_api_endpoint || '/api/iimobile-topup';
-        const modeVal = appSettingsState.afn_api_mode || 'telegram_relay';
+        const modeVal = appSettingsState.afn_api_mode || 'proxy_api';
 
         if (!appSettingsState.afn_api_enabled) {
           apiOk = true;
@@ -5042,7 +4914,6 @@
                 mode: modeVal,
                 network: resolvedNetwork,
                 phone: intlPhone,
-                bundle_id: payload.bundle_id || undefined,
                 amount: Number(payload.afnAmt),
                 rate: Number(payload.rate || getAfnExchangeRate())
               })
@@ -5221,13 +5092,12 @@
     async function saveAccountPassword() {
       if (!currentFoundUser) return;
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const existingHash = getStoredPinHashForAccount(currentFoundUser, accId);
       const oldPin = toEnglishDigits(document.getElementById('oldAccountPinInput').value.trim());
       const p1 = toEnglishDigits(document.getElementById('newAccountPinInput').value.trim());
       const p2 = toEnglishDigits(document.getElementById('confirmAccountPinInput').value.trim());
 
-      const hashedOld = await hashPin(oldPin);
-      if (oldPin !== existingHash && hashedOld !== existingHash) {
+      const validOld = await verifyPinAgainstDatabaseColumn(accId, oldPin, currentFoundUser);
+      if (!validOld) {
         alert('رمز فعلی صحیح نیست.');
         return;
       }
@@ -5236,8 +5106,8 @@
         return;
       }
 
-      showRealLoading('در حال ذخیره...', 'به‌روزرسانی رمز');
-      const ok = await persistPinHashInSupabase(accId, p1);
+      showRealLoading('در حال ذخیره...', 'به‌روزرسانی ستون PinHash');
+      const ok = await setPinInDatabaseColumn(accId, p1);
       await fetchDataFromSupabaseFresh();
       const refreshed = accountsList.find(u =>
         String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase()
@@ -5538,52 +5408,6 @@
       const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
-    let selectedAfnServiceMode = 'call';
-
-    function selectAfnServiceType(mode) {
-      playSound('click');
-      selectedAfnServiceMode = (mode === 'internet') ? 'internet' : 'call';
-      const callBtn = document.getElementById('afnServiceTypeCallBtn');
-      const netBtn = document.getElementById('afnServiceTypeInternetBtn');
-      const netGroup = document.getElementById('afnInternetPackageGroup');
-      const amtInput = document.getElementById('afnAmountInput');
-
-      if (callBtn) callBtn.classList.toggle('active', selectedAfnServiceMode === 'call');
-      if (netBtn) netBtn.classList.toggle('active', selectedAfnServiceMode === 'internet');
-      if (netGroup) netGroup.classList.toggle('hidden', selectedAfnServiceMode !== 'internet');
-
-      if (selectedAfnServiceMode === 'internet') {
-        if (amtInput) amtInput.readOnly = true;
-        onAfnInternetPackageChange();
-      } else {
-        if (amtInput) amtInput.readOnly = false;
-        recalcTopupCost();
-      }
-    }
-
-    function onAfnInternetPackageChange() {
-      const pkgSel = document.getElementById('afnInternetPackageSelect');
-      const amtInput = document.getElementById('afnAmountInput');
-      if (!pkgSel || !amtInput) return;
-      const val = parseFloat(toEnglishDigits(pkgSel.value)) || 0;
-      if (val > 0) {
-        amtInput.value = String(val);
-      }
-      recalcTopupCost();
-    }
-
-    function getSelectedAfnBundleMeta() {
-      if (selectedAfnServiceMode !== 'internet') {
-        return { serviceType: 'call', bundle_id: undefined, label: 'کردیت تماس' };
-      }
-      const pkgSel = document.getElementById('afnInternetPackageSelect');
-      const opt = pkgSel && pkgSel.selectedIndex >= 0 ? pkgSel.options[pkgSel.selectedIndex] : null;
-      return {
-        serviceType: 'internet',
-        bundle_id: opt ? (opt.getAttribute('data-bundle-id') || undefined) : undefined,
-        label: opt ? (opt.getAttribute('data-label') || opt.textContent.trim()) : 'بسته اینترنت'
-      };
-    }
 
     function openChargeAccountModal() {
       playSound('click');
@@ -5660,50 +5484,61 @@
         if (txDate === todayStr) {
           todaySalesAfn += afnVal;
         }
-        const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
+        const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
         if (accId) {
-          buyerTotalsByAcc[accId] = (buyerTotalsByAcc[accId] || 0) + afnVal;
+          buyerTotalsByAcc[accId.toLowerCase()] = (buyerTotalsByAcc[accId.toLowerCase()] || 0) + afnVal;
         }
       });
 
-      const remainingStockAfn = initialStock - totalSalesAfn;
+      const remStock = initialStock - totalSalesAfn;
       totalSalesEl.innerText = `${formatEnMoney(Math.round(totalSalesAfn * 100) / 100)} AFN`;
       todaySalesEl.innerText = `${formatEnMoney(Math.round(todaySalesAfn * 100) / 100)} AFN`;
-      remStockEl.innerText = `${formatEnMoney(Math.round(remainingStockAfn * 100) / 100)} AFN`;
+      remStockEl.innerText = `${formatEnMoney(Math.round(remStock * 100) / 100)} AFN`;
 
       if (statusEl) {
-        if (remainingStockAfn > 0) {
-          statusEl.innerText = 'شارژ مانده است';
-          statusEl.style.color = 'var(--emerald-800)';
-        } else {
-          statusEl.innerText = 'شارژ تمام شده (نمانده)';
+        if (remStock <= 0) {
+          statusEl.innerText = 'اتمام شارژ شرکت';
           statusEl.style.color = 'var(--danger)';
+        } else if (initialStock > 0 && remStock <= initialStock * 0.15) {
+          statusEl.innerText = 'شارژ شرکت رو به اتمام';
+          statusEl.style.color = 'var(--warning)';
+        } else {
+          statusEl.innerText = 'شارژ شرکت در دسترس';
+          statusEl.style.color = 'var(--emerald-800)';
         }
       }
 
       const buyers = [];
       const nonBuyers = [];
-
       accountsList.forEach(acc => {
         const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-        const name = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
-        const spentAfn = buyerTotalsByAcc[accId.toLowerCase()] || 0;
-        if (spentAfn > 0) {
-          buyers.push({ name, accId, spentAfn });
+        if (!accId) return;
+        const accName = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
+        const sumAfn = buyerTotalsByAcc[accId.toLowerCase()] || 0;
+        if (sumAfn > 0) {
+          buyers.push({ accId, accName, sumAfn });
         } else {
-          nonBuyers.push({ name, accId });
+          nonBuyers.push({ accId, accName });
         }
       });
 
-      buyers.sort((a, b) => b.spentAfn - a.spentAfn);
+      buyers.sort((a, b) => b.sumAfn - a.sumAfn);
 
-      buyersBox.innerHTML = buyers.length
-        ? buyers.map(b => `<div class="admin-mini-item"><span>${b.name} (${b.accId})</span><span class="eng-num">${formatEnMoney(Math.round(b.spentAfn * 100) / 100)} AFN</span></div>`).join('')
-        : '<div style="font-size:0.72rem; color:var(--slate-500);">هنوز خریدی ثبت نشده است.</div>';
+      if (buyers.length === 0) {
+        buyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">هنوز خریدی ثبت نشده است.</div>';
+      } else {
+        buyersBox.innerHTML = buyers.map(b =>
+          `<div class="admin-mini-item"><span>${b.accName} (<span class="eng-num">${b.accId}</span>)</span><strong class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(Math.round(b.sumAfn * 100) / 100)} AFN</strong></div>`
+        ).join('');
+      }
 
-      nonBuyersBox.innerHTML = nonBuyers.length
-        ? nonBuyers.map(nb => `<div class="admin-mini-item"><span>${nb.name} (${nb.accId})</span><span>بدون خرید</span></div>`).join('')
-        : '<div style="font-size:0.72rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
+      if (nonBuyers.length === 0) {
+        nonBuyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
+      } else {
+        nonBuyersBox.innerHTML = nonBuyers.map(nb =>
+          `<div class="admin-mini-item"><span>${nb.accName} (<span class="eng-num">${nb.accId}</span>)</span><span style="color:var(--slate-500);">بدون خرید</span></div>`
+        ).join('');
+      }
     }
 
     async function adminResetAndGenerateAccountPin() {
@@ -5712,56 +5547,51 @@
         alert('ابتدا وارد بخش مدیریت شوید.');
         return;
       }
-      const queryVal = toEnglishDigits(document.getElementById('mgmtResetAccOrPhoneInput').value.trim());
-      const customPin = toEnglishDigits(document.getElementById('mgmtCustomOrGeneratedPinInput').value.trim());
-      const resBox = document.getElementById('mgmtGeneratedPinResult');
+      const queryRaw = toEnglishDigits((document.getElementById('mgmtResetAccOrPhoneInput')?.value || '').trim());
+      const customPin = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
+      const resEl = document.getElementById('mgmtGeneratedPinResult');
 
-      if (!queryVal) {
-        alert('شناسه حساب یا شماره تماس مشتری را وارد کنید.');
+      if (!queryRaw) {
+        alert('شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید.');
         return;
       }
 
-      showRealLoading('در حال ریست و تولید رمز...', 'به‌روزرسانی حساب در دیتابیس');
+      showRealLoading('در حال ریست و تولید رمز...', 'جستجو و به‌روزرسانی ستون PinHash در دیتابیس');
       await fetchDataFromSupabaseFresh();
 
-      const qLower = queryVal.toLowerCase();
-      const qLast9 = getLast9Digits(queryVal);
+      const qLower = queryRaw.toLowerCase();
+      const qLast9 = getLast9Digits(queryRaw);
       const targetAcc = accountsList.find(acc => {
         const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
-        const phLast9 = getLast9Digits(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']));
-        return aid === qLower || (qLast9.length >= 9 && phLast9 === qLast9);
+        const ph = String(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']) || '').trim();
+        return aid === qLower || (qLast9.length >= 9 && getLast9Digits(ph) === qLast9);
       });
 
       if (!targetAcc) {
         hideRealLoading();
-        alert('حسابی با این شناسه یا شماره پیدا نشد.');
+        alert('حسابی با این شناسه یا شماره تماس یافت نشد.');
         return;
       }
 
       const targetAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
       const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const newPin = customPin.length >= 4
-        ? customPin
-        : String(Math.floor(100000 + Math.random() * 900000));
+      const newPinValue = customPin || String(Math.floor(100000 + Math.random() * 900000));
 
-      const ok = await persistPinHashInSupabase(targetAccId, newPin);
+      const savedOk = await setPinInDatabaseColumn(targetAccId, newPinValue);
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
-      if (!ok) {
-        alert('خطا در ذخیره رمز جدید در دیتابیس.');
+      if (!savedOk) {
+        alert('خطا در ذخیره رمز جدید در ستون PinHash دیتابیس.');
         return;
       }
 
-      playSound('success');
-      if (resBox) {
-        resBox.innerHTML = `رمز جدید برای <b>${targetName}</b> (${targetAccId}): <span style="user-select:all; background:var(--white); padding:2px 6px; border-radius:6px; border:1px solid #86efac;">${newPin}</span>`;
+      if (resEl) {
+        resEl.innerText = `حساب: ${targetName} (${targetAccId}) | رمز جدید: ${newPinValue}`;
       }
-      alert(`رمز جدید برای ${targetName} (${targetAccId}) تولید و ذخیره شد:
-${newPin}
-لطفاً این رمز را به صورت امن به صاحب حساب تحویل دهید.`);
+      playSound('success');
+      alert(`رمز حساب ${targetName} (${targetAccId}) با موفقیت ریست و ذخیره شد.\nرمز جدید: ${newPinValue}`);
     }
-
   </script>
 </body>
 </html>
