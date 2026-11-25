@@ -1320,7 +1320,7 @@
             <input type="password" id="loginAccountPinInput" placeholder="پین یا پسورد خود را وارد کنید" dir="ltr" onkeydown="if(event.key==='Enter') verifyAccount()">
           </div>
           <div id="legacyNoPinSetupBox" class="warn-callout-box hidden">
-            <div style="margin-bottom:6px;">این حساب رمز یا پسورد فعالی ندارد و برای ادامه ملزم به ایجاد پسورد/پین است. رمز تعیین‌شده در ستون <code>PinHash</code> ذخیره می‌شود.</div>
+            <div style="margin-bottom:6px;">ایجاد رمز جدید برای حساب:</div>
             <div class="form-group" style="margin-bottom:6px;">
               <label for="legacyInitialPinInput">ایجاد پسورد / پین جدید</label>
               <input type="password" id="legacyInitialPinInput" placeholder="پسورد جدید" dir="ltr">
@@ -1341,11 +1341,8 @@
           <div class="panel-banner-header">
             <h4>افتتاح حساب جدید</h4>
           </div>
-          <div class="info-callout-box">
-            شناسه حساب به‌صورت خودکار تولید می‌شود و پین/رمز ثابت شما هم برای ورود به حساب و هم برای تایید تراکنش‌ها استفاده می‌شود.
-          </div>
           <div class="warn-callout-box">
-            رمز حساب باید حداقل ۶ کاراکتر و شامل <b>حروف کوچک انگلیسی</b>، <b>حروف بزرگ انگلیسی</b> و <b>عدد</b> باشد؛ همچنین شماره همراه باید حتماً با <b>علامت مثبت (+) و کد کشور</b> وارد شود (بدون وارد کردن شماره واقعی نمونه).
+            رمز حداقل ۶ کاراکتر شامل حروف کوچک، بزرگ و عدد؛ شماره همراه با + و کد کشور.
           </div>
           <div class="form-group">
             <label for="regAccId">شناسه حساب (Account ID)</label>
@@ -1455,20 +1452,7 @@
             </div>
           </div>
 
-          <div class="launch-hub-card" id="homeInfoGuideCard">
-            <div class="launch-hub-header">
-              <h4>اطلاعات و راهنمایی</h4>
-              <span>راهنمای حساب</span>
-            </div>
-            <div class="info-callout-box" style="margin-bottom:8px;">
-              • ورود به حساب از طریق <b>پین / پسورد</b> انجام می‌شود و در صورت نداشتن رمز، ابتدا رمز جدید ایجاد و در ستون <code>PinHash</code> ذخیره می‌گردد.<br>
-              • انتقال موجودی فقط بر اساس <b>کد حساب (Account ID)</b> انجام می‌شود و نیازی به شماره تماس مقصد نیست.<br>
-              • برای تایید تراکنش‌ها، <b>پین / پسورد</b> در اولویت است و گزینه اثر انگشت اختیاری و نیازمند تایید مجدد است.
-            </div>
-            <div id="homeRateGuideNote" style="font-size:0.73rem; font-weight:800; color:var(--emerald-900); text-align:right;">
-              نرخ تبدیل افغانی به دینار و وضعیت خدمات به‌صورت زنده از تنظیمات مدیریت خوانده می‌شود.
-            </div>
-          </div>
+
 
           <div class="admin-notice-card" id="homeAnnouncementCard">
             <div class="admin-notice-badge">📢 اطلاعیه و راهنمای مشتریان</div>
@@ -1596,9 +1580,7 @@
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnTransfer" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
             </div>
 
-            <div class="info-callout-box">
-              انتقال موجودی فقط بر اساس <b>کد حساب مقصد (Account ID)</b> و بدون نیاز به شماره تماس انجام می‌شود.
-            </div>
+
 
             <div class="form-group">
               <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
@@ -1642,9 +1624,7 @@
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
             </div>
 
-            <div class="info-callout-box">
-              فرم مستقل <b>کردیت</b>: شماره موبایل افغانستان و مبلغ کردیت (AFN) را وارد کنید تا معادل دینار (IQD) از موجودی شما کسر و کردیت ارسال شود. بسته‌های اینترنت و تماس در بخش «شارژ بسته‌ها» قرار دارند.
-            </div>
+
 
             <div class="form-group">
               <label for="afnTargetPhone">شماره موبایل مقصد (AFN)</label>
@@ -1679,8 +1659,8 @@
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnIq" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی اجباری</button>
             </div>
 
-            <div class="warn-callout-box">
-              توجه: خرید شارژ عراق مستقیم و آنی نیست و مستقیماً به شماره فرستاده نمی‌شود؛ با ثبت درخواست، پیام برای ادمین ارسال می‌گردد تا <b>رمز شارژ (PIN)</b> را در اختیار شما قرار دهد. قیمت و کسر مبلغ کاملاً مطابق تنظیمات مدیریت است.
+            <div class="info-callout-box">
+              پس از ثبت، درخواست برای دریافت رمز شارژ ارسال می‌شود.
             </div>
 
             <div class="form-group">
@@ -1693,15 +1673,7 @@
 
             <div class="form-group">
               <label for="iqCardSelect">مبلغ (IQD)</label>
-              <select id="iqCardSelect" onchange="recalcTopupCost()">
-                <option value="1000">1,000</option>
-                <option value="2000">2,000</option>
-                <option value="3000">3,000</option>
-                <option value="5000">5,000</option>
-                <option value="10000">10,000</option>
-                <option value="15000">15,000</option>
-                <option value="25000">25,000</option>
-              </select>
+              <select id="iqCardSelect" onchange="recalcTopupCost()"></select>
             </div>
 
             <div id="iqCalcBox" class="calc-summary-box">
@@ -2022,9 +1994,7 @@
     <div class="center-dialog-box">
       <h3 id="pinModalHeading" style="font-size:0.96rem; font-weight:900; margin-bottom:6px;">تایید تراکنش با پسورد / پین</h3>
       <p id="txPinSummaryText" style="font-size:0.78rem; color:var(--slate-700); line-height:1.6; margin-bottom:8px;"></p>
-      <div class="warn-callout-box" style="font-size:0.69rem; margin-bottom:10px;">
-        تایید تراکنش بر اساس <b>پسورد / پین حساب</b> در اولویت است تا در صورت باز بودن حساب در دستگاه دیگر، از اثر انگشت آن گوشی استفاده نشود. گزینه اثر انگشت اختیاری است و در هر بار خروج/اقدام نیاز به تایید مجدد دارد.
-      </div>
+
 
       <div id="txFallbackPinBox">
         <div class="form-group">
@@ -2149,15 +2119,7 @@
       "AsiaCell (آسیاسل)"
     ];
 
-    const DEFAULT_IQ_PACKAGES = [
-      { id: "iq-1000", label: "1,000", active: true, card_amount: 1000, charge_amount: 1000 },
-      { id: "iq-2000", label: "2,000", active: true, card_amount: 2000, charge_amount: 2000 },
-      { id: "iq-3000", label: "3,000", active: true, card_amount: 3000, charge_amount: 3000 },
-      { id: "iq-5000", label: "5,000", active: true, card_amount: 5000, charge_amount: 5000 },
-      { id: "iq-10000", label: "10,000", active: true, card_amount: 10000, charge_amount: 10000 },
-      { id: "iq-15000", label: "15,000", active: true, card_amount: 15000, charge_amount: 15000 },
-      { id: "iq-25000", label: "25,000", active: true, card_amount: 25000, charge_amount: 25000 }
-    ];
+    const DEFAULT_IQ_PACKAGES = [];
 
     const DEFAULT_HOME_ANNOUNCEMENT = "شما با این برنامه می‌توانید خودتان در هر زمان به شماره‌های افغانستان کردیت ارسال کنید. اطلاعات، اعلان‌ها و پیشنهادات مدیریت در همین بخش نمایش داده می‌شوند.";
 
@@ -2314,16 +2276,20 @@
       if (iqCardSel) {
         const prevCard = iqCardSel.value;
         const currentNet = iqNetSel ? String(iqNetSel.value || '') : '';
-        const pkgs = appSettingsState.iq_packages || DEFAULT_IQ_PACKAGES;
-        iqCardSel.innerHTML = pkgs.map((pkg, idx) => {
-          const info = resolveIraqPackagePricing(pkg, currentNet);
-          const diffNote = info.chargeAmount !== info.cardAmount ? ` (${formatEnMoney(info.chargeAmount)} IQD)` : '';
-          return `<option value="${info.cardAmount}" data-pkg-id="${info.id || idx}">${info.label}${diffNote}</option>`;
-        }).join('');
-        if (prevCard && Array.from(iqCardSel.options).some(o => o.value === String(prevCard))) {
-          iqCardSel.value = String(prevCard);
-        } else if (iqCardSel.options.length > 0) {
-          iqCardSel.selectedIndex = 0;
+        const pkgs = Array.isArray(appSettingsState.iq_packages) ? appSettingsState.iq_packages.filter(p => p && p.active !== false) : [];
+        if (!pkgs.length) {
+          iqCardSel.innerHTML = '<option value="">تنظیم نشده در مدیریت</option>';
+        } else {
+          iqCardSel.innerHTML = pkgs.map((pkg, idx) => {
+            const info = resolveIraqPackagePricing(pkg, currentNet);
+            const diffNote = info.chargeAmount !== info.cardAmount ? ` (${formatEnMoney(info.chargeAmount)} IQD)` : '';
+            return `<option value="${info.cardAmount}" data-pkg-id="${info.id || idx}">${info.label}${diffNote}</option>`;
+          }).join('');
+          if (prevCard && Array.from(iqCardSel.options).some(o => o.value === String(prevCard))) {
+            iqCardSel.value = String(prevCard);
+          } else if (iqCardSel.options.length > 0) {
+            iqCardSel.selectedIndex = 0;
+          }
         }
       }
     }
@@ -3257,26 +3223,64 @@
       return found ? String(getVal(found, ['PinHash', 'pinhash', 'pin_hash']) || '').trim() : '';
     }
 
-    async function persistPinHashInSupabase(accId, pinHash) {
+    async function persistPinHashInSupabase(accId, pinValue) {
       const cleanId = String(accId || '').trim();
-      const cleanHash = String(pinHash || '').trim();
-      if (!cleanId || !cleanHash) return false;
+      const cleanVal = String(pinValue || '').trim();
+      if (!cleanId || !cleanVal) return false;
       const ready = await initSupabaseFromEnv();
       if (!ready || !_supabase) return false;
-      const { data, error } = await _supabase
+
+      let res = await _supabase
         .from('accounts')
-        .update({ PinHash: cleanHash })
+        .update({ PinHash: cleanVal })
         .eq('AccountID', cleanId)
         .select('AccountID, PinHash');
-      if (error) return false;
-      if (Array.isArray(data) && data.length > 0) {
+
+      if (res.error) {
+        const alt = await _supabase
+          .from('accounts')
+          .update({ pin_hash: cleanVal })
+          .eq('AccountID', cleanId)
+          .select('AccountID, pin_hash');
+        if (alt.error) {
+          console.error('Supabase PinHash update error:', res.error, alt.error);
+          return false;
+        }
+        res = alt;
+      }
+
+      if (!Array.isArray(res.data) || res.data.length === 0) {
+        const phoneVal = currentFoundUser ? String(getVal(currentFoundUser, ['Phone', 'phone']) || '').trim() : '';
+        const nameVal = currentFoundUser ? String(getVal(currentFoundUser, ['Name', 'name']) || '').trim() : '';
+        if (phoneVal) {
+          const byPhone = await _supabase
+            .from('accounts')
+            .update({ PinHash: cleanVal })
+            .eq('Phone', phoneVal)
+            .select('AccountID, PinHash');
+          if (!byPhone.error && Array.isArray(byPhone.data) && byPhone.data.length > 0) {
+            res = byPhone;
+          } else if (nameVal) {
+            const ins = await _supabase
+              .from('accounts')
+              .insert([{ AccountID: cleanId, Name: nameVal, Phone: phoneVal, PinHash: cleanVal }])
+              .select('AccountID, PinHash');
+            if (!ins.error && Array.isArray(ins.data) && ins.data.length > 0) {
+              res = ins;
+            }
+          }
+        }
+      }
+
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        const savedColVal = String(res.data[0].PinHash ?? res.data[0].pin_hash ?? cleanVal).trim();
         accountsList = accountsList.map(a => {
           const aid = String(getVal(a, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-          return aid.toLowerCase() === cleanId.toLowerCase() ? { ...a, PinHash: cleanHash } : a;
+          return aid.toLowerCase() === cleanId.toLowerCase() ? { ...a, PinHash: savedColVal } : a;
         });
         try { localStorage.setItem('karimi_cache_accounts', JSON.stringify(accountsList)); } catch (e) {}
         if (currentFoundUser && String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === cleanId.toLowerCase()) {
-          currentFoundUser = { ...currentFoundUser, PinHash: cleanHash };
+          currentFoundUser = { ...currentFoundUser, PinHash: savedColVal };
         }
         return true;
       }
@@ -4200,8 +4204,12 @@
         }
         showRealLoading('در حال ثبت پسورد حساب...', 'ذخیره پسورد جدید');
         await initSupabaseFromEnv();
-        const newHashed = await hashPin(p1);
-        await persistPinHashInSupabase(sheetAccId, newHashed);
+        const savedOk = await persistPinHashInSupabase(sheetAccId, p1);
+        if (!savedOk) {
+          hideRealLoading();
+          alert('خطا در ذخیره رمز در ستون PinHash دیتابیس. لطفاً اتصال یا دسترسی جدول accounts را بررسی کنید.');
+          return;
+        }
         await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
         const refreshedAcc = accountsList.find(u =>
           String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === sheetAccId.toLowerCase()
@@ -4218,7 +4226,7 @@
           return;
         }
         const hashedEntered = await hashPin(enteredPin);
-        if (hashedEntered !== existingPin && enteredPin !== existingPin) {
+        if (enteredPin !== existingPin && hashedEntered !== existingPin) {
           alert('پین یا پسورد واردشده صحیح نیست.');
           return;
         }
@@ -4287,12 +4295,11 @@
         return;
       }
 
-      const hashed = await hashPin(pin);
       const { error } = await _supabase.from('accounts').insert([{
         AccountID: accId,
         Name: name,
         Phone: phone,
-        PinHash: hashed,
+        PinHash: pin,
         AssignedUserEmail: OWNER_EMAIL,
         CreatedBy: OWNER_EMAIL
       }]);
@@ -4912,7 +4919,7 @@
       const storedHash = getStoredPinHashForAccount(currentFoundUser, accId);
       const hashedInput = await hashPin(pinRaw);
 
-      if (hashedInput !== storedHash && pinRaw !== storedHash) {
+      if (pinRaw !== storedHash && hashedInput !== storedHash) {
         alert('رمز ثابت اشتباه است.');
         return;
       }
@@ -5220,7 +5227,7 @@
       const p2 = toEnglishDigits(document.getElementById('confirmAccountPinInput').value.trim());
 
       const hashedOld = await hashPin(oldPin);
-      if (hashedOld !== existingHash && oldPin !== existingHash) {
+      if (oldPin !== existingHash && hashedOld !== existingHash) {
         alert('رمز فعلی صحیح نیست.');
         return;
       }
@@ -5230,8 +5237,7 @@
       }
 
       showRealLoading('در حال ذخیره...', 'به‌روزرسانی رمز');
-      const newHash = await hashPin(p1);
-      const ok = await persistPinHashInSupabase(accId, newHash);
+      const ok = await persistPinHashInSupabase(accId, p1);
       await fetchDataFromSupabaseFresh();
       const refreshed = accountsList.find(u =>
         String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase()
@@ -5738,8 +5744,7 @@
         ? customPin
         : String(Math.floor(100000 + Math.random() * 900000));
 
-      const hashed = await hashPin(newPin);
-      const ok = await persistPinHashInSupabase(targetAccId, hashed);
+      const ok = await persistPinHashInSupabase(targetAccId, newPin);
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
