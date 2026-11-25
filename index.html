@@ -1193,12 +1193,7 @@
           </div>
         </div>
 
-        <div class="admin-notice-card" id="adminAccountNoticeCard">
-          <div class="admin-notice-badge">راهنمای افتتاح حساب</div>
-          <div style="font-size:0.88rem; font-weight:900; color:var(--emerald-950); margin-bottom:4px;">برای افتتاح حساب جدید به ادمین مراجعه کنید</div>
-          <p style="font-size:0.74rem; color:var(--slate-700); line-height:1.6;">ثبت حساب مستقیم بسته شده است. لطفاً برای ایجاد حساب و دریافت کد حساب با مدیریت تماس بگیرید.</p>
-          <a id="adminDirectWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-top:8px;">واتساپ ادمین</a>
-        </div>
+
       </div>
 
       <!-- گام ۲: تایید کد حساب -->
@@ -1434,9 +1429,9 @@
               <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
             </div>
 
-            <div class="mandatory-sync-banner">
-              <span class="mandatory-sync-text">قبل از انجام تراکنش حسابت را به‌روزرسانی کن.</span>
-              <button type="button" class="mandatory-sync-btn" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
+            <div class="mandatory-sync-banner" id="mandatoryBannerTransfer">
+              <span class="mandatory-sync-text" id="mandatoryBannerTextTransfer">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
+              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnTransfer" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
             </div>
 
             <div class="form-group">
@@ -1481,9 +1476,9 @@
               <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
             </div>
 
-            <div class="mandatory-sync-banner">
-              <span class="mandatory-sync-text">قبل از انجام تراکنش حسابت را به‌روزرسانی کن.</span>
-              <button type="button" class="mandatory-sync-btn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
+            <div class="mandatory-sync-banner" id="mandatoryBannerAfn">
+              <span class="mandatory-sync-text" id="mandatoryBannerTextAfn">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
+              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
             </div>
 
             <div class="form-group">
@@ -1514,9 +1509,9 @@
               <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
             </div>
 
-            <div class="mandatory-sync-banner">
-              <span class="mandatory-sync-text">قبل از انجام تراکنش حسابت را به‌روزرسانی کن.</span>
-              <button type="button" class="mandatory-sync-btn" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی اجباری</button>
+            <div class="mandatory-sync-banner" id="mandatoryBannerIq">
+              <span class="mandatory-sync-text" id="mandatoryBannerTextIq">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
+              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnIq" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی اجباری</button>
             </div>
 
             <div class="form-group">
@@ -1987,6 +1982,70 @@
       return (!isNaN(r) && r > 0) ? r : DEFAULT_APP_SETTINGS.afn_to_iqd_rate;
     }
 
+    function resolveIraqPackagePricing(pkg, networkName = '') {
+      const p = pkg || {};
+      const cardAmt = parseFloat(toEnglishDigits(p.card_amount ?? p.amount ?? p.value ?? p.label ?? 0)) || 0;
+      let chargeAmt = NaN;
+
+      if (networkName && p.network_prices && typeof p.network_prices === 'object') {
+        const netVal = p.network_prices[networkName];
+        if (netVal !== undefined && netVal !== null && netVal !== '') {
+          chargeAmt = parseFloat(toEnglishDigits(netVal));
+        }
+      }
+
+      if (isNaN(chargeAmt)) {
+        const rawCharge = p.charge_amount ?? p.price ?? p.sell_price ?? p.deduct_amount ?? p.cost;
+        if (rawCharge !== undefined && rawCharge !== null && rawCharge !== '') {
+          chargeAmt = parseFloat(toEnglishDigits(rawCharge));
+        }
+      }
+
+      if (isNaN(chargeAmt)) {
+        const pct = parseFloat(toEnglishDigits(p.commission_pct ?? p.fee_pct ?? p.markup_pct ?? appSettingsState.iq_commission_pct ?? 0));
+        const fee = parseFloat(toEnglishDigits(p.fee_amount ?? p.fee ?? appSettingsState.iq_fee_amount ?? 0));
+        const mult = parseFloat(toEnglishDigits(p.multiplier ?? p.rate ?? appSettingsState.iq_to_iqd_rate ?? 1));
+        const baseVal = (!isNaN(mult) && mult > 0) ? (cardAmt * mult) : cardAmt;
+        chargeAmt = Math.round(baseVal + (baseVal * ((isNaN(pct) ? 0 : pct) / 100)) + (isNaN(fee) ? 0 : fee));
+      }
+
+      if (isNaN(chargeAmt) || chargeAmt < 0) chargeAmt = cardAmt;
+      const labelTxt = p.label ? String(p.label) : formatEnMoney(cardAmt);
+      return {
+        id: String(p.id || `iq-${cardAmt}`),
+        label: labelTxt,
+        cardAmount: cardAmt,
+        chargeAmount: chargeAmt
+      };
+    }
+
+    function getSelectedIraqPackageInfo() {
+      const sel = document.getElementById('iqCardSelect');
+      const netSel = document.getElementById('iqNetworkSelect');
+      const netName = netSel ? String(netSel.value || '') : '';
+      const pkgs = Array.isArray(appSettingsState.iq_packages) && appSettingsState.iq_packages.length > 0
+        ? appSettingsState.iq_packages
+        : DEFAULT_IQ_PACKAGES;
+
+      let chosenPkg = null;
+      if (sel && sel.selectedIndex >= 0 && sel.options[sel.selectedIndex]) {
+        const opt = sel.options[sel.selectedIndex];
+        const pkgId = opt.getAttribute('data-pkg-id');
+        if (pkgId) {
+          chosenPkg = pkgs.find(p => String(p.id) === String(pkgId)) || null;
+        }
+        if (!chosenPkg) {
+          const valNum = parseFloat(toEnglishDigits(opt.value)) || 0;
+          chosenPkg = pkgs.find(p => (parseFloat(toEnglishDigits(p.card_amount ?? p.amount ?? p.value ?? 0)) || 0) === valNum) || null;
+        }
+      }
+
+      if (!chosenPkg) {
+        chosenPkg = pkgs[0] || DEFAULT_IQ_PACKAGES[0];
+      }
+      return resolveIraqPackagePricing(chosenPkg, netName);
+    }
+
     function populateAfnAndIqSelectorsFromSettings() {
       const iqNetSel = document.getElementById('iqNetworkSelect');
       if (iqNetSel) {
@@ -1995,16 +2054,21 @@
         iqNetSel.innerHTML = nets.map(net => `<option value="${net}">${net}</option>`).join('');
         if (prevNet && nets.includes(prevNet)) iqNetSel.value = prevNet;
         else iqNetSel.selectedIndex = 0;
+        if (!iqNetSel.getAttribute('data-bound-change')) {
+          iqNetSel.setAttribute('data-bound-change', '1');
+          iqNetSel.addEventListener('change', () => recalcTopupCost());
+        }
       }
 
       const iqCardSel = document.getElementById('iqCardSelect');
       if (iqCardSel) {
         const prevCard = iqCardSel.value;
+        const currentNet = iqNetSel ? String(iqNetSel.value || '') : '';
         const pkgs = appSettingsState.iq_packages || DEFAULT_IQ_PACKAGES;
-        iqCardSel.innerHTML = pkgs.map(pkg => {
-          const cardAmt = parseFloat(pkg.card_amount ?? pkg.charge_amount ?? pkg.amount) || 0;
-          const labelTxt = pkg.label ? String(pkg.label) : formatEnMoney(cardAmt);
-          return `<option value="${cardAmt}">${labelTxt}</option>`;
+        iqCardSel.innerHTML = pkgs.map((pkg, idx) => {
+          const info = resolveIraqPackagePricing(pkg, currentNet);
+          const diffNote = info.chargeAmount !== info.cardAmount ? ` (${formatEnMoney(info.chargeAmount)} IQD)` : '';
+          return `<option value="${info.cardAmount}" data-pkg-id="${info.id || idx}">${info.label}${diffNote}</option>`;
         }).join('');
         if (prevCard && Array.from(iqCardSel.options).some(o => o.value === String(prevCard))) {
           iqCardSel.value = String(prevCard);
@@ -2377,6 +2441,10 @@
       });
 
       document.getElementById('modalBody').innerHTML = `
+        <div style="background:var(--emerald-50); border:1.5px solid #6ee7b7; border-radius:var(--radius-md); padding:11px 12px; line-height:1.75; text-align:right; color:var(--emerald-950); font-size:0.82rem; font-weight:800;">
+          <div style="font-size:0.72rem; color:var(--emerald-700); font-weight:900; margin-bottom:4px;">شرح رسمی رسید</div>
+          <div>${descStr}</div>
+        </div>
         <div class="receipt-row"><span class="receipt-label">صاحب حساب</span><span class="receipt-val">${nameVal}</span></div>
         <div class="receipt-row"><span class="receipt-label">طرف حساب</span><span class="receipt-val">${cpName}</span></div>
         <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت</span><span class="receipt-val eng-num">${dateOnly} ${timeStr}</span></div>
@@ -2385,7 +2453,6 @@
         <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">شرح</span><span class="receipt-val">${descStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
       `;
       const adminWaBtn = document.getElementById('receiptSendAdminWaBtn');
@@ -3429,6 +3496,7 @@
       playSound('click');
       requestExternalNotificationPermission();
 
+      resetMandatorySyncState(mode);
       const accId = localStorage.getItem('karimi_accId') ||
         (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
       if (accId) {
@@ -3875,17 +3943,67 @@
       }, 60);
     }
 
+    let mandatorySyncCompletedForMode = { transfer: false, afn: false, iq: false };
+
+    function resetMandatorySyncState(specificMode = null) {
+      if (specificMode) {
+        mandatorySyncCompletedForMode[specificMode] = false;
+      } else {
+        mandatorySyncCompletedForMode = { transfer: false, afn: false, iq: false };
+      }
+      updateMandatoryBannerUi();
+    }
+
+    function updateMandatoryBannerUi() {
+      const map = [
+        { mode: 'transfer', bannerId: 'mandatoryBannerTransfer', textId: 'mandatoryBannerTextTransfer', btnId: 'mandatoryBtnTransfer' },
+        { mode: 'afn', bannerId: 'mandatoryBannerAfn', textId: 'mandatoryBannerTextAfn', btnId: 'mandatoryBtnAfn' },
+        { mode: 'iq', bannerId: 'mandatoryBannerIq', textId: 'mandatoryBannerTextIq', btnId: 'mandatoryBtnIq' }
+      ];
+      map.forEach(item => {
+        const done = Boolean(mandatorySyncCompletedForMode[item.mode]);
+        const banner = document.getElementById(item.bannerId);
+        const txt = document.getElementById(item.textId);
+        const btn = document.getElementById(item.btnId);
+        if (banner) {
+          banner.style.background = done ? 'var(--emerald-50)' : 'var(--warning-soft)';
+          banner.style.borderColor = done ? '#6ee7b7' : '#fcd34d';
+        }
+        if (txt) {
+          txt.style.color = done ? 'var(--emerald-800)' : '#92400e';
+          txt.innerText = done
+            ? 'حساب شما به‌روزرسانی شد؛ می‌توانید تراکنش را انجام دهید.'
+            : 'قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)';
+        }
+        if (btn) {
+          btn.style.background = done ? 'var(--emerald-600)' : 'var(--warning)';
+          btn.innerText = done ? 'به‌روز شد ✓' : 'به‌روزرسانی اجباری';
+        }
+      });
+    }
+
+    function hasCompletedMandatorySync(mode) {
+      if (mandatorySyncCompletedForMode[mode]) return true;
+      alert('قبل از انجام تراکنش حسابت را به‌روزرسانی کن.');
+      return false;
+    }
+
     async function mandatoryRefreshBeforeForm(mode) {
       playSound('click');
       const accId = localStorage.getItem('karimi_accId') ||
         (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
-      alert('قبل از انجام تراکنش حسابت را به‌روزرسانی کن.');
       if (accId) {
         await forceSyncBeforeOperation(accId);
       } else {
         await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       }
-      if (mode) openServiceForm(mode);
+      if (mode) {
+        mandatorySyncCompletedForMode[mode] = true;
+      } else {
+        mandatorySyncCompletedForMode = { transfer: true, afn: true, iq: true };
+      }
+      updateMandatoryBannerUi();
+      playSound('success');
     }
 
     function recomputeCustomerBalances(sheetAccId) {
@@ -4022,6 +4140,7 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
+      if (!hasCompletedMandatorySync('transfer')) return;
       if (!appSettingsState.transfer_enabled) {
         alert('انتقال موجودی توسط مدیریت غیرفعال است.');
         return;
@@ -4094,17 +4213,19 @@
         if (afnBtn) afnBtn.disabled = false;
       }
 
-      const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
+      const iqPkgInfo = getSelectedIraqPackageInfo();
+      const cardAmt = iqPkgInfo.cardAmount;
+      const chargeAmt = iqPkgInfo.chargeAmount;
       const iqBox = document.getElementById('iqCalcBox');
       const iqErr = document.getElementById('topupIqEligibilityMsg');
       const iqBtn = document.getElementById('btnExecuteTopupIq');
-      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(cardAmt);
+      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(chargeAmt);
 
       if (!appSettingsState.topup_iq_enabled) {
         iqBox.classList.add('error');
         iqErr.innerText = 'شارژ عراق در جدول تنظیمات غیرفعال است.';
         if (iqBtn) iqBtn.disabled = true;
-      } else if (netIqd <= 0 || cardAmt > netIqd) {
+      } else if (netIqd <= 0 || chargeAmt > netIqd) {
         iqBox.classList.add('error');
         iqErr.innerText = 'موجودی دینار کافی نیست.';
         if (iqBtn) iqBtn.disabled = true;
@@ -4151,6 +4272,7 @@
 
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
+      if (!hasCompletedMandatorySync(mode)) return;
       if (mode === 'afn' && !appSettingsState.topup_afn_enabled) {
         alert('ارسال کردیت توسط مدیریت غیرفعال است.');
         return;
@@ -4193,13 +4315,15 @@
         summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
-        const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
-        if (cardAmt <= 0 || cardAmt > netIqd) {
+        const iqPkgInfo = getSelectedIraqPackageInfo();
+        const cardAmt = iqPkgInfo.cardAmount;
+        const chargeAmt = iqPkgInfo.chargeAmount;
+        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > netIqd) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt };
-        summaryHtml = `شارژ <b>${network}</b> (<b class="eng-num">${formatEnMoney(cardAmt)} IQD</b>)`;
+        payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt, chargeAmt, pkgLabel: iqPkgInfo.label };
+        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از حساب: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
       }
 
       if (!isTxBiometricEnabled()) {
@@ -4324,6 +4448,7 @@
       }
 
       resetAllOperationForms();
+      resetMandatorySyncState();
       collapseServiceForms();
       await fetchDataFromSupabaseFresh();
       processDashboard(d.fromId, false);
@@ -4379,6 +4504,7 @@
         if (!appSettingsState.afn_api_enabled) {
           apiOk = true;
           apiRef = `MANUAL-${txId}`;
+          payload.companyResponse = 'ثبت سیستمی کردیت افغانستان';
         } else {
           try {
             const resp = await fetch(endpointUrl, {
@@ -4400,7 +4526,10 @@
 
             if (resp.ok && json && json.ok) {
               apiOk = true;
-              if (json.txid) apiRef = `REF-${json.txid}`;
+              const extractedCode = json.txid || json.reference_id || json.tracking_code || json.ref || json.id || (json.raw && (json.raw.txid || json.raw.reference_id || json.raw.id || json.raw.ref)) || '';
+              if (extractedCode) apiRef = String(extractedCode);
+              const extractedCompanyMsg = json.company_message || json.message || json.msg || (json.raw && (json.raw.msg || json.raw.message)) || '';
+              payload.companyResponse = extractedCompanyMsg ? String(extractedCompanyMsg).trim() : '';
             } else {
               const companyRaw = json && (
                 json.company_message ||
@@ -4430,6 +4559,8 @@
           return;
         }
 
+        const companyRespNote = payload.companyResponse ? ` | پاسخ شرکت: ${payload.companyResponse}` : '';
+        const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
@@ -4438,7 +4569,7 @@
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'ارسال کردیت',
-          Description: `${resolvedNetwork} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
+          Description: officialAfnDesc,
           AssignedUserEmail: assigned,
           Status: appSettingsState.afn_api_enabled ? 'تایید شده' : 'ثبت شده'
         };
@@ -4465,25 +4596,27 @@
         showReceiptForTransactionData(afnTxRow);
       } else {
         showRealLoading('در حال ثبت...', 'ثبت تراکنش');
+        const iqChargeAmt = Number(payload.chargeAmt ?? payload.cardAmt) || Number(payload.cardAmt) || 0;
+        const iqCardAmt = Number(payload.cardAmt) || iqChargeAmt;
         const apiResult = await callExternalTopupApi({
           txId,
           accountId: payload.accId,
           accountName: payload.accName,
           network: payload.network,
-          amount: Number(payload.cardAmt),
+          amount: iqChargeAmt,
+          cardAmount: iqCardAmt,
           currency: 'IQD'
         });
+        const refSuffix = (apiResult.handledByExternalApi && apiResult.referenceId) ? ` | کد پیگیری: ${apiResult.referenceId}` : '';
         const iqTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
-          Amount: Number(payload.cardAmt),
+          Amount: iqChargeAmt,
           Currency: 'IQD',
           Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
-          Description: apiResult.handledByExternalApi && apiResult.referenceId
-            ? `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD) - ${apiResult.referenceId}`
-            : `${payload.network} (${formatEnMoney(payload.cardAmt)} IQD)`,
+          Description: `رسید رسمی شارژ عراق — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
           AssignedUserEmail: assigned,
           Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
         };
