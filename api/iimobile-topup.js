@@ -19,6 +19,10 @@ export default async function handler(req, res) {
 
   const apiBase = rawApiBase.endsWith('/v1/apis') ? rawApiBase : `${rawApiBase}/v1/apis`;
 
+  const creditBundleId = String(
+    process.env.IIMOBILE_CREDIT_BUNDLE_ID || process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506'
+  ).trim();
+
   const envToken = String(
     process.env.IIMOBILE_JWT_TOKEN || process.env.IIMOBILE_TOKEN || process.env.IIMOBILE_API_KEY || ''
   )
@@ -27,35 +31,14 @@ export default async function handler(req, res) {
     .trim();
 
   const reqAuth = String(req.headers?.authorization || '').trim();
-  const authHeaderValue = reqAuth || (envToken ? `Bearer ${envToken}` : '');
-
-  const OPERATOR_MAP = {
-    'ام‌تی‌ان': 'mtn',
-    'ام تي ان': 'mtn',
-    'mtn': 'mtn',
-    'افغان بی‌سیم': 'awcc',
-    'افغان بي سيم': 'awcc',
-    'awcc': 'awcc',
-    'سلام': 'salam',
-    'salam': 'salam',
-    'روشن': 'roshan',
-    'roshan': 'roshan',
-    'اتصالات': 'etisalat',
-    'etisalat': 'etisalat',
-    'atoma': 'atoma'
-  };
-
-  function resolveOperatorKey(rawOp) {
-    const clean = String(rawOp || '').trim().toLowerCase();
-    return OPERATOR_MAP[rawOp] || OPERATOR_MAP[clean] || clean;
-  }
+  const rawReqAuth = reqAuth.replace(/^Bearer\s+/i, '').trim();
+  const authHeaderValue = rawReqAuth || envToken;
 
   const body = req.body || {};
-  const { operator, network, phone, amount } = body;
+  const { operator, phone, amount, bundle_id } = body;
   const numAmount = Number(amount);
-  const resolvedOperator = resolveOperatorKey(operator || network);
 
-  if (!resolvedOperator || !phone || Number.isNaN(numAmount) || numAmount <= 0) {
+  if (!operator || !phone || Number.isNaN(numAmount) || numAmount <= 0) {
     return res.status(400).json({
       ok: false,
       stage: 'validation',
@@ -63,16 +46,16 @@ export default async function handler(req, res) {
     });
   }
 
+  const normalizedOperator = String(operator).trim().toLowerCase();
   const normalizedPhone = String(phone).trim();
+  const effectiveBundleId = String(bundle_id || creditBundleId).trim() || creditBundleId;
 
-  // در server.js مقدار IIMOBILE_BASE_URL روی .../v1/apis ست شده است، پس مسیر داخلی را به‌صورت نسبی می‌فرستیم
-  function buildTargetUrl(endpointPath) {
-    const cleanPath = String(endpointPath).replace(/^\/+/, '');
-    if (proxyBase.includes('161.97.150.196:1001')) {
-      return `/${cleanPath}`;
-    }
-    return `${apiBase}/${cleanPath}`;
-  }
+  const payload = {
+    operator: normalizedOperator,
+    phone: normalizedPhone,
+    bundle_id: effectiveBundleId,
+    amount: numAmount
+  };
 
   function cleanHtmlMessage(text, fallbackStatus) {
     const str = String(text || '').trim();
@@ -142,7 +125,7 @@ export default async function handler(req, res) {
   function buildTransactionDescription({ ok, stage, txid, companyMessage }) {
     const statusLabel = ok ? 'موفق' : 'ناموفق';
     const parts = [
-      `${statusLabel} | شارژ اعتباری ${resolvedOperator} | شماره: ${normalizedPhone} | مبلغ: ${numAmount}`,
+      `${statusLabel} | شارژ اعتباری ${normalizedOperator} | شماره: ${normalizedPhone} | مبلغ: ${numAmount}`,
       `مرحله: ${stage}`
     ];
     if (txid !== undefined && txid !== null && String(txid) !== '') {
@@ -152,6 +135,11 @@ export default async function handler(req, res) {
       parts.push(`واکنش شرکت: ${companyMessage}`);
     }
     return parts.join(' | ');
+  }
+
+  function buildTargetUrl(endpointPath) {
+    const cleanPath = `/${String(endpointPath).replace(/^\/+/, '')}`;
+    return `${apiBase}${cleanPath}`;
   }
 
   async function postViaProxy(endpointPath, bodyObj) {
@@ -185,14 +173,8 @@ export default async function handler(req, res) {
     return { resp, raw, targetUrl, companyMessage };
   }
 
-  const initPayload = {
-    operator: resolvedOperator,
-    phone: normalizedPhone,
-    amount: numAmount
-  };
-
   try {
-    const initRes = await postViaProxy('/v1/api/initiate-transaction', initPayload);
+    const initRes = await postViaProxy('/v1/api/initiate-transaction', payload);
     const initData = initRes.raw || {};
     const txId = extractTxId(initData);
 
@@ -227,7 +209,7 @@ export default async function handler(req, res) {
           : txId;
 
       const execRes = await postViaProxy('/v1/api/execute-transaction', {
-        operator: resolvedOperator,
+        operator: normalizedOperator,
         txnid: parsedTxnId
       });
       const execData = execRes.raw || {};
