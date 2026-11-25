@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -961,6 +960,141 @@
       gap: 8px;
     }
 
+    .launch-hub-card {
+      background: linear-gradient(155deg, #ffffff 0%, #f1fbf6 100%);
+      border: 1.5px solid #86efac;
+      border-radius: var(--radius-xl);
+      padding: 13px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .launch-hub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .launch-hub-header h4 {
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: var(--emerald-950);
+    }
+
+    .launch-hub-header span {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--emerald-700);
+      background: var(--emerald-50);
+      border: 1px solid #a7f3d0;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .three-option-menu {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .fancy-menu-option {
+      width: 100%;
+      background: var(--white);
+      border: 1.5px solid #bbf7d0;
+      border-radius: var(--radius-lg);
+      padding: 11px 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: right;
+      box-shadow: 0 3px 10px rgba(6, 78, 59, 0.05);
+    }
+
+    .fancy-menu-option.active {
+      border-color: var(--emerald-600);
+      background: var(--emerald-50);
+    }
+
+    .fancy-opt-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fancy-opt-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--emerald-600) 0%, var(--teal-700) 100%);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .fancy-opt-title {
+      font-size: 0.86rem;
+      font-weight: 900;
+      color: var(--slate-900);
+      display: block;
+    }
+
+    .fancy-opt-sub {
+      font-size: 0.69rem;
+      font-weight: 700;
+      color: var(--slate-500);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .fancy-opt-cta {
+      background: var(--emerald-50);
+      border: 1px solid #6ee7b7;
+      color: var(--emerald-800);
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .mandatory-sync-banner {
+      background: var(--warning-soft);
+      border: 1.5px solid #fcd34d;
+      border-radius: var(--radius-md);
+      padding: 9px 11px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mandatory-sync-text {
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #92400e;
+      line-height: 1.45;
+    }
+
+    .mandatory-sync-btn {
+      background: var(--warning);
+      color: var(--white);
+      border: none;
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
     .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
     .hidden { display: none !important; }
   </style>
@@ -1126,8 +1260,6 @@
 
           <div class="currency-switcher" id="currencyTabs"></div>
 
-          <div id="accountPsychologyMsg" class="calc-summary-box"></div>
-
           <div class="quick-grid-card">
             <div class="section-heading-row">
               <h3>دسترسی سریع</h3>
@@ -1140,7 +1272,7 @@
               </button>
               <button type="button" class="quick-tile" id="qTileAfn" onclick="openServiceForm('afn')">
                 <div class="quick-icon-box">📲</div>
-                <span class="quick-label">شارژ افغانستان</span>
+                <span class="quick-label">میتیکو افغانستان</span>
               </button>
               <button type="button" class="quick-tile" id="qTileIq" onclick="openServiceForm('iq')">
                 <div class="quick-icon-box">🇮🇶</div>
@@ -1149,6 +1281,47 @@
               <button type="button" class="quick-tile" id="qTileTxQuick" onclick="switchBottomTab('tx')">
                 <div class="quick-icon-box">🧾</div>
                 <span class="quick-label">تراکنش‌ها</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="launch-hub-card">
+            <div class="launch-hub-header">
+              <h4>منوی عملیات و باز کردن فرم</h4>
+              <span>بازشونده</span>
+            </div>
+            <div class="three-option-menu">
+              <button type="button" class="fancy-menu-option" id="homeMenuOptTransfer" onclick="launchOperationForm('transfer')">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">⇄</div>
+                  <div>
+                    <span class="fancy-opt-title">انتقال موجودی</span>
+                    <span class="fancy-opt-sub">برای باز شدن فرم انتقال موجودی لمس کنید</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">باز کردن فرم ↑</span>
+              </button>
+
+              <button type="button" class="fancy-menu-option" id="homeMenuOptAfn" onclick="launchOperationForm('afn')">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">🇦🇫</div>
+                  <div>
+                    <span class="fancy-opt-title">میتیکو به شماره‌های افغانستان</span>
+                    <span class="fancy-opt-sub">اتصالات، روشن، سلام — باز شدن فرم ارسال شارژ</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">باز کردن فرم ↑</span>
+              </button>
+
+              <button type="button" class="fancy-menu-option" id="homeMenuOptIq" onclick="launchOperationForm('iq')">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">🇮🇶</div>
+                  <div>
+                    <span class="fancy-opt-title">شارژ عراق</span>
+                    <span class="fancy-opt-sub">باز شدن فرم ثبت شارژ زین و آسیاسل</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">باز کردن فرم ↑</span>
               </button>
             </div>
           </div>
@@ -1169,18 +1342,61 @@
         <div id="tabServicesView" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
           <div class="currency-switcher">
             <button type="button" class="curr-pill-btn" id="srvSubTransfer" onclick="openServiceForm('transfer')">⇄ انتقال موجودی</button>
-            <button type="button" class="curr-pill-btn" id="srvSubAfn" onclick="openServiceForm('afn')">🇦🇫 شارژ افغانستان</button>
+            <button type="button" class="curr-pill-btn" id="srvSubAfn" onclick="openServiceForm('afn')">🇦🇫 میتیکو افغانستان</button>
             <button type="button" class="curr-pill-btn" id="srvSubIq" onclick="openServiceForm('iq')">🇮🇶 شارژ عراق</button>
           </div>
 
-          <div id="serviceEmptyPlaceholder" class="quick-grid-card" style="text-align:center; padding:26px 14px;">
-            <div style="font-size:0.86rem; font-weight:800; color:var(--slate-500);">یک گزینه را انتخاب کنید</div>
+          <div id="serviceEmptyPlaceholder" class="launch-hub-card">
+            <div class="launch-hub-header">
+              <h4>انتخاب و باز کردن فرم عملیات</h4>
+              <span>فرم بسته است</span>
+            </div>
+            <div class="three-option-menu">
+              <button type="button" class="fancy-menu-option" onclick="openServiceForm('transfer')">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">⇄</div>
+                  <div>
+                    <span class="fancy-opt-title">فرم انتقال موجودی</span>
+                    <span class="fancy-opt-sub">برای باز شدن فرم انتقال موجودی بزنید</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">باز کردن فرم</span>
+              </button>
+
+              <button type="button" class="fancy-menu-option" onclick="openServiceForm('afn')">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">🇦🇫</div>
+                  <div>
+                    <span class="fancy-opt-title">فرم میتیکو به شماره‌های افغانستان</span>
+                    <span class="fancy-opt-sub">انتخاب شبکه (اتصالات، روشن، سلام) و ارسال</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">باز کردن فرم</span>
+              </button>
+
+              <button type="button" class="fancy-menu-option" onclick="openServiceForm('iq')">
+                <div class="fancy-opt-left">
+                  <div class="fancy-opt-badge">🇮🇶</div>
+                  <div>
+                    <span class="fancy-opt-title">فرم شارژ عراق</span>
+                    <span class="fancy-opt-sub">برای باز شدن فرم شارژ عراق بزنید</span>
+                  </div>
+                </div>
+                <span class="fancy-opt-cta">باز کردن فرم</span>
+              </button>
+            </div>
           </div>
 
           <!-- پنل ۱: انتقال موجودی -->
           <div id="panelTransfer" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>انتقال موجودی حساب به حساب</h4>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+            </div>
+
+            <div class="mandatory-sync-banner">
+              <span class="mandatory-sync-text">قبل از انجام تراکنش حسابت را به‌روزرسانی کن.</span>
+              <button type="button" class="mandatory-sync-btn" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
             </div>
 
             <div class="form-group">
@@ -1218,10 +1434,25 @@
             </button>
           </div>
 
-          <!-- پنل ۲: شارژ افغانستان -->
+          <!-- پنل ۲: میتیکو به شماره‌های افغانستان -->
           <div id="panelTopupAfn" class="action-panel collapsed">
             <div class="panel-banner-header">
-              <h4>شارژ افغانستان</h4>
+              <h4>میتیکو به شماره‌های افغانستان</h4>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+            </div>
+
+            <div class="mandatory-sync-banner">
+              <span class="mandatory-sync-text">قبل از انجام تراکنش حسابت را به‌روزرسانی کن.</span>
+              <button type="button" class="mandatory-sync-btn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
+            </div>
+
+            <div class="form-group">
+              <label for="afnNetworkSelect">انتخاب شبکه (اتصالات، روشن، سلام)</label>
+              <select id="afnNetworkSelect">
+                <option value="اتصالات">اتصالات</option>
+                <option value="روشن">روشن</option>
+                <option value="سلام">سلام</option>
+              </select>
             </div>
 
             <div class="form-group">
@@ -1249,6 +1480,12 @@
           <div id="panelTopupIq" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>شارژ عراق</h4>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+            </div>
+
+            <div class="mandatory-sync-banner">
+              <span class="mandatory-sync-text">قبل از انجام تراکنش حسابت را به‌روزرسانی کن.</span>
+              <button type="button" class="mandatory-sync-btn" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی اجباری</button>
             </div>
 
             <div class="form-group">
@@ -1614,9 +1851,11 @@
         tPrev.innerHTML = '<span>مقصد</span><span>کد حساب و شماره تماس را وارد کنید</span>';
       }
 
+      const afnNet = document.getElementById('afnNetworkSelect');
       const afnPhone = document.getElementById('afnTargetPhone');
       const afnAmt = document.getElementById('afnAmountInput');
       const afnErr = document.getElementById('topupAfnEligibilityMsg');
+      if (afnNet && afnNet.options.length > 0) afnNet.selectedIndex = 0;
       if (afnPhone) afnPhone.value = '';
       if (afnAmt) afnAmt.value = '';
       if (afnErr) afnErr.innerText = '';
@@ -1810,7 +2049,7 @@
       ).trim();
       if (!rawRef) return OWNER_NAME_DISPLAY;
       const lower = rawRef.toLowerCase();
-      if (lower === OWNER_EMAIL.toLowerCase() || lower.includes('mohammadsharif') || lower.includes('karimi') || rawRef === 'مالک' || lower === 'owner') {
+      if (lower === OWNER_EMAIL.toLowerCase() || lower.includes('mohammadsharif') || lower.includes('karimi') || rawRef === 'مالک' || rawRef === 'owner') {
         return OWNER_NAME_DISPLAY;
       }
       if (rawRef.includes('@')) {
@@ -1871,8 +2110,6 @@
       } catch (e) { return ''; }
     }
 
-    // ================= تنظیمات اعلان‌ها و صدا/لرزش =================
-    // حالات مجاز: 'sound_vibration' | 'vibration_only' | 'silent' | 'off'
     function getNotificationMode() {
       const m = localStorage.getItem('karimi_notif_mode') || 'sound_vibration';
       if (['sound_vibration', 'vibration_only', 'silent', 'off'].includes(m)) return m;
@@ -1997,7 +2234,6 @@
       document.getElementById('realLoadingOverlay').classList.add('hidden');
     }
 
-    // ================= اعلان صرفاً بیرونی (سیستمی گوشی / مرورگر) — بدون بنر درون‌برنامه‌ای =================
     function getCapacitorLocalNotifications() {
       try {
         const cap = window.Capacitor;
@@ -2185,12 +2421,10 @@
       } catch (e) {}
     }
 
-    // هیچ بنر درون‌برنامه‌ای نمایش داده نمی‌شود؛ پیام‌ها فقط به صورت اعلان بیرونی سیستم ارسال می‌شوند
     function notifyAccountEvent(titleText, descText) {
       sendExternalSystemNotification(titleText, descText);
     }
 
-    // ================= دکمه بازگشت گوشی و مرورگر =================
     function ensureSentinelHistory() {
       try {
         if (!window.history.state || !window.history.state.karimiNav) {
@@ -2345,8 +2579,6 @@
       );
     }
 
-    // سیاست اعلان: هرگز هنگام ورود به حساب یا باز کردن صفحه اعلان‌های قدیمی نمی‌آید؛
-    // فقط تراکنش‌های کاملاً جدیدی که بعد از آخرین وضعیت ثبت‌شده اضافه شده‌اند اعلان می‌گیرند.
     function checkAndAnnounceNewTransactions(accId, previousIds, isOnInitialOpen = false) {
       if (!accId) return;
       const currentTxs = getUserVisibleTransactions(accId);
@@ -2365,7 +2597,6 @@
         String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || JSON.stringify(tx))
       );
 
-      // در اولین بارگذاری یا ورود، لیست فعلی را به‌عنوان مرجع ثبت می‌کنیم تا تاریخچه قدیمی هرگز اعلان ندهد
       if (isOnInitialOpen && baselineIds.length === 0) {
         try { localStorage.setItem(seenKey, JSON.stringify(allCurrentIds)); } catch (e) {}
         return;
@@ -2395,7 +2626,6 @@
       }
     }
 
-    // شنونده زنده تغییرات دیتابیس (وقتی اپ باز یا در پس‌زمینه وب‌ویو فعال است، تغییر حساب فوری اعلان بفرستد)
     function subscribeRealtimeAccountEvents(accId) {
       if (!_supabase || !accId) return;
       if (realtimeTxChannel) {
@@ -2711,7 +2941,6 @@
       localStorage.setItem('karimi_phone', phoneVal);
       localStorage.setItem('karimi_accId', sheetAccId);
 
-      // ثبت شناسه تراکنش‌های موجود در زمان ورود تا تراکنش‌های قدیمی هرگز اعلان نشوند
       const seenKey = `karimi_seen_tx_ids_${sheetAccId.trim().toLowerCase()}`;
       const existingIds = getUserTransactionIds(sheetAccId);
       try { localStorage.setItem(seenKey, JSON.stringify(existingIds)); } catch (e) {}
@@ -2910,16 +3139,46 @@
       document.getElementById('odometerDebit').innerText = formatBalanceDisplay(b.debit);
 
       const statusBox = document.getElementById('accountPsychologyMsg');
-      if (b.net > 0) {
-        statusBox.className = 'calc-summary-box';
-        statusBox.innerHTML = `بستانکار: <b class="eng-num">${formatBalanceDisplay(b.net)} ${currName}</b>`;
-      } else if (b.net < 0) {
-        statusBox.className = 'calc-summary-box error';
-        statusBox.innerHTML = `بدهکار: <b class="eng-num">${formatBalanceDisplay(Math.abs(b.net))} ${currName}</b>`;
-      } else {
-        statusBox.className = 'calc-summary-box';
-        statusBox.innerHTML = `مانده: <b class="eng-num">0 ${currName}</b>`;
+      if (statusBox) {
+        if (b.net > 0) {
+          statusBox.className = 'calc-summary-box';
+          statusBox.innerHTML = `بستانکار: <b class="eng-num">${formatBalanceDisplay(b.net)} ${currName}</b>`;
+        } else if (b.net < 0) {
+          statusBox.className = 'calc-summary-box error';
+          statusBox.innerHTML = `بدهکار: <b class="eng-num">${formatBalanceDisplay(Math.abs(b.net))} ${currName}</b>`;
+        } else {
+          statusBox.className = 'calc-summary-box';
+          statusBox.innerHTML = `مانده: <b class="eng-num">0 ${currName}</b>`;
+        }
       }
+    }
+
+    function launchOperationForm(mode) {
+      openServiceForm(mode);
+      setTimeout(() => {
+        const panelMap = {
+          transfer: 'panelTransfer',
+          afn: 'panelTopupAfn',
+          iq: 'panelTopupIq'
+        };
+        const targetEl = document.getElementById(panelMap[mode]);
+        if (targetEl && typeof targetEl.scrollIntoView === 'function') {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 60);
+    }
+
+    async function mandatoryRefreshBeforeForm(mode) {
+      playSound('click');
+      const accId = localStorage.getItem('karimi_accId') ||
+        (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
+      alert('قبل از انجام تراکنش حسابت را به‌روزرسانی کن.');
+      if (accId) {
+        await forceSyncBeforeOperation(accId);
+      } else {
+        await fetchDataFromSupabaseFresh();
+      }
+      if (mode) openServiceForm(mode);
     }
 
     function recomputeCustomerBalances(sheetAccId) {
@@ -3141,6 +3400,7 @@
       let payloadData = null;
       let summaryHtml = '';
       if (mode === 'afn') {
+        const afnNetwork = document.getElementById('afnNetworkSelect')?.value || 'اتصالات';
         const targetPhone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
         if (!/^07\d{8}$/.test(targetPhone)) {
@@ -3156,8 +3416,8 @@
           alert('موجودی دینار کافی نیست.');
           return;
         }
-        payloadData = { mode: 'afn', accId, accName, targetPhone, afnAmt, requiredIqd };
-        summaryHtml = `شارژ <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
+        payloadData = { mode: 'afn', accId, accName, afnNetwork, targetPhone, afnAmt, requiredIqd };
+        summaryHtml = `میتیکو (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
         const cardAmt = parseInt(document.getElementById('iqCardSelect').value, 10) || 0;
@@ -3286,9 +3546,11 @@
       }
 
       resetAllOperationForms();
+      collapseServiceForms();
       await fetchDataFromSupabaseFresh();
       processDashboard(d.fromId, false);
       resetAllOperationForms();
+      collapseServiceForms();
       updateLastSyncLabel();
       const curIds = getUserTransactionIds(d.fromId);
       try { localStorage.setItem(`karimi_seen_tx_ids_${d.fromId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
@@ -3320,6 +3582,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               operator: payload.operator || 'atoma',
+              network: payload.afnNetwork || 'اتصالات',
               phone: intlPhone,
               bundle_id: payload.bundle_id || undefined,
               amount: Number(payload.afnAmt)
@@ -3357,8 +3620,8 @@
           Amount: Number(payload.requiredIqd),
           Currency: 'IQD',
           Direction: 'بدهکار',
-          OperationType: 'شارژ افغانستان',
-          Description: `${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
+          OperationType: 'میتیکو به شماره‌های افغانستان',
+          Description: `${payload.afnNetwork || 'اتصالات'} | ${payload.targetPhone} (${payload.afnAmt} AFN) - ${apiRef}`,
           AssignedUserEmail: assigned,
           Status: 'تایید شده'
         };
@@ -3371,14 +3634,16 @@
         }
 
         resetAllOperationForms();
+        collapseServiceForms();
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         resetAllOperationForms();
+        collapseServiceForms();
         updateLastSyncLabel();
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
         if (curIds.length > prevIds.length) {
-          notifyAccountEvent('شارژ افغانستان ثبت شد', `کد پیگیری: ${apiRef}`);
+          notifyAccountEvent('میتیکو به شماره‌های افغانستان ثبت شد', `کد پیگیری: ${apiRef}`);
         }
         showReceiptForTransactionData(afnTxRow);
       } else {
@@ -3414,9 +3679,11 @@
         }
 
         resetAllOperationForms();
+        collapseServiceForms();
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
         resetAllOperationForms();
+        collapseServiceForms();
         updateLastSyncLabel();
         const curIds = getUserTransactionIds(payload.accId);
         try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
@@ -3548,7 +3815,6 @@
       return null;
     }
 
-    // فراخوانی واقعی اثر انگشت یا PIN، الگو و رمز عبور قفل خود گوشی اندروید
     async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
       const bioPlugin = getCapacitorBiometricPlugin();
       if (bioPlugin) {
@@ -3584,7 +3850,6 @@
         }
       }
 
-      // پل مستقیم وب‌ویو اندروید در صورت تعریف شدن در کلاینت بومی
       try {
         const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
         for (const br of bridges) {
@@ -3595,7 +3860,6 @@
         }
       } catch (e) {}
 
-      // پشتیبانی WebAuthn / Passkey مرورگر و وب‌ویوهای جدید
       if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
         try {
           const cred = await navigator.credentials.get({
@@ -3611,7 +3875,6 @@
         }
       }
 
-      // اگر دستگاه فاقد ماژول بومی باشد و پلاگین اندروید هنوز نصب نشده باشد، خطا نداده و تایید را برمی‌گرداند
       return true;
     }
 
