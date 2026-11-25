@@ -9,13 +9,32 @@ export default async function handler(req, res) {
     });
   }
 
-  const proxyBase = (process.env.PROXY_BASE_URL || 'http://161.97.150.196:1001').replace(/\/+$/, '');
-  const apiBase = (process.env.IIMOBILE_API_BASE || 'https://recharge-apis.iimobile.af/v1/apis').replace(/\/+$/, '');
+  const proxyBase = String(process.env.PROXY_BASE_URL || 'http://161.97.150.196:1001')
+    .trim()
+    .replace(/\/+$/, '');
+
+  const rawApiBase = String(process.env.IIMOBILE_API_BASE || 'https://recharge-apis.iimobile.af/v1/apis')
+    .trim()
+    .replace(/\/+$/, '');
+
+  const apiBase = rawApiBase.endsWith('/v1/apis') ? rawApiBase : `${rawApiBase}/v1/apis`;
+
   const creditBundleId = String(
     process.env.IIMOBILE_CREDIT_BUNDLE_ID || process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506'
   ).trim();
 
-  const { operator, phone, amount } = req.body || {};
+  const envToken = String(
+    process.env.IIMOBILE_JWT_TOKEN || process.env.IIMOBILE_TOKEN || process.env.IIMOBILE_API_KEY || ''
+  )
+    .trim()
+    .replace(/^Bearer\s+/i, '')
+    .trim();
+
+  const reqAuth = String(req.headers?.authorization || '').trim();
+  const authHeaderValue = reqAuth || (envToken ? `Bearer ${envToken}` : '');
+
+  const body = req.body || {};
+  const { operator, phone, amount, bundle_id } = body;
   const numAmount = Number(amount);
 
   if (!operator || !phone || Number.isNaN(numAmount) || numAmount <= 0) {
@@ -28,11 +47,12 @@ export default async function handler(req, res) {
 
   const normalizedOperator = String(operator).trim().toLowerCase();
   const normalizedPhone = String(phone).trim();
+  const effectiveBundleId = String(bundle_id || creditBundleId).trim() || creditBundleId;
 
   const payload = {
     operator: normalizedOperator,
     phone: normalizedPhone,
-    bundle_id: creditBundleId,
+    bundle_id: effectiveBundleId,
     amount: numAmount
   };
 
@@ -44,7 +64,10 @@ export default async function handler(req, res) {
 
     const titleMatch = str.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
     const h1Match = str.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-    const summary = (h1Match?.[1] || titleMatch?.[1] || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const summary = (h1Match?.[1] || titleMatch?.[1] || '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
     return summary ? `${summary} (پاسخ HTML از سرور)` : `خطای HTTP ${fallbackStatus || ''} (پاسخ HTML از سرور)`.trim();
   }
 
@@ -77,9 +100,24 @@ export default async function handler(req, res) {
     return cleanHtmlMessage(rawText, httpStatus);
   }
 
+  function extractTxId(data) {
+    if (!data || typeof data !== 'object') return '';
+    const val =
+      data.txid ??
+      data.txnid ??
+      data.transaction_id ??
+      data.id ??
+      data?.data?.txid ??
+      data?.data?.txnid ??
+      data?.data?.transaction_id ??
+      data?.data?.id ??
+      '';
+    return String(val || '').trim();
+  }
+
   function isPositiveStatus(data) {
     if (!data || typeof data !== 'object') return false;
-    const st = data.status;
+    const st = data.status ?? data?.data?.status;
     return st === 1 || st === 2 || st === '1' || st === '2' || st === true || data.success === true;
   }
 
@@ -107,12 +145,17 @@ export default async function handler(req, res) {
     const targetUrl = buildTargetUrl(endpointPath);
     const proxyUrl = `${proxyBase}/?url=${encodeURIComponent(targetUrl)}`;
 
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-target-url': targetUrl
+    };
+    if (authHeaderValue) {
+      headers['Authorization'] = authHeaderValue;
+    }
+
     const resp = await fetch(proxyUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-target-url': targetUrl
-      },
+      headers,
       body: JSON.stringify(bodyObj),
       signal: AbortSignal.timeout(15000)
     });
@@ -132,20 +175,14 @@ export default async function handler(req, res) {
   try {
     const initRes = await postViaProxy('/v1/api/initiate-transaction', payload);
     const initData = initRes.raw || {};
-    const txId =
-      initData.txid ??
-      initData.transaction_id ??
-      initData.id ??
-      initData?.data?.txid ??
-      initData?.data?.transaction_id ??
-      initData?.data?.id;
+    const txId = extractTxId(initData);
 
     if (!initRes.resp.ok || (!isPositiveStatus(initData) && !txId)) {
       const statusCode = initRes.resp.status >= 400 ? initRes.resp.status : 400;
       const description = buildTransactionDescription({
         ok: false,
         stage: 'initiate',
-        txid: txId,
+        txid: txId || null,
         companyMessage: initRes.companyMessage
       });
 
@@ -156,7 +193,7 @@ export default async function handler(req, res) {
         company_message: initRes.companyMessage,
         company_status: initData?.status ?? null,
         company_http_status: initRes.resp.status,
-        txid: txId ?? null,
+        txid: txId || null,
         tx_description: description,
         targetUrl: initRes.targetUrl,
         initiate_raw: initData,
@@ -164,11 +201,11 @@ export default async function handler(req, res) {
       });
     }
 
-    if (txId !== undefined && txId !== null && txId !== '') {
+    if (txId) {
       const parsedTxnId =
-        /^\d+$/.test(String(txId)) && Number(txId) <= Number.MAX_SAFE_INTEGER
+        /^\d+$/.test(txId) && Number(txId) <= Number.MAX_SAFE_INTEGER
           ? Number(txId)
-          : String(txId);
+          : txId;
 
       const execRes = await postViaProxy('/v1/api/execute-transaction', {
         operator: normalizedOperator,
@@ -176,18 +213,19 @@ export default async function handler(req, res) {
       });
       const execData = execRes.raw || {};
       const execOk = execRes.resp.ok && isPositiveStatus(execData);
+      const finalTxId = extractTxId(execData) || txId;
       const statusCode = execOk ? 200 : (execRes.resp.status >= 400 ? execRes.resp.status : 400);
       const description = buildTransactionDescription({
         ok: execOk,
         stage: 'execute',
-        txid: txId,
+        txid: finalTxId,
         companyMessage: execRes.companyMessage || initRes.companyMessage
       });
 
       return res.status(statusCode).json({
         ok: execOk,
         stage: 'execute',
-        txid: txId,
+        txid: finalTxId,
         message: execOk ? (execRes.companyMessage || 'Recharge Successful') : undefined,
         error: execOk ? undefined : (execRes.companyMessage || 'Execute transaction failed'),
         company_message: execRes.companyMessage,
