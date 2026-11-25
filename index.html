@@ -4252,11 +4252,21 @@
               apiOk = true;
               if (json.txid) apiRef = `REF-${json.txid}`;
             } else {
-              const exactServerMsg =
-                (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) ||
-                (rawText && rawText.trim()) ||
-                `HTTP ${resp.status} ${resp.statusText || ''}`.trim();
-              lastErr = typeof exactServerMsg === 'string' ? exactServerMsg : JSON.stringify(exactServerMsg);
+              const companyRaw = json && (
+                json.company_message ||
+                json.initiate_company_message ||
+                (json.raw && (json.raw.msg || json.raw.message || json.raw.error || json.raw.detail)) ||
+                (json.initiate_raw && (json.initiate_raw.msg || json.initiate_raw.message || json.initiate_raw.error || json.initiate_raw.detail)) ||
+                (json.execute_raw && (json.execute_raw.msg || json.execute_raw.message || json.execute_raw.error || json.execute_raw.detail))
+              );
+              const stageTag = json && json.stage ? `[${json.stage}] ` : '';
+              const detailMsg = companyRaw || (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) || (rawText && rawText.trim()) || '';
+              if (detailMsg && detailMsg !== 'Bad Request') {
+                lastErr = `${stageTag}${typeof detailMsg === 'string' ? detailMsg : JSON.stringify(detailMsg)}`;
+              } else {
+                const rawSnippet = json ? JSON.stringify(json) : (rawText && rawText.trim()) || '';
+                lastErr = `${stageTag}HTTP ${resp.status} ${resp.statusText || ''}${rawSnippet ? ' | ' + rawSnippet : ''}`.trim();
+              }
             }
           } catch (err) {
             lastErr = err && err.message ? String(err.message) : 'Network Error';
