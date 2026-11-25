@@ -7,40 +7,32 @@ export default async function handler(req, res) {
 
   const proxyBase = (process.env.PROXY_BASE_URL || 'http://161.97.150.196:1001').replace(/\/+$/, '');
   const apiBase = (process.env.IIMOBILE_API_BASE || 'https://recharge-apis.iimobile.af/v1/apis').replace(/\/+$/, '');
-  const defaultBundleId = String(process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506').trim();
+  const creditBundleId = String(process.env.IIMOBILE_CREDIT_BUNDLE_ID || process.env.IIMOBILE_DEFAULT_BUNDLE_ID || '543212506').trim();
 
-  const { operator, phone, bundle_id, amount } = req.body || {};
-  if (!operator || !phone) {
-    return res.status(400).json({ ok: false, error: 'operator and phone are required' });
+  const { operator, phone, amount } = req.body || {};
+  const numAmount = Number(amount);
+
+  if (!operator || !phone || Number.isNaN(numAmount) || numAmount <= 0) {
+    return res.status(400).json({
+      ok: false,
+      error: 'operator, phone, and valid positive amount are required for topup'
+    });
   }
 
   const normalizedOperator = String(operator).trim().toLowerCase();
   const normalizedPhone = String(phone).trim();
-  const effectiveBundleId = bundle_id !== undefined && bundle_id !== null && String(bundle_id).trim() !== ''
-    ? String(bundle_id).trim()
-    : defaultBundleId;
 
   const payload = {
     operator: normalizedOperator,
     phone: normalizedPhone,
-    bundle_id: effectiveBundleId
+    bundle_id: creditBundleId,
+    amount: numAmount
   };
-
-  if (amount !== undefined && amount !== null && String(amount).trim() !== '') {
-    const numAmount = Number(amount);
-    if (!Number.isNaN(numAmount) && numAmount > 0) {
-      payload.amount = numAmount;
-    }
-  }
 
   function isPositiveStatus(data) {
     if (!data || typeof data !== 'object') return false;
     const st = data.status;
-    if (st === 1 || st === 2 || st === '1' || st === '2' || st === true || st === 'success' || st === 'ok') {
-      return true;
-    }
-    if (data.success === true) return true;
-    return false;
+    return st === 1 || st === 2 || st === '1' || st === '2' || st === true || data.success === true;
   }
 
   function formatFriendlyError(data, fallbackMsg) {
@@ -50,10 +42,9 @@ export default async function handler(req, res) {
 
     const lower = rawMsg.toLowerCase();
     if (
-      lower.includes('balance') ||
+      lower.includes('low balance') ||
       lower.includes('insufficient') ||
-      lower.includes('credit') ||
-      lower.includes('fund') ||
+      lower.includes('not enough balance') ||
       lower.includes('موجودی')
     ) {
       return 'سیستم موجودی ندارد؛ شارژ انجام نشد.';
@@ -63,8 +54,8 @@ export default async function handler(req, res) {
 
   function buildTargetUrl(endpointPath) {
     const cleanPath = `/${String(endpointPath).replace(/^\/+/, '')}`;
-    if (apiBase.endsWith('/v1/apis') && cleanPath.startsWith('/v1/apis/')) {
-      return `${apiBase}${cleanPath.slice('/v1/apis'.length)}`;
+    if (apiBase.endsWith('/v1/apis') && cleanPath.startsWith('/v1/api/')) {
+      return `${apiBase.slice(0, -'/apis'.length)}${cleanPath}`;
     }
     return `${apiBase}${cleanPath}`;
   }
@@ -98,10 +89,12 @@ export default async function handler(req, res) {
     const initRes = await postViaProxy('/v1/api/initiate-transaction', payload);
     const initData = initRes.raw || {};
     const txId =
-      initData.txid ||
-      initData.transaction_id ||
-      initData.id ||
-      (initData.data && (initData.data.txid || initData.data.transaction_id || initData.data.id));
+      initData.txid ??
+      initData.transaction_id ??
+      initData.id ??
+      initData?.data?.txid ??
+      initData?.data?.transaction_id ??
+      initData?.data?.id;
 
     if (!initRes.resp.ok || (!isPositiveStatus(initData) && !txId)) {
       const friendlyError = formatFriendlyError(initData, 'Initiate transaction failed');
@@ -111,17 +104,22 @@ export default async function handler(req, res) {
         stage: 'initiate',
         no_balance: friendlyError.includes('موجودی'),
         error: friendlyError,
+        targetUrl: initRes.targetUrl,
         raw: initData
       });
     }
 
-    if (txId) {
+    if (txId !== undefined && txId !== null && txId !== '') {
+      const parsedTxnId = /^\d+$/.test(String(txId)) && Number(txId) <= Number.MAX_SAFE_INTEGER
+        ? Number(txId)
+        : String(txId);
+
       const execRes = await postViaProxy('/v1/api/execute-transaction', {
         operator: normalizedOperator,
-        txnid: Number(txId) || txId
+        txnid: parsedTxnId
       });
       const execData = execRes.raw || {};
-      const execOk = execRes.resp.ok && (isPositiveStatus(execData) || execData.status === undefined);
+      const execOk = execRes.resp.ok && isPositiveStatus(execData);
       const friendlyError = execOk ? undefined : formatFriendlyError(execData, 'Execute transaction failed');
       const statusCode = execOk ? 200 : (execRes.resp.status >= 400 ? execRes.resp.status : 400);
 
@@ -132,6 +130,7 @@ export default async function handler(req, res) {
         initiate: initData,
         no_balance: friendlyError ? friendlyError.includes('موجودی') : false,
         error: friendlyError,
+        targetUrl: execRes.targetUrl,
         raw: execData
       });
     }
@@ -139,6 +138,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       stage: 'initiate',
+      targetUrl: initRes.targetUrl,
       raw: initData
     });
   } catch (err) {
