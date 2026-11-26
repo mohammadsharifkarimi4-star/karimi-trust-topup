@@ -373,21 +373,6 @@
       font-weight: 800;
     }
 
-    .credit-wallet-strip {
-      margin-top: 7px;
-      background: #f0fdfa;
-      border: 1.5px solid #5eead4;
-      border-radius: 11px;
-      padding: 6px 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      font-weight: 900;
-      color: #0f766e;
-    }
-
     .currency-switcher {
       display: flex;
       gap: 5px;
@@ -1288,7 +1273,7 @@
           <button type="button" class="btn btn-soft-emerald" style="margin-top:8px;" onclick="openSelfRegister()">افتتاح حساب جدید</button>
 
           <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
-            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">👆 ورود با اثر انگشت</button>
+            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
           </div>
         </div>
       </div>
@@ -1402,11 +1387,6 @@
                 <span style="color:var(--slate-500);">بدهکار (-)</span>
                 <span id="odometerDebit" class="eng-num" style="color:var(--danger);">0</span>
               </div>
-            </div>
-
-            <div class="credit-wallet-strip">
-              <span>📲 موجودی کیف پول کردیت و شارژ (IQD)</span>
-              <span id="odometerCreditWalletIqd" class="eng-num" style="font-size:0.84rem; color:#065f46;">0 IQD</span>
             </div>
           </div>
 
@@ -1568,27 +1548,13 @@
             </div>
 
             <div class="form-group">
-              <label for="transferDestinationMode">نوع انتقال</label>
-              <select id="transferDestinationMode" onchange="toggleTransferDestinationMode()">
-                <option value="account">انتقال به حساب دیگر (با Account ID)</option>
-                <option value="credit_wallet">انتقال یک‌طرفه به کیف پول کردیت و شارژ (IQD)</option>
-              </select>
+              <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
+              <input type="text" id="transferTargetAccIdInput" placeholder="Account ID مقصد" dir="ltr" oninput="previewTransferRecipient()">
             </div>
 
-            <div id="transferIrreversibleWarnBox" class="warn-callout-box hidden">
-              ⚠️ <b>توجه مهم (غیرقابل‌بازگشت):</b> مبلغی که از حساب اصلی به <b>کیف پول کردیت و شارژ (IQD)</b> منتقل می‌کنید به همان اندازه از حساب اصلی شما کم می‌شود و <b>به هیچ وجه قابل بازگشت به حساب اصلی نیست</b> (فقط برای ارسال کردیت و شارژ عراق مصرف می‌شود).
-            </div>
-
-            <div id="transferTargetAccountGroup">
-              <div class="form-group">
-                <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
-                <input type="text" id="transferTargetAccIdInput" placeholder="Account ID مقصد" dir="ltr" oninput="previewTransferRecipient()">
-              </div>
-
-              <div id="transferRecipientPreview" class="recipient-preview-box invalid">
-                <span>مقصد</span>
-                <span>کد حساب مقصد (Account ID) را وارد کنید</span>
-              </div>
+            <div id="transferRecipientPreview" class="recipient-preview-box invalid">
+              <span>مقصد</span>
+              <span>کد حساب مقصد (Account ID) را وارد کنید</span>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:8px;" class="form-group">
@@ -1888,23 +1854,6 @@
 
         <button type="button" class="btn btn-primary" onclick="saveAppSettingsToSupabase()" style="margin-bottom:8px;">ذخیره و اعمال تنظیمات در دیتابیس</button>
         <button type="button" class="btn btn-soft-emerald" onclick="reloadAppSettingsFromDb()" style="margin-bottom:10px;">خواندن مجدد از دیتابیس</button>
-
-        <div class="info-callout-box" style="margin-top:8px; border-color:#5eead4; background:#f0fdfa;">
-          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px; color:#0f766e;">شارژ کیف پول کردیت و شارژ با Account ID (بدهکار شدن حساب اصلی)</div>
-          <div style="font-size:0.7rem; margin-bottom:6px; color:var(--slate-700);">با وارد کردن Account ID مشتری و مبلغ دینار (IQD)، کیف پول کردیت او شارژ می‌شود و هم‌زمان حساب اصلی‌اش به همان مبلغ بدهکار می‌شود:</div>
-          <div class="form-group" style="margin-bottom:6px;">
-            <input type="text" id="mgmtCreditWalletAccIdInput" placeholder="شناسه حساب مشتری (Account ID)" dir="ltr" oninput="previewAdminCreditWalletTarget()">
-          </div>
-          <div id="mgmtCreditWalletTargetPreview" style="font-size:0.72rem; font-weight:800; color:var(--slate-600); margin-bottom:6px;">---</div>
-          <div class="form-group" style="margin-bottom:6px;">
-            <input type="number" id="mgmtCreditWalletAmountInput" placeholder="مبلغ شارژ به دینار (IQD)" dir="ltr">
-          </div>
-          <div class="form-group" style="margin-bottom:6px;">
-            <input type="text" id="mgmtCreditWalletNoteInput" placeholder="توضیح / یادداشت اختیاری">
-          </div>
-          <button type="button" class="btn btn-primary" onclick="adminTopupCustomerCreditWalletIqd()">شارژ کیف پول کردیت و ثبت بدهی</button>
-          <div id="mgmtCreditWalletResultMsg" style="margin-top:6px; font-size:0.74rem; font-weight:900; color:#065f46; text-align:center;"></div>
-        </div>
 
         <div class="info-callout-box" style="margin-top:8px;">
           <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px;">ریست نمودن رمز طرف و تولیدش</div>
@@ -2848,9 +2797,6 @@
     }
 
     function resetAllOperationForms() {
-      const tMode = document.getElementById('transferDestinationMode');
-      if (tMode) tMode.value = 'account';
-      toggleTransferDestinationMode();
       const tAcc = document.getElementById('transferTargetAccIdInput');
       const tAmt = document.getElementById('transferAmountInput');
       if (tAcc) tAcc.value = '';
@@ -4401,10 +4347,6 @@
       document.getElementById('odometerValue').innerText = formatBalanceDisplay(b.net);
       document.getElementById('odometerCredit').innerText = formatBalanceDisplay(b.credit);
       document.getElementById('odometerDebit').innerText = formatBalanceDisplay(b.debit);
-      const cwEl = document.getElementById('odometerCreditWalletIqd');
-      if (cwEl) {
-        cwEl.innerText = balanceHidden ? '•••••• IQD' : `${formatEnMoney(getCreditWalletIqdBalance())} IQD`;
-      }
     }
 
     let mandatorySyncCompletedForMode = { transfer: false, afn: false, iq: false };
@@ -4560,39 +4502,14 @@
       return target;
     }
 
-    function toggleTransferDestinationMode() {
-      const mode = document.getElementById('transferDestinationMode')?.value || 'account';
-      const targetGroup = document.getElementById('transferTargetAccountGroup');
-      const warnBox = document.getElementById('transferIrreversibleWarnBox');
-      const currSel = document.getElementById('transferCurrencySelect');
-      if (mode === 'credit_wallet') {
-        targetGroup?.classList.add('hidden');
-        warnBox?.classList.remove('hidden');
-        if (currSel) {
-          currSel.value = 'IQD';
-          currSel.disabled = true;
-        }
-      } else {
-        targetGroup?.classList.remove('hidden');
-        warnBox?.classList.add('hidden');
-        if (currSel) {
-          currSel.disabled = false;
-        }
-      }
-      recalcTransferBox();
-    }
-
     function recalcTransferBox() {
-      const destMode = document.getElementById('transferDestinationMode')?.value || 'account';
-      const currSel = document.getElementById('transferCurrencySelect');
-      if (destMode === 'credit_wallet' && currSel) currSel.value = 'IQD';
-      const curr = (destMode === 'credit_wallet') ? 'IQD' : (currSel?.value || 'IQD');
+      const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
       const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value)) || 0;
       const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
       const box = document.getElementById('transferCalcBox');
       const btn = document.getElementById('btnExecuteTransfer');
 
-      if (destMode !== 'credit_wallet' && !appSettingsState.transfer_enabled) {
+      if (!appSettingsState.transfer_enabled) {
         box.className = 'calc-summary-box error';
         box.innerHTML = 'انتقال موجودی در جدول تنظیمات غیرفعال است';
         if (btn) btn.disabled = true;
@@ -4607,11 +4524,7 @@
       }
 
       box.className = 'calc-summary-box';
-      if (destMode === 'credit_wallet') {
-        box.innerHTML = `موجودی حساب اصلی (IQD): <b class="eng-num">${formatEnMoney(avail)}</b> | کیف پول کردیت فعلی: <b class="eng-num">${formatEnMoney(getCreditWalletIqdBalance())}</b> IQD`;
-      } else {
-        box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
-      }
+      box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
       if (btn) btn.disabled = false;
     }
 
@@ -4630,44 +4543,18 @@
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
       if (!hasCompletedMandatorySync('transfer')) return;
-      const destMode = document.getElementById('transferDestinationMode')?.value || 'account';
-
-      if (destMode !== 'credit_wallet' && !appSettingsState.transfer_enabled) {
+      if (!appSettingsState.transfer_enabled) {
         alert('انتقال موجودی توسط مدیریت غیرفعال است.');
         return;
       }
-
       const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(myAccId);
-      const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
-
-      if (destMode === 'credit_wallet') {
-        const availIqd = getNetIqdBalance();
-        if (isNaN(amt) || amt <= 0) {
-          alert('مبلغ انتقال به دینار (IQD) را وارد کنید.');
-          return;
-        }
-        if (availIqd <= 0 || amt > availIqd) {
-          alert('موجودی دینار حساب اصلی کافی نیست.');
-          return;
-        }
-        if (!isTxBiometricEnabled()) {
-          const hasPin = await ensureAccountHasPin(myAccId);
-          if (!hasPin) return;
-        }
-        openOperationAuthModal(
-          'تایید انتقال یک‌طرفه به کیف پول کردیت',
-          `انتقال <b class="eng-num">${formatEnMoney(amt)} IQD</b> از حساب اصلی به <b>کیف پول کردیت و شارژ</b>.<br><span style="color:var(--danger); font-weight:900;">هشدار: این مبلغ از حساب اصلی کسر می‌شود و به هیچ وجه قابل بازگشت نیست.</span>`,
-          { kind: 'transfer_credit_wallet', data: { accId: myAccId, accName: myName, amt } }
-        );
-        return;
-      }
-
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
       const targetAcc = findRecipientByAccountId(idQ);
       const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
+      const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
       const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
+      const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
 
       if (!targetAcc) {
         alert('کد حساب مقصد (Account ID) صحیح نیست یا حسابی با این شناسه وجود ندارد.');
@@ -4702,15 +4589,8 @@
       return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
     }
 
-    function getCreditWalletIqdBalance() {
-      if (!currentFoundUser) return 0;
-      const raw = getVal(currentFoundUser, ['credit_wallet_iqd', 'CreditWalletIqd', 'CREDIT_WALLET_IQD']);
-      const val = parseFloat(toEnglishDigits(raw));
-      return isNaN(val) ? 0 : val;
-    }
-
     function recalcTopupCost() {
-      const creditWalletIqd = getCreditWalletIqdBalance();
+      const netIqd = getNetIqdBalance();
       const rate = getAfnExchangeRate();
 
       const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
@@ -4724,13 +4604,13 @@
         afnBox.classList.add('error');
         afnErr.innerText = 'ارسال کردیت در جدول تنظیمات غیرفعال است.';
         if (afnBtn) afnBtn.disabled = true;
-      } else if (creditWalletIqd <= 0 || reqIqd > creditWalletIqd) {
+      } else if (netIqd <= 0 || reqIqd > netIqd) {
         afnBox.classList.add('error');
-        afnErr.innerText = `موجودی کیف پول کردیت کافی نیست (موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD).`;
+        afnErr.innerText = 'موجودی دینار کافی نیست.';
         if (afnBtn) afnBtn.disabled = true;
       } else {
         afnBox.classList.remove('error');
-        afnErr.innerText = `موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`;
+        afnErr.innerText = '';
         if (afnBtn) afnBtn.disabled = false;
       }
 
@@ -4746,13 +4626,13 @@
         iqBox.classList.add('error');
         iqErr.innerText = 'شارژ عراق در جدول تنظیمات غیرفعال است.';
         if (iqBtn) iqBtn.disabled = true;
-      } else if (creditWalletIqd <= 0 || chargeAmt > creditWalletIqd) {
+      } else if (netIqd <= 0 || chargeAmt > netIqd) {
         iqBox.classList.add('error');
-        iqErr.innerText = `موجودی کیف پول کردیت کافی نیست (موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD).`;
+        iqErr.innerText = 'موجودی دینار کافی نیست.';
         if (iqBtn) iqBtn.disabled = true;
       } else {
         iqBox.classList.remove('error');
-        iqErr.innerText = `موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`;
+        iqErr.innerText = '';
         if (iqBtn) iqBtn.disabled = false;
       }
     }
@@ -4805,7 +4685,7 @@
 
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(accId);
-      const creditWalletIqd = getCreditWalletIqdBalance();
+      const netIqd = getNetIqdBalance();
       const rate = getAfnExchangeRate();
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
       const accPhone = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
@@ -4828,23 +4708,23 @@
           return;
         }
         const requiredIqd = Math.round(afnAmt * rate);
-        if (requiredIqd > creditWalletIqd || creditWalletIqd <= 0) {
-          alert(`موجودی کیف پول کردیت کافی نیست. موجودی فعلی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`);
+        if (requiredIqd > netIqd || netIqd <= 0) {
+          alert('موجودی دینار کافی نیست.');
           return;
         }
         payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
-        summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (کسر از کیف پول کردیت: <b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
+        summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
         const iqPkgInfo = getSelectedIraqPackageInfo();
         const cardAmt = iqPkgInfo.cardAmount;
         const chargeAmt = iqPkgInfo.chargeAmount;
-        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > creditWalletIqd) {
-          alert(`موجودی کیف پول کردیت کافی نیست. موجودی فعلی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`);
+        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > netIqd) {
+          alert('موجودی دینار کافی نیست.');
           return;
         }
         payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt, chargeAmt, pkgLabel: iqPkgInfo.label };
-        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از کیف پول کردیت: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
+        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از حساب: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
       }
 
       if (!isTxBiometricEnabled()) {
@@ -4882,75 +4762,8 @@
       pendingAction = null;
       if (actionObj.kind === 'transfer') {
         await runAccountTransfer(actionObj.data);
-      } else if (actionObj.kind === 'transfer_credit_wallet') {
-        await runMainToCreditWalletTransfer(actionObj.data);
       } else if (actionObj.kind === 'topup') {
         await runTopupAfterPin(actionObj.data);
-      }
-    }
-
-    async function runMainToCreditWalletTransfer(d) {
-      await forceSyncBeforeOperation(d.accId);
-      const availIqd = getNetIqdBalance();
-      if (availIqd <= 0 || Number(d.amt) > availIqd) {
-        alert('موجودی دینار حساب اصلی کافی نیست.');
-        return;
-      }
-
-      showRealLoading('در حال انتقال به کیف پول کردیت...', 'کسر از حساب اصلی و شارژ credit_wallet_iqd');
-      const prevIds = getUserTransactionIds(d.accId);
-      let rpcData = null;
-      let errMsg = '';
-
-      try {
-        const { data, error } = await _supabase.rpc('transfer_main_to_credit_wallet_iqd', {
-          p_account_id: d.accId,
-          p_amount: Number(d.amt),
-          p_note: 'انتقال یک‌طرفه توسط کاربر (غیرقابل بازگشت)'
-        });
-        if (error) {
-          errMsg = error.message || 'خطا در انتقال به کیف پول کردیت';
-        } else {
-          rpcData = data;
-        }
-      } catch (e) {
-        errMsg = e && e.message ? e.message : 'خطای ارتباط با دیتابیس';
-      }
-
-      if (errMsg) {
-        hideRealLoading();
-        alert('خطا در انتقال به کیف پول کردیت: ' + errMsg);
-        return;
-      }
-
-      resetAllOperationForms();
-      resetMandatorySyncState();
-      collapseServiceForms();
-      await fetchDataFromSupabaseFresh();
-      const found = accountsList.find(u =>
-        String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === d.accId.toLowerCase()
-      );
-      if (found) currentFoundUser = found;
-      processDashboard(d.accId, false);
-      resetAllOperationForms();
-      collapseServiceForms();
-      updateLastSyncLabel();
-      hideRealLoading();
-
-      const curIds = getUserTransactionIds(d.accId);
-      try { localStorage.setItem(`karimi_seen_tx_ids_${d.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
-      if (curIds.length > prevIds.length) {
-        notifyAccountEvent('انتقال به کیف پول کردیت انجام شد', `${formatEnMoney(d.amt)} IQD به کیف پول کردیت منتقل شد (غیرقابل بازگشت).`);
-      }
-
-      const createdTxId = rpcData && rpcData.tx_id ? String(rpcData.tx_id) : '';
-      const createdTx = createdTxId
-        ? customerTransactions.find(t => String(getVal(t, ['TransID', 'transid', 'id'])) === createdTxId)
-        : customerTransactions[0];
-      if (createdTx) {
-        showReceiptForTransactionData(createdTx);
-      } else {
-        alert(`مبلغ ${formatEnMoney(d.amt)} IQD با موفقیت به کیف پول کردیت منتقل شد.`);
       }
     }
 
@@ -5144,22 +4957,15 @@
           return;
         }
 
-        const currentCwAfn = getCreditWalletIqdBalance();
-        const nextCwAfn = Math.max(0, currentCwAfn - Number(payload.requiredIqd));
-        await _supabase
-          .from('accounts')
-          .update({ credit_wallet_iqd: nextCwAfn })
-          .eq('AccountID', payload.accId);
-
         const companyRespNote = payload.companyResponse ? ` | پاسخ شرکت: ${payload.companyResponse}` : '';
-        const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان (کسر از کیف پول کردیت) — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
+        const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
           Amount: Number(payload.requiredIqd),
           Currency: 'IQD',
-          Direction: 'کیف پول کردیت',
+          Direction: 'بدهکار',
           OperationType: 'ارسال کردیت',
           Description: officialAfnDesc,
           AssignedUserEmail: assigned,
@@ -5199,13 +5005,6 @@
           cardAmount: iqCardAmt,
           currency: 'IQD'
         });
-        const currentCwIq = getCreditWalletIqdBalance();
-        const nextCwIq = Math.max(0, currentCwIq - iqChargeAmt);
-        await _supabase
-          .from('accounts')
-          .update({ credit_wallet_iqd: nextCwIq })
-          .eq('AccountID', payload.accId);
-
         const refSuffix = (apiResult.handledByExternalApi && apiResult.referenceId) ? ` | کد پیگیری: ${apiResult.referenceId}` : '';
         const iqTxRow = {
           TransID: txId,
@@ -5213,9 +5012,9 @@
           Date: nowIso,
           Amount: iqChargeAmt,
           Currency: 'IQD',
-          Direction: 'کیف پول کردیت',
+          Direction: 'بدهکار',
           OperationType: 'شارژ عراق',
-          Description: `رسید رسمی شارژ عراق (کسر از کیف پول کردیت) — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
+          Description: `رسید رسمی شارژ عراق — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
           AssignedUserEmail: assigned,
           Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
         };
@@ -5362,89 +5161,37 @@
       return null;
     }
 
-    let lastBiometricAuthError = '';
-
-    async function checkRealBiometricAvailability() {
-      const bioPlugin = getCapacitorBiometricPlugin();
-      if (bioPlugin && typeof bioPlugin.isAvailable === 'function') {
-        try {
-          const avail = await bioPlugin.isAvailable({ useFallback: true });
-          if (avail && (avail.isAvailable === true || Number(avail.biometryType) > 0 || avail.deviceIsSecure === true)) {
-            return { available: true, mode: 'capacitor', info: avail };
-          }
-          return { available: false, mode: 'capacitor', reason: 'اثر انگشت یا قفل امنیتی روی این دستگاه فعال نیست.' };
-        } catch (err) {
-          return { available: false, mode: 'capacitor', reason: (err && err.message) || 'خطا در بررسی سنسور اثر انگشت' };
-        }
-      }
-
-      try {
-        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
-        for (const br of bridges) {
-          if (br && (typeof br.isBiometricAvailable === 'function' || typeof br.requestFingerprintAuth === 'function' || typeof br.requestDeviceAuth === 'function')) {
-            if (typeof br.isBiometricAvailable === 'function') {
-              const canUse = Boolean(br.isBiometricAvailable());
-              return { available: canUse, mode: 'bridge', reason: canUse ? '' : 'سنسور اثر انگشت در دستگاه در دسترس نیست.' };
-            }
-            return { available: true, mode: 'bridge' };
-          }
-        }
-      } catch (e) {}
-
-      if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
-        try {
-          if (typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === 'function') {
-            const platformAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-            if (platformAvailable) {
-              return { available: true, mode: 'webauthn' };
-            }
-            return { available: false, mode: 'webauthn', reason: 'احراز هویت بیومتریک/اثر انگشت در این مرورگر یا دستگاه در دسترس نیست.' };
-          }
-          return { available: true, mode: 'webauthn' };
-        } catch (e) {
-          return { available: false, mode: 'webauthn', reason: (e && e.message) || 'خطای بررسی WebAuthn' };
-        }
-      }
-
-      return { available: false, mode: 'none', reason: 'امکان ورود با اثر انگشت در این محیط وجود ندارد؛ لطفاً از پین یا پسورد استفاده کنید.' };
-    }
-
-    async function triggerBiometricAuth(reasonText = 'اثر انگشت خود را روی حسگر قرار دهید یا قفل گوشی را تایید کنید') {
-      lastBiometricAuthError = '';
-      const availability = await checkRealBiometricAvailability();
-      if (!availability.available) {
-        lastBiometricAuthError = availability.reason || 'سنسور اثر انگشت یا قفل دستگاه در دسترس نیست.';
-        return false;
-      }
-
+    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
       const bioPlugin = getCapacitorBiometricPlugin();
       if (bioPlugin) {
         try {
+          if (typeof bioPlugin.isAvailable === 'function') {
+            await bioPlugin.isAvailable().catch(() => null);
+          }
           if (typeof bioPlugin.verifyIdentity === 'function') {
             await bioPlugin.verifyIdentity({
               reason: reasonText,
-              title: 'ورود با اثر انگشت — امانت‌داری کریمی',
-              subtitle: 'سنسور اثر انگشت یا قفل دستگاه',
+              title: 'امانت‌داری کریمی',
+              subtitle: 'قفل گوشی (اثر انگشت، PIN، الگو یا رمز عبور)',
               description: reasonText,
-              negativeButtonText: 'استفاده از رمز ثابت',
+              negativeButtonText: 'رمز ثابت برنامه',
               useFallback: true,
               allowDeviceCredential: true,
-              deviceCredentialTitle: 'تایید هویت دستگاه',
-              deviceCredentialSubtitle: 'اثر انگشت یا پین/الگوی قفل گوشی را وارد کنید'
+              deviceCredentialTitle: 'قفل صفحه گوشی',
+              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور دستگاه را وارد کنید'
             });
             return true;
           }
           if (typeof bioPlugin.authenticate === 'function') {
             await bioPlugin.authenticate({
               reason: reasonText,
-              title: 'ورود با اثر انگشت — امانت‌داری کریمی',
+              title: 'امانت‌داری کریمی',
               allowDeviceCredential: true,
               fallbackTitle: 'استفاده از قفل گوشی'
             });
             return true;
           }
         } catch (err) {
-          lastBiometricAuthError = (err && (err.message || err.errorMessage)) || 'تایید اثر انگشت لغو شد یا ناموفق بود.';
           return false;
         }
       }
@@ -5452,51 +5199,29 @@
       try {
         const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
         for (const br of bridges) {
-          if (!br) continue;
-          if (typeof br.requestFingerprintAuth === 'function') {
-            const res = br.requestFingerprintAuth(reasonText);
-            if (Boolean(res)) return true;
-            lastBiometricAuthError = 'تایید اثر انگشت انجام نشد.';
-            return false;
-          }
-          if (typeof br.requestDeviceAuth === 'function') {
+          if (br && typeof br.requestDeviceAuth === 'function') {
             const res = br.requestDeviceAuth(reasonText);
-            if (Boolean(res)) return true;
-            lastBiometricAuthError = 'تایید قفل دستگاه انجام نشد.';
-            return false;
+            return Boolean(res);
           }
         }
-      } catch (e) {
-        lastBiometricAuthError = (e && e.message) || 'خطای ارتباط با احراز هویت گوشی';
-        return false;
-      }
+      } catch (e) {}
 
       if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
         try {
-          const challengeBytes = new Uint8Array(32);
-          if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
-            window.crypto.getRandomValues(challengeBytes);
-          } else {
-            for (let i = 0; i < 32; i++) challengeBytes[i] = (i * 13 + 7) % 256;
-          }
           const cred = await navigator.credentials.get({
             publicKey: {
-              challenge: challengeBytes,
+              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112, 126, 140, 154, 168, 182, 196, 210, 224]),
               timeout: 60000,
               userVerification: 'required'
             }
           });
           if (cred) return true;
-          lastBiometricAuthError = 'احراز هویت اثر انگشت تایید نشد.';
-          return false;
         } catch (e) {
-          lastBiometricAuthError = (e && e.message) || 'احراز هویت اثر انگشت لغو یا رد شد.';
           return false;
         }
       }
 
-      lastBiometricAuthError = 'امکان احراز هویت بیومتریک در این محیط وجود ندارد.';
-      return false;
+      return true;
     }
 
     async function loginWithBiometric() {
@@ -5505,15 +5230,15 @@
       const bioPhone = localStorage.getItem('karimi_biometric_phone');
       const bioAccId = localStorage.getItem('karimi_biometric_accId');
       if (localStorage.getItem('karimi_biometric_enabled') !== 'true' || !bioPhone || !bioAccId) {
-        alert('ورود با اثر انگشت روی این حساب فعال نیست.');
+        alert('اثر انگشت فعال نیست.');
         return;
       }
-      const ok = await triggerBiometricAuth('اثر انگشت خود را برای ورود به حساب تایید کنید');
+      const ok = await triggerBiometricAuth('ورود به حساب با اثر انگشت یا قفل گوشی');
       if (!ok) {
-        alert(lastBiometricAuthError || 'احراز هویت با اثر انگشت تایید نشد.');
+        alert('احراز هویت با قفل گوشی تایید نشد.');
         return;
       }
-      showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
+      showRealLoading('در حال ورود...', 'دریافت اطلاعات');
       await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       hideRealLoading();
       autoLogin(bioPhone, bioAccId, true);
@@ -5524,13 +5249,9 @@
 
     async function confirmEnableBiometric() {
       playSound('success');
-      if (!currentFoundUser) {
-        alert('ابتدا وارد حساب خود شوید.');
-        return;
-      }
-      const ok = await triggerBiometricAuth('برای فعال‌سازی ورود با اثر انگشت، اثر انگشت خود را تایید کنید');
+      const ok = await triggerBiometricAuth('فعال‌سازی اثر انگشت یا قفل گوشی برای حساب');
       if (!ok) {
-        alert(lastBiometricAuthError || 'تایید اثر انگشت انجام نشد؛ فعال‌سازی لغو شد.');
+        alert('تایید قفل گوشی انجام نشد.');
         return;
       }
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
@@ -5544,7 +5265,6 @@
       document.getElementById('biometricPromptModal').classList.add('hidden');
       updateBioStatusLabel();
       updateTxBioStatusLabel();
-      alert('ورود با اثر انگشت با موفقیت برای حساب شما فعال شد.');
     }
 
     function dismissBiometricPrompt() {
@@ -5871,101 +5591,6 @@
       }
       playSound('success');
       alert(`رمز حساب ${targetName} (${targetAccId}) با موفقیت ریست و ذخیره شد.\nرمز جدید: ${newPinValue}`);
-    }
-
-    function previewAdminCreditWalletTarget() {
-      const q = toEnglishDigits((document.getElementById('mgmtCreditWalletAccIdInput')?.value || '')).trim().toLowerCase();
-      const box = document.getElementById('mgmtCreditWalletTargetPreview');
-      if (!box) return null;
-      if (!q) {
-        box.innerText = '---';
-        box.style.color = 'var(--slate-600)';
-        return null;
-      }
-      const found = accountsList.find(acc =>
-        String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === q
-      );
-      if (!found) {
-        box.innerText = 'حسابی با این Account ID یافت نشد';
-        box.style.color = 'var(--danger)';
-        return null;
-      }
-      const name = String(getVal(found, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const cwBal = parseFloat(toEnglishDigits(getVal(found, ['credit_wallet_iqd']) || 0)) || 0;
-      box.innerText = `حساب: ${name} | موجودی فعلی کیف پول کردیت: ${formatEnMoney(cwBal)} IQD`;
-      box.style.color = 'var(--emerald-800)';
-      return found;
-    }
-
-    async function adminTopupCustomerCreditWalletIqd() {
-      playSound('click');
-      if (!activeManagementAdmin) {
-        alert('ابتدا وارد بخش مدیریت شوید.');
-        return;
-      }
-      const accIdRaw = toEnglishDigits((document.getElementById('mgmtCreditWalletAccIdInput')?.value || '')).trim();
-      const amtVal = parseFloat(toEnglishDigits((document.getElementById('mgmtCreditWalletAmountInput')?.value || '')).trim());
-      const noteVal = (document.getElementById('mgmtCreditWalletNoteInput')?.value || '').trim();
-      const resEl = document.getElementById('mgmtCreditWalletResultMsg');
-
-      if (!accIdRaw) {
-        alert('شناسه حساب (Account ID) را وارد کنید.');
-        return;
-      }
-      if (isNaN(amtVal) || amtVal <= 0) {
-        alert('مبلغ شارژ به دینار (IQD) را وارد کنید.');
-        return;
-      }
-
-      showRealLoading('در حال شارژ کیف پول کردیت...', 'ثبت اعتبار در credit_wallet_iqd و بدهکار کردن حساب اصلی');
-      await fetchDataFromSupabaseFresh();
-
-      const targetAcc = accountsList.find(acc =>
-        String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === accIdRaw.toLowerCase()
-      );
-      if (!targetAcc) {
-        hideRealLoading();
-        alert('حسابی با این Account ID یافت نشد.');
-        return;
-      }
-
-      const exactAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-      const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-
-      const { data, error } = await _supabase.rpc('admin_topup_credit_wallet_iqd', {
-        p_account_id: exactAccId,
-        p_amount: amtVal,
-        p_note: noteVal || null
-      });
-
-      await fetchDataFromSupabaseFresh();
-      if (currentFoundUser) {
-        const myId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-        const refreshedSelf = accountsList.find(u =>
-          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === myId.toLowerCase()
-        );
-        if (refreshedSelf) currentFoundUser = refreshedSelf;
-        processDashboard(myId, false);
-      }
-      hideRealLoading();
-
-      if (error) {
-        alert('خطا در شارژ کیف پول کردیت: ' + error.message);
-        return;
-      }
-
-      const newWalletBal = (data && data.credit_wallet_iqd !== undefined) ? data.credit_wallet_iqd : amtVal;
-      if (resEl) {
-        resEl.innerText = `کیف پول کردیت ${targetName} (${exactAccId}) به مبلغ ${formatEnMoney(amtVal)} IQD شارژ شد (موجودی جدید کیف پول: ${formatEnMoney(newWalletBal)} IQD) و حساب اصلی بدهکار شد.`;
-      }
-      document.getElementById('mgmtCreditWalletAmountInput').value = '';
-      document.getElementById('mgmtCreditWalletNoteInput').value = '';
-      previewAdminCreditWalletTarget();
-      playSound('success');
-      alert(`شارژ کیف پول کردیت انجام شد.
-مشتری: ${targetName} (${exactAccId})
-مبلغ شارژ و بدهی ثبت‌شده: ${formatEnMoney(amtVal)} IQD
-موجودی فعلی کیف پول کردیت: ${formatEnMoney(newWalletBal)} IQD`);
     }
   </script>
 </body>
