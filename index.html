@@ -373,6 +373,21 @@
       font-weight: 800;
     }
 
+    .credit-wallet-strip {
+      margin-top: 7px;
+      background: #f0fdfa;
+      border: 1.5px solid #5eead4;
+      border-radius: 11px;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #0f766e;
+    }
+
     .currency-switcher {
       display: flex;
       gap: 5px;
@@ -1388,6 +1403,11 @@
                 <span id="odometerDebit" class="eng-num" style="color:var(--danger);">0</span>
               </div>
             </div>
+
+            <div class="credit-wallet-strip">
+              <span>📲 موجودی کیف پول کردیت و شارژ (IQD)</span>
+              <span id="odometerCreditWalletIqd" class="eng-num" style="font-size:0.84rem; color:#065f46;">0 IQD</span>
+            </div>
           </div>
 
           <div class="currency-switcher" id="currencyTabs"></div>
@@ -1548,13 +1568,27 @@
             </div>
 
             <div class="form-group">
-              <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
-              <input type="text" id="transferTargetAccIdInput" placeholder="Account ID مقصد" dir="ltr" oninput="previewTransferRecipient()">
+              <label for="transferDestinationMode">نوع انتقال</label>
+              <select id="transferDestinationMode" onchange="toggleTransferDestinationMode()">
+                <option value="account">انتقال به حساب دیگر (با Account ID)</option>
+                <option value="credit_wallet">انتقال یک‌طرفه به کیف پول کردیت و شارژ (IQD)</option>
+              </select>
             </div>
 
-            <div id="transferRecipientPreview" class="recipient-preview-box invalid">
-              <span>مقصد</span>
-              <span>کد حساب مقصد (Account ID) را وارد کنید</span>
+            <div id="transferIrreversibleWarnBox" class="warn-callout-box hidden">
+              ⚠️ <b>توجه مهم (غیرقابل‌بازگشت):</b> مبلغی که از حساب اصلی به <b>کیف پول کردیت و شارژ (IQD)</b> منتقل می‌کنید به همان اندازه از حساب اصلی شما کم می‌شود و <b>به هیچ وجه قابل بازگشت به حساب اصلی نیست</b> (فقط برای ارسال کردیت و شارژ عراق مصرف می‌شود).
+            </div>
+
+            <div id="transferTargetAccountGroup">
+              <div class="form-group">
+                <label for="transferTargetAccIdInput">کد حساب مقصد (Account ID)</label>
+                <input type="text" id="transferTargetAccIdInput" placeholder="Account ID مقصد" dir="ltr" oninput="previewTransferRecipient()">
+              </div>
+
+              <div id="transferRecipientPreview" class="recipient-preview-box invalid">
+                <span>مقصد</span>
+                <span>کد حساب مقصد (Account ID) را وارد کنید</span>
+              </div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:8px;" class="form-group">
@@ -1854,6 +1888,23 @@
 
         <button type="button" class="btn btn-primary" onclick="saveAppSettingsToSupabase()" style="margin-bottom:8px;">ذخیره و اعمال تنظیمات در دیتابیس</button>
         <button type="button" class="btn btn-soft-emerald" onclick="reloadAppSettingsFromDb()" style="margin-bottom:10px;">خواندن مجدد از دیتابیس</button>
+
+        <div class="info-callout-box" style="margin-top:8px; border-color:#5eead4; background:#f0fdfa;">
+          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px; color:#0f766e;">شارژ کیف پول کردیت و شارژ با Account ID (بدهکار شدن حساب اصلی)</div>
+          <div style="font-size:0.7rem; margin-bottom:6px; color:var(--slate-700);">با وارد کردن Account ID مشتری و مبلغ دینار (IQD)، کیف پول کردیت او شارژ می‌شود و هم‌زمان حساب اصلی‌اش به همان مبلغ بدهکار می‌شود:</div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <input type="text" id="mgmtCreditWalletAccIdInput" placeholder="شناسه حساب مشتری (Account ID)" dir="ltr" oninput="previewAdminCreditWalletTarget()">
+          </div>
+          <div id="mgmtCreditWalletTargetPreview" style="font-size:0.72rem; font-weight:800; color:var(--slate-600); margin-bottom:6px;">---</div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <input type="number" id="mgmtCreditWalletAmountInput" placeholder="مبلغ شارژ به دینار (IQD)" dir="ltr">
+          </div>
+          <div class="form-group" style="margin-bottom:6px;">
+            <input type="text" id="mgmtCreditWalletNoteInput" placeholder="توضیح / یادداشت اختیاری">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="adminTopupCustomerCreditWalletIqd()">شارژ کیف پول کردیت و ثبت بدهی</button>
+          <div id="mgmtCreditWalletResultMsg" style="margin-top:6px; font-size:0.74rem; font-weight:900; color:#065f46; text-align:center;"></div>
+        </div>
 
         <div class="info-callout-box" style="margin-top:8px;">
           <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px;">ریست نمودن رمز طرف و تولیدش</div>
@@ -2770,8 +2821,7 @@
           const parsed = JSON.parse(jsonMatch[1]);
           const prefix = str.slice(0, jsonMatch.index).trim();
           const pretty = JSON.stringify(parsed, null, 2);
-          return prefix ? `${prefix}
-${pretty}` : pretty;
+          return prefix ? `${prefix}\n${pretty}` : pretty;
         } catch (e) {}
       }
       return str;
@@ -2798,6 +2848,9 @@ ${pretty}` : pretty;
     }
 
     function resetAllOperationForms() {
+      const tMode = document.getElementById('transferDestinationMode');
+      if (tMode) tMode.value = 'account';
+      toggleTransferDestinationMode();
       const tAcc = document.getElementById('transferTargetAccIdInput');
       const tAmt = document.getElementById('transferAmountInput');
       if (tAcc) tAcc.value = '';
@@ -2838,8 +2891,7 @@ ${pretty}` : pretty;
         `کد سند: ${data.txId}`,
         `تاریخ و ساعت: ${data.dateStr}`
       ];
-      return `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msgLines.join('
-'))}`;
+      return `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msgLines.join('\n'))}`;
     }
 
     let lastIraqTopupAdminUrl = '';
@@ -3162,6 +3214,7 @@ ${pretty}` : pretty;
       return found ? String(getVal(found, ['PinHash', 'pinhash', 'pin_hash']) || '').trim() : '';
     }
 
+    // ذخیره و بررسی رمز مستقیم در ستون PinHash جدول accounts از طریق RPC سوپابیس و ستون PinHash
     async function setPinInDatabaseColumn(accId, pinValue) {
       const cleanId = String(accId || '').trim();
       const cleanVal = String(pinValue || '').trim();
@@ -3367,16 +3420,11 @@ ${pretty}` : pretty;
 
     function stripHtmlToPlain(htmlStr) {
       return String(htmlStr || '')
-        .replace(/<br\s*\/?>/gi, '
-')
-        .replace(/<\/div>|<\/p>|<\/li>/gi, '
-')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/div>|<\/p>|<\/li>/gi, '\n')
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
-        .replace(/
-{3,}/g, '
-
-')
+        .replace(/\n{3,}/g, '\n\n')
         .trim();
     }
 
@@ -4353,6 +4401,10 @@ ${pretty}` : pretty;
       document.getElementById('odometerValue').innerText = formatBalanceDisplay(b.net);
       document.getElementById('odometerCredit').innerText = formatBalanceDisplay(b.credit);
       document.getElementById('odometerDebit').innerText = formatBalanceDisplay(b.debit);
+      const cwEl = document.getElementById('odometerCreditWalletIqd');
+      if (cwEl) {
+        cwEl.innerText = balanceHidden ? '•••••• IQD' : `${formatEnMoney(getCreditWalletIqdBalance())} IQD`;
+      }
     }
 
     let mandatorySyncCompletedForMode = { transfer: false, afn: false, iq: false };
@@ -4508,14 +4560,39 @@ ${pretty}` : pretty;
       return target;
     }
 
+    function toggleTransferDestinationMode() {
+      const mode = document.getElementById('transferDestinationMode')?.value || 'account';
+      const targetGroup = document.getElementById('transferTargetAccountGroup');
+      const warnBox = document.getElementById('transferIrreversibleWarnBox');
+      const currSel = document.getElementById('transferCurrencySelect');
+      if (mode === 'credit_wallet') {
+        targetGroup?.classList.add('hidden');
+        warnBox?.classList.remove('hidden');
+        if (currSel) {
+          currSel.value = 'IQD';
+          currSel.disabled = true;
+        }
+      } else {
+        targetGroup?.classList.remove('hidden');
+        warnBox?.classList.add('hidden');
+        if (currSel) {
+          currSel.disabled = false;
+        }
+      }
+      recalcTransferBox();
+    }
+
     function recalcTransferBox() {
-      const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
+      const destMode = document.getElementById('transferDestinationMode')?.value || 'account';
+      const currSel = document.getElementById('transferCurrencySelect');
+      if (destMode === 'credit_wallet' && currSel) currSel.value = 'IQD';
+      const curr = (destMode === 'credit_wallet') ? 'IQD' : (currSel?.value || 'IQD');
       const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value)) || 0;
       const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
       const box = document.getElementById('transferCalcBox');
       const btn = document.getElementById('btnExecuteTransfer');
 
-      if (!appSettingsState.transfer_enabled) {
+      if (destMode !== 'credit_wallet' && !appSettingsState.transfer_enabled) {
         box.className = 'calc-summary-box error';
         box.innerHTML = 'انتقال موجودی در جدول تنظیمات غیرفعال است';
         if (btn) btn.disabled = true;
@@ -4530,7 +4607,11 @@ ${pretty}` : pretty;
       }
 
       box.className = 'calc-summary-box';
-      box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
+      if (destMode === 'credit_wallet') {
+        box.innerHTML = `موجودی حساب اصلی (IQD): <b class="eng-num">${formatEnMoney(avail)}</b> | کیف پول کردیت فعلی: <b class="eng-num">${formatEnMoney(getCreditWalletIqdBalance())}</b> IQD`;
+      } else {
+        box.innerHTML = `موجودی قابل انتقال (<span class="eng-num">${curr}</span>): <b class="eng-num">${formatEnMoney(avail)}</b>`;
+      }
       if (btn) btn.disabled = false;
     }
 
@@ -4549,18 +4630,44 @@ ${pretty}` : pretty;
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
       if (!hasCompletedMandatorySync('transfer')) return;
-      if (!appSettingsState.transfer_enabled) {
+      const destMode = document.getElementById('transferDestinationMode')?.value || 'account';
+
+      if (destMode !== 'credit_wallet' && !appSettingsState.transfer_enabled) {
         alert('انتقال موجودی توسط مدیریت غیرفعال است.');
         return;
       }
+
       const myAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(myAccId);
+      const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
+
+      if (destMode === 'credit_wallet') {
+        const availIqd = getNetIqdBalance();
+        if (isNaN(amt) || amt <= 0) {
+          alert('مبلغ انتقال به دینار (IQD) را وارد کنید.');
+          return;
+        }
+        if (availIqd <= 0 || amt > availIqd) {
+          alert('موجودی دینار حساب اصلی کافی نیست.');
+          return;
+        }
+        if (!isTxBiometricEnabled()) {
+          const hasPin = await ensureAccountHasPin(myAccId);
+          if (!hasPin) return;
+        }
+        openOperationAuthModal(
+          'تایید انتقال یک‌طرفه به کیف پول کردیت',
+          `انتقال <b class="eng-num">${formatEnMoney(amt)} IQD</b> از حساب اصلی به <b>کیف پول کردیت و شارژ</b>.<br><span style="color:var(--danger); font-weight:900;">هشدار: این مبلغ از حساب اصلی کسر می‌شود و به هیچ وجه قابل بازگشت نیست.</span>`,
+          { kind: 'transfer_credit_wallet', data: { accId: myAccId, accName: myName, amt } }
+        );
+        return;
+      }
+
       const idQ = document.getElementById('transferTargetAccIdInput').value.trim();
       const targetAcc = findRecipientByAccountId(idQ);
       const curr = document.getElementById('transferCurrencySelect').value || 'IQD';
-      const amt = parseFloat(toEnglishDigits(document.getElementById('transferAmountInput').value));
       const avail = (customerBalances[curr] && customerBalances[curr].net) ? customerBalances[curr].net : 0;
-      const myName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
 
       if (!targetAcc) {
         alert('کد حساب مقصد (Account ID) صحیح نیست یا حسابی با این شناسه وجود ندارد.');
@@ -4595,8 +4702,15 @@ ${pretty}` : pretty;
       return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
     }
 
+    function getCreditWalletIqdBalance() {
+      if (!currentFoundUser) return 0;
+      const raw = getVal(currentFoundUser, ['credit_wallet_iqd', 'CreditWalletIqd', 'CREDIT_WALLET_IQD']);
+      const val = parseFloat(toEnglishDigits(raw));
+      return isNaN(val) ? 0 : val;
+    }
+
     function recalcTopupCost() {
-      const netIqd = getNetIqdBalance();
+      const creditWalletIqd = getCreditWalletIqdBalance();
       const rate = getAfnExchangeRate();
 
       const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
@@ -4610,13 +4724,13 @@ ${pretty}` : pretty;
         afnBox.classList.add('error');
         afnErr.innerText = 'ارسال کردیت در جدول تنظیمات غیرفعال است.';
         if (afnBtn) afnBtn.disabled = true;
-      } else if (netIqd <= 0 || reqIqd > netIqd) {
+      } else if (creditWalletIqd <= 0 || reqIqd > creditWalletIqd) {
         afnBox.classList.add('error');
-        afnErr.innerText = 'موجودی دینار کافی نیست.';
+        afnErr.innerText = `موجودی کیف پول کردیت کافی نیست (موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD).`;
         if (afnBtn) afnBtn.disabled = true;
       } else {
         afnBox.classList.remove('error');
-        afnErr.innerText = '';
+        afnErr.innerText = `موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`;
         if (afnBtn) afnBtn.disabled = false;
       }
 
@@ -4632,13 +4746,13 @@ ${pretty}` : pretty;
         iqBox.classList.add('error');
         iqErr.innerText = 'شارژ عراق در جدول تنظیمات غیرفعال است.';
         if (iqBtn) iqBtn.disabled = true;
-      } else if (netIqd <= 0 || chargeAmt > netIqd) {
+      } else if (creditWalletIqd <= 0 || chargeAmt > creditWalletIqd) {
         iqBox.classList.add('error');
-        iqErr.innerText = 'موجودی دینار کافی نیست.';
+        iqErr.innerText = `موجودی کیف پول کردیت کافی نیست (موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD).`;
         if (iqBtn) iqBtn.disabled = true;
       } else {
         iqBox.classList.remove('error');
-        iqErr.innerText = '';
+        iqErr.innerText = `موجودی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`;
         if (iqBtn) iqBtn.disabled = false;
       }
     }
@@ -4691,7 +4805,7 @@ ${pretty}` : pretty;
 
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(accId);
-      const netIqd = getNetIqdBalance();
+      const creditWalletIqd = getCreditWalletIqdBalance();
       const rate = getAfnExchangeRate();
       const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
       const accPhone = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
@@ -4714,23 +4828,23 @@ ${pretty}` : pretty;
           return;
         }
         const requiredIqd = Math.round(afnAmt * rate);
-        if (requiredIqd > netIqd || netIqd <= 0) {
-          alert('موجودی دینار کافی نیست.');
+        if (requiredIqd > creditWalletIqd || creditWalletIqd <= 0) {
+          alert(`موجودی کیف پول کردیت کافی نیست. موجودی فعلی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`);
           return;
         }
         payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
-        summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
+        summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (کسر از کیف پول کردیت: <b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
         const network = document.getElementById('iqNetworkSelect').value;
         const iqPkgInfo = getSelectedIraqPackageInfo();
         const cardAmt = iqPkgInfo.cardAmount;
         const chargeAmt = iqPkgInfo.chargeAmount;
-        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > netIqd) {
-          alert('موجودی دینار کافی نیست.');
+        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > creditWalletIqd) {
+          alert(`موجودی کیف پول کردیت کافی نیست. موجودی فعلی کیف پول کردیت: ${formatEnMoney(creditWalletIqd)} IQD`);
           return;
         }
         payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt, chargeAmt, pkgLabel: iqPkgInfo.label };
-        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از حساب: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
+        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از کیف پول کردیت: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
       }
 
       if (!isTxBiometricEnabled()) {
@@ -4768,8 +4882,75 @@ ${pretty}` : pretty;
       pendingAction = null;
       if (actionObj.kind === 'transfer') {
         await runAccountTransfer(actionObj.data);
+      } else if (actionObj.kind === 'transfer_credit_wallet') {
+        await runMainToCreditWalletTransfer(actionObj.data);
       } else if (actionObj.kind === 'topup') {
         await runTopupAfterPin(actionObj.data);
+      }
+    }
+
+    async function runMainToCreditWalletTransfer(d) {
+      await forceSyncBeforeOperation(d.accId);
+      const availIqd = getNetIqdBalance();
+      if (availIqd <= 0 || Number(d.amt) > availIqd) {
+        alert('موجودی دینار حساب اصلی کافی نیست.');
+        return;
+      }
+
+      showRealLoading('در حال انتقال به کیف پول کردیت...', 'کسر از حساب اصلی و شارژ credit_wallet_iqd');
+      const prevIds = getUserTransactionIds(d.accId);
+      let rpcData = null;
+      let errMsg = '';
+
+      try {
+        const { data, error } = await _supabase.rpc('transfer_main_to_credit_wallet_iqd', {
+          p_account_id: d.accId,
+          p_amount: Number(d.amt),
+          p_note: 'انتقال یک‌طرفه توسط کاربر (غیرقابل بازگشت)'
+        });
+        if (error) {
+          errMsg = error.message || 'خطا در انتقال به کیف پول کردیت';
+        } else {
+          rpcData = data;
+        }
+      } catch (e) {
+        errMsg = e && e.message ? e.message : 'خطای ارتباط با دیتابیس';
+      }
+
+      if (errMsg) {
+        hideRealLoading();
+        alert('خطا در انتقال به کیف پول کردیت: ' + errMsg);
+        return;
+      }
+
+      resetAllOperationForms();
+      resetMandatorySyncState();
+      collapseServiceForms();
+      await fetchDataFromSupabaseFresh();
+      const found = accountsList.find(u =>
+        String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === d.accId.toLowerCase()
+      );
+      if (found) currentFoundUser = found;
+      processDashboard(d.accId, false);
+      resetAllOperationForms();
+      collapseServiceForms();
+      updateLastSyncLabel();
+      hideRealLoading();
+
+      const curIds = getUserTransactionIds(d.accId);
+      try { localStorage.setItem(`karimi_seen_tx_ids_${d.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+      if (curIds.length > prevIds.length) {
+        notifyAccountEvent('انتقال به کیف پول کردیت انجام شد', `${formatEnMoney(d.amt)} IQD به کیف پول کردیت منتقل شد (غیرقابل بازگشت).`);
+      }
+
+      const createdTxId = rpcData && rpcData.tx_id ? String(rpcData.tx_id) : '';
+      const createdTx = createdTxId
+        ? customerTransactions.find(t => String(getVal(t, ['TransID', 'transid', 'id'])) === createdTxId)
+        : customerTransactions[0];
+      if (createdTx) {
+        showReceiptForTransactionData(createdTx);
+      } else {
+        alert(`مبلغ ${formatEnMoney(d.amt)} IQD با موفقیت به کیف پول کردیت منتقل شد.`);
       }
     }
 
@@ -4963,15 +5144,22 @@ ${pretty}` : pretty;
           return;
         }
 
+        const currentCwAfn = getCreditWalletIqdBalance();
+        const nextCwAfn = Math.max(0, currentCwAfn - Number(payload.requiredIqd));
+        await _supabase
+          .from('accounts')
+          .update({ credit_wallet_iqd: nextCwAfn })
+          .eq('AccountID', payload.accId);
+
         const companyRespNote = payload.companyResponse ? ` | پاسخ شرکت: ${payload.companyResponse}` : '';
-        const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
+        const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان (کسر از کیف پول کردیت) — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
         const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
           Amount: Number(payload.requiredIqd),
           Currency: 'IQD',
-          Direction: 'بدهکار',
+          Direction: 'کیف پول کردیت',
           OperationType: 'ارسال کردیت',
           Description: officialAfnDesc,
           AssignedUserEmail: assigned,
@@ -5011,6 +5199,13 @@ ${pretty}` : pretty;
           cardAmount: iqCardAmt,
           currency: 'IQD'
         });
+        const currentCwIq = getCreditWalletIqdBalance();
+        const nextCwIq = Math.max(0, currentCwIq - iqChargeAmt);
+        await _supabase
+          .from('accounts')
+          .update({ credit_wallet_iqd: nextCwIq })
+          .eq('AccountID', payload.accId);
+
         const refSuffix = (apiResult.handledByExternalApi && apiResult.referenceId) ? ` | کد پیگیری: ${apiResult.referenceId}` : '';
         const iqTxRow = {
           TransID: txId,
@@ -5018,9 +5213,9 @@ ${pretty}` : pretty;
           Date: nowIso,
           Amount: iqChargeAmt,
           Currency: 'IQD',
-          Direction: 'بدهکار',
+          Direction: 'کیف پول کردیت',
           OperationType: 'شارژ عراق',
-          Description: `رسید رسمی شارژ عراق — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
+          Description: `رسید رسمی شارژ عراق (کسر از کیف پول کردیت) — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
           AssignedUserEmail: assigned,
           Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
         };
@@ -5066,10 +5261,7 @@ ${pretty}` : pretty;
     function openLegacyPinActivationModal(accId) {
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
-      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت
-نام: ${nameVal}
-کد حساب: ${accId}
-شماره: ${phoneVal}`);
+      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت\nنام: ${nameVal}\nکد حساب: ${accId}\nشماره: ${phoneVal}`);
       document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
       document.getElementById('legacyPinActivationModal').classList.remove('hidden');
       ensureSentinelHistory();
@@ -5414,12 +5606,7 @@ ${pretty}` : pretty;
       const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
       const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
-      const msg = `امانت‌داری کریمی
-نام: ${name}
-عملیات: ${op}
-مبلغ: ${amt} ${curr}
-سند: ${tid}
-تاریخ: ${date}`;
+      const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -5500,138 +5687,206 @@ ${pretty}` : pretty;
         }
         const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
         if (accId) {
-          buyerTotalsByAcc[accId] = (buyerTotalsByAcc[accId] || 0) + afnVal;
+          buyerTotalsByAcc[accId.toLowerCase()] = (buyerTotalsByAcc[accId.toLowerCase()] || 0) + afnVal;
         }
       });
 
-      const remainingStock = initialStock - totalSalesAfn;
-      totalSalesEl.innerText = `${formatEnMoney(totalSalesAfn)} AFN`;
-      todaySalesEl.innerText = `${formatEnMoney(todaySalesAfn)} AFN`;
-      remStockEl.innerText = `${formatEnMoney(remainingStock)} AFN`;
+      const remStock = initialStock - totalSalesAfn;
+      totalSalesEl.innerText = `${formatEnMoney(Math.round(totalSalesAfn * 100) / 100)} AFN`;
+      todaySalesEl.innerText = `${formatEnMoney(Math.round(todaySalesAfn * 100) / 100)} AFN`;
+      remStockEl.innerText = `${formatEnMoney(Math.round(remStock * 100) / 100)} AFN`;
+
       if (statusEl) {
-        if (remainingStock <= 0) {
-          statusEl.innerText = 'تمام شده';
+        if (remStock <= 0) {
+          statusEl.innerText = 'اتمام شارژ شرکت';
           statusEl.style.color = 'var(--danger)';
-        } else if (remainingStock < 5000) {
-          statusEl.innerText = 'رو به اتمام';
+        } else if (initialStock > 0 && remStock <= initialStock * 0.15) {
+          statusEl.innerText = 'شارژ شرکت رو به اتمام';
           statusEl.style.color = 'var(--warning)';
         } else {
-          statusEl.innerText = 'در دسترس';
-          statusEl.style.color = 'var(--emerald-700)';
+          statusEl.innerText = 'شارژ شرکت در دسترس';
+          statusEl.style.color = 'var(--emerald-800)';
         }
       }
 
       const buyers = [];
       const nonBuyers = [];
-      const seenAccIds = new Set();
-
       accountsList.forEach(acc => {
         const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-        if (!accId || seenAccIds.has(accId.toLowerCase())) return;
-        seenAccIds.add(accId.toLowerCase());
-        const accName = String(getVal(acc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-        const phone = toEnglishDigits(getVal(acc, ['Phone', 'phone', 'تلفن']) || '');
-        const boughtAfn = buyerTotalsByAcc[accId] || 0;
-
-        if (boughtAfn > 0) {
-          buyers.push({ accId, accName, phone, boughtAfn });
+        if (!accId) return;
+        const accName = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
+        const sumAfn = buyerTotalsByAcc[accId.toLowerCase()] || 0;
+        if (sumAfn > 0) {
+          buyers.push({ accId, accName, sumAfn });
         } else {
-          nonBuyers.push({ accId, accName, phone });
+          nonBuyers.push({ accId, accName });
         }
       });
 
-      buyers.sort((a, b) => b.boughtAfn - a.boughtAfn);
+      buyers.sort((a, b) => b.sumAfn - a.sumAfn);
 
       if (buyers.length === 0) {
-        buyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">هیچ حسابی خرید شارژ/کردیت به AFN ثبت نکرده است.</div>';
+        buyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">هنوز خریدی ثبت نشده است.</div>';
       } else {
-        buyersBox.innerHTML = buyers.map(b => `
-          <div class="admin-mini-item">
-            <span><b>${b.accName}</b> (<span class="eng-num">${b.accId}</span>)</span>
-            <span class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(b.boughtAfn)} AFN</span>
-          </div>`).join('');
+        buyersBox.innerHTML = buyers.map(b =>
+          `<div class="admin-mini-item"><span>${b.accName} (<span class="eng-num">${b.accId}</span>)</span><strong class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(Math.round(b.sumAfn * 100) / 100)} AFN</strong></div>`
+        ).join('');
       }
 
       if (nonBuyers.length === 0) {
-        nonBuyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها حداقل یک خرید داشته‌اند.</div>';
+        nonBuyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
       } else {
-        nonBuyersBox.innerHTML = nonBuyers.map(nb => `
-          <div class="admin-mini-item">
-            <span><b>${nb.accName}</b> (<span class="eng-num">${nb.accId}</span>)</span>
-            <span class="eng-num" style="color:var(--slate-500);">${nb.phone || '---'}</span>
-          </div>`).join('');
+        nonBuyersBox.innerHTML = nonBuyers.map(nb =>
+          `<div class="admin-mini-item"><span>${nb.accName} (<span class="eng-num">${nb.accId}</span>)</span><span style="color:var(--slate-500);">بدون خرید</span></div>`
+        ).join('');
       }
-    }
-
-    function generateStrongRandomPin() {
-      const lowers = 'abcdefghjkmnpqrstuvwxyz';
-      const uppers = 'ABCDEFGHJKMNPQRSTUVWXYZ';
-      const digits = '23456789';
-      const all = lowers + uppers + digits;
-      let out = [
-        lowers[Math.floor(Math.random() * lowers.length)],
-        uppers[Math.floor(Math.random() * uppers.length)],
-        digits[Math.floor(Math.random() * digits.length)]
-      ];
-      for (let i = 0; i < 5; i++) {
-        out.push(all[Math.floor(Math.random() * all.length)]);
-      }
-      return out.sort(() => Math.random() - 0.5).join('');
     }
 
     async function adminResetAndGenerateAccountPin() {
+      playSound('click');
       if (!activeManagementAdmin) {
         alert('ابتدا وارد بخش مدیریت شوید.');
         return;
       }
       const queryRaw = toEnglishDigits((document.getElementById('mgmtResetAccOrPhoneInput')?.value || '').trim());
-      const customPinRaw = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
-      const resBox = document.getElementById('mgmtGeneratedPinResult');
+      const customPin = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
+      const resEl = document.getElementById('mgmtGeneratedPinResult');
 
       if (!queryRaw) {
         alert('شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید.');
         return;
       }
 
-      showRealLoading('در حال ریست و تولید رمز طرف...', 'به‌روزرسانی ستون PinHash در جدول accounts');
+      showRealLoading('در حال ریست و تولید رمز...', 'جستجو و به‌روزرسانی ستون PinHash در دیتابیس');
       await fetchDataFromSupabaseFresh();
 
       const qLower = queryRaw.toLowerCase();
       const qLast9 = getLast9Digits(queryRaw);
-
       const targetAcc = accountsList.find(acc => {
         const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
-        const ph = getLast9Digits(getVal(acc, ['Phone', 'phone', 'تلفن']) || '');
-        if (aid && aid === qLower) return true;
-        if (qLast9.length >= 9 && ph === qLast9) return true;
-        return false;
+        const ph = String(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']) || '').trim();
+        return aid === qLower || (qLast9.length >= 9 && getLast9Digits(ph) === qLast9);
       });
 
       if (!targetAcc) {
         hideRealLoading();
-        alert('حسابی با این شناسه یا شماره تماس پیدا نشد.');
+        alert('حسابی با این شناسه یا شماره تماس یافت نشد.');
         return;
       }
 
       const targetAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
       const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const newPin = customPinRaw || generateStrongRandomPin();
+      const newPinValue = customPin || String(Math.floor(100000 + Math.random() * 900000));
 
-      const ok = await setPinInDatabaseColumn(targetAccId, newPin);
+      const savedOk = await setPinInDatabaseColumn(targetAccId, newPinValue);
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
-      if (!ok) {
+      if (!savedOk) {
         alert('خطا در ذخیره رمز جدید در ستون PinHash دیتابیس.');
         return;
       }
 
-      playSound('success');
-      if (resBox) {
-        resBox.innerText = `Account: ${targetAccId} (${targetName}) | New Pin: ${newPin}`;
+      if (resEl) {
+        resEl.innerText = `حساب: ${targetName} (${targetAccId}) | رمز جدید: ${newPinValue}`;
       }
-      alert(`رمز جدید برای ${targetName} (${targetAccId}) ریست و ذخیره شد:
-${newPin}`);
+      playSound('success');
+      alert(`رمز حساب ${targetName} (${targetAccId}) با موفقیت ریست و ذخیره شد.\nرمز جدید: ${newPinValue}`);
+    }
+
+    function previewAdminCreditWalletTarget() {
+      const q = toEnglishDigits((document.getElementById('mgmtCreditWalletAccIdInput')?.value || '')).trim().toLowerCase();
+      const box = document.getElementById('mgmtCreditWalletTargetPreview');
+      if (!box) return null;
+      if (!q) {
+        box.innerText = '---';
+        box.style.color = 'var(--slate-600)';
+        return null;
+      }
+      const found = accountsList.find(acc =>
+        String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === q
+      );
+      if (!found) {
+        box.innerText = 'حسابی با این Account ID یافت نشد';
+        box.style.color = 'var(--danger)';
+        return null;
+      }
+      const name = String(getVal(found, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const cwBal = parseFloat(toEnglishDigits(getVal(found, ['credit_wallet_iqd']) || 0)) || 0;
+      box.innerText = `حساب: ${name} | موجودی فعلی کیف پول کردیت: ${formatEnMoney(cwBal)} IQD`;
+      box.style.color = 'var(--emerald-800)';
+      return found;
+    }
+
+    async function adminTopupCustomerCreditWalletIqd() {
+      playSound('click');
+      if (!activeManagementAdmin) {
+        alert('ابتدا وارد بخش مدیریت شوید.');
+        return;
+      }
+      const accIdRaw = toEnglishDigits((document.getElementById('mgmtCreditWalletAccIdInput')?.value || '')).trim();
+      const amtVal = parseFloat(toEnglishDigits((document.getElementById('mgmtCreditWalletAmountInput')?.value || '')).trim());
+      const noteVal = (document.getElementById('mgmtCreditWalletNoteInput')?.value || '').trim();
+      const resEl = document.getElementById('mgmtCreditWalletResultMsg');
+
+      if (!accIdRaw) {
+        alert('شناسه حساب (Account ID) را وارد کنید.');
+        return;
+      }
+      if (isNaN(amtVal) || amtVal <= 0) {
+        alert('مبلغ شارژ به دینار (IQD) را وارد کنید.');
+        return;
+      }
+
+      showRealLoading('در حال شارژ کیف پول کردیت...', 'ثبت اعتبار در credit_wallet_iqd و بدهکار کردن حساب اصلی');
+      await fetchDataFromSupabaseFresh();
+
+      const targetAcc = accountsList.find(acc =>
+        String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === accIdRaw.toLowerCase()
+      );
+      if (!targetAcc) {
+        hideRealLoading();
+        alert('حسابی با این Account ID یافت نشد.');
+        return;
+      }
+
+      const exactAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+      const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+
+      const { data, error } = await _supabase.rpc('admin_topup_credit_wallet_iqd', {
+        p_account_id: exactAccId,
+        p_amount: amtVal,
+        p_note: noteVal || null
+      });
+
+      await fetchDataFromSupabaseFresh();
+      if (currentFoundUser) {
+        const myId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        const refreshedSelf = accountsList.find(u =>
+          String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === myId.toLowerCase()
+        );
+        if (refreshedSelf) currentFoundUser = refreshedSelf;
+        processDashboard(myId, false);
+      }
+      hideRealLoading();
+
+      if (error) {
+        alert('خطا در شارژ کیف پول کردیت: ' + error.message);
+        return;
+      }
+
+      const newWalletBal = (data && data.credit_wallet_iqd !== undefined) ? data.credit_wallet_iqd : amtVal;
+      if (resEl) {
+        resEl.innerText = `کیف پول کردیت ${targetName} (${exactAccId}) به مبلغ ${formatEnMoney(amtVal)} IQD شارژ شد (موجودی جدید کیف پول: ${formatEnMoney(newWalletBal)} IQD) و حساب اصلی بدهکار شد.`;
+      }
+      document.getElementById('mgmtCreditWalletAmountInput').value = '';
+      document.getElementById('mgmtCreditWalletNoteInput').value = '';
+      previewAdminCreditWalletTarget();
+      playSound('success');
+      alert(`شارژ کیف پول کردیت انجام شد.
+مشتری: ${targetName} (${exactAccId})
+مبلغ شارژ و بدهی ثبت‌شده: ${formatEnMoney(amtVal)} IQD
+موجودی فعلی کیف پول کردیت: ${formatEnMoney(newWalletBal)} IQD`);
     }
   </script>
 </body>
