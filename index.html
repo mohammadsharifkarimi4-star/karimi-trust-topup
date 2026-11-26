@@ -1288,7 +1288,7 @@
           <button type="button" class="btn btn-soft-emerald" style="margin-top:8px;" onclick="openSelfRegister()">افتتاح حساب جدید</button>
 
           <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
-            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
+            <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">👆 ورود با اثر انگشت</button>
           </div>
         </div>
       </div>
@@ -5362,37 +5362,89 @@
       return null;
     }
 
-    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
+    let lastBiometricAuthError = '';
+
+    async function checkRealBiometricAvailability() {
+      const bioPlugin = getCapacitorBiometricPlugin();
+      if (bioPlugin && typeof bioPlugin.isAvailable === 'function') {
+        try {
+          const avail = await bioPlugin.isAvailable({ useFallback: true });
+          if (avail && (avail.isAvailable === true || Number(avail.biometryType) > 0 || avail.deviceIsSecure === true)) {
+            return { available: true, mode: 'capacitor', info: avail };
+          }
+          return { available: false, mode: 'capacitor', reason: 'اثر انگشت یا قفل امنیتی روی این دستگاه فعال نیست.' };
+        } catch (err) {
+          return { available: false, mode: 'capacitor', reason: (err && err.message) || 'خطا در بررسی سنسور اثر انگشت' };
+        }
+      }
+
+      try {
+        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
+        for (const br of bridges) {
+          if (br && (typeof br.isBiometricAvailable === 'function' || typeof br.requestFingerprintAuth === 'function' || typeof br.requestDeviceAuth === 'function')) {
+            if (typeof br.isBiometricAvailable === 'function') {
+              const canUse = Boolean(br.isBiometricAvailable());
+              return { available: canUse, mode: 'bridge', reason: canUse ? '' : 'سنسور اثر انگشت در دستگاه در دسترس نیست.' };
+            }
+            return { available: true, mode: 'bridge' };
+          }
+        }
+      } catch (e) {}
+
+      if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
+        try {
+          if (typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === 'function') {
+            const platformAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+            if (platformAvailable) {
+              return { available: true, mode: 'webauthn' };
+            }
+            return { available: false, mode: 'webauthn', reason: 'احراز هویت بیومتریک/اثر انگشت در این مرورگر یا دستگاه در دسترس نیست.' };
+          }
+          return { available: true, mode: 'webauthn' };
+        } catch (e) {
+          return { available: false, mode: 'webauthn', reason: (e && e.message) || 'خطای بررسی WebAuthn' };
+        }
+      }
+
+      return { available: false, mode: 'none', reason: 'امکان ورود با اثر انگشت در این محیط وجود ندارد؛ لطفاً از پین یا پسورد استفاده کنید.' };
+    }
+
+    async function triggerBiometricAuth(reasonText = 'اثر انگشت خود را روی حسگر قرار دهید یا قفل گوشی را تایید کنید') {
+      lastBiometricAuthError = '';
+      const availability = await checkRealBiometricAvailability();
+      if (!availability.available) {
+        lastBiometricAuthError = availability.reason || 'سنسور اثر انگشت یا قفل دستگاه در دسترس نیست.';
+        return false;
+      }
+
       const bioPlugin = getCapacitorBiometricPlugin();
       if (bioPlugin) {
         try {
-          if (typeof bioPlugin.isAvailable === 'function') {
-            await bioPlugin.isAvailable().catch(() => null);
-          }
           if (typeof bioPlugin.verifyIdentity === 'function') {
             await bioPlugin.verifyIdentity({
               reason: reasonText,
-              title: 'امانت‌داری کریمی',
-              subtitle: 'قفل گوشی (اثر انگشت، PIN، الگو یا رمز عبور)',
+              title: 'ورود با اثر انگشت — امانت‌داری کریمی',
+              subtitle: 'سنسور اثر انگشت یا قفل دستگاه',
               description: reasonText,
-              negativeButtonText: 'رمز ثابت برنامه',
+              negativeButtonText: 'استفاده از رمز ثابت',
               useFallback: true,
               allowDeviceCredential: true,
-              deviceCredentialTitle: 'قفل صفحه گوشی',
-              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور دستگاه را وارد کنید'
+              deviceCredentialTitle: 'تایید هویت دستگاه',
+              deviceCredentialSubtitle: 'اثر انگشت یا پین/الگوی قفل گوشی را وارد کنید'
             });
             return true;
           }
           if (typeof bioPlugin.authenticate === 'function') {
             await bioPlugin.authenticate({
               reason: reasonText,
-              title: 'امانت‌داری کریمی',
+              title: 'ورود با اثر انگشت — امانت‌داری کریمی',
               allowDeviceCredential: true,
               fallbackTitle: 'استفاده از قفل گوشی'
             });
             return true;
           }
         } catch (err) {
+          lastBiometricAuthError = (err && (err.message || err.errorMessage)) || 'تایید اثر انگشت لغو شد یا ناموفق بود.';
           return false;
         }
       }
@@ -5400,29 +5452,51 @@
       try {
         const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
         for (const br of bridges) {
-          if (br && typeof br.requestDeviceAuth === 'function') {
+          if (!br) continue;
+          if (typeof br.requestFingerprintAuth === 'function') {
+            const res = br.requestFingerprintAuth(reasonText);
+            if (Boolean(res)) return true;
+            lastBiometricAuthError = 'تایید اثر انگشت انجام نشد.';
+            return false;
+          }
+          if (typeof br.requestDeviceAuth === 'function') {
             const res = br.requestDeviceAuth(reasonText);
-            return Boolean(res);
+            if (Boolean(res)) return true;
+            lastBiometricAuthError = 'تایید قفل دستگاه انجام نشد.';
+            return false;
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        lastBiometricAuthError = (e && e.message) || 'خطای ارتباط با احراز هویت گوشی';
+        return false;
+      }
 
       if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
         try {
+          const challengeBytes = new Uint8Array(32);
+          if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+            window.crypto.getRandomValues(challengeBytes);
+          } else {
+            for (let i = 0; i < 32; i++) challengeBytes[i] = (i * 13 + 7) % 256;
+          }
           const cred = await navigator.credentials.get({
             publicKey: {
-              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112, 126, 140, 154, 168, 182, 196, 210, 224]),
+              challenge: challengeBytes,
               timeout: 60000,
               userVerification: 'required'
             }
           });
           if (cred) return true;
+          lastBiometricAuthError = 'احراز هویت اثر انگشت تایید نشد.';
+          return false;
         } catch (e) {
+          lastBiometricAuthError = (e && e.message) || 'احراز هویت اثر انگشت لغو یا رد شد.';
           return false;
         }
       }
 
-      return true;
+      lastBiometricAuthError = 'امکان احراز هویت بیومتریک در این محیط وجود ندارد.';
+      return false;
     }
 
     async function loginWithBiometric() {
@@ -5431,15 +5505,15 @@
       const bioPhone = localStorage.getItem('karimi_biometric_phone');
       const bioAccId = localStorage.getItem('karimi_biometric_accId');
       if (localStorage.getItem('karimi_biometric_enabled') !== 'true' || !bioPhone || !bioAccId) {
-        alert('اثر انگشت فعال نیست.');
+        alert('ورود با اثر انگشت روی این حساب فعال نیست.');
         return;
       }
-      const ok = await triggerBiometricAuth('ورود به حساب با اثر انگشت یا قفل گوشی');
+      const ok = await triggerBiometricAuth('اثر انگشت خود را برای ورود به حساب تایید کنید');
       if (!ok) {
-        alert('احراز هویت با قفل گوشی تایید نشد.');
+        alert(lastBiometricAuthError || 'احراز هویت با اثر انگشت تایید نشد.');
         return;
       }
-      showRealLoading('در حال ورود...', 'دریافت اطلاعات');
+      showRealLoading('در حال ورود...', 'دریافت اطلاعات حساب');
       await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       hideRealLoading();
       autoLogin(bioPhone, bioAccId, true);
@@ -5450,9 +5524,13 @@
 
     async function confirmEnableBiometric() {
       playSound('success');
-      const ok = await triggerBiometricAuth('فعال‌سازی اثر انگشت یا قفل گوشی برای حساب');
+      if (!currentFoundUser) {
+        alert('ابتدا وارد حساب خود شوید.');
+        return;
+      }
+      const ok = await triggerBiometricAuth('برای فعال‌سازی ورود با اثر انگشت، اثر انگشت خود را تایید کنید');
       if (!ok) {
-        alert('تایید قفل گوشی انجام نشد.');
+        alert(lastBiometricAuthError || 'تایید اثر انگشت انجام نشد؛ فعال‌سازی لغو شد.');
         return;
       }
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
@@ -5466,6 +5544,7 @@
       document.getElementById('biometricPromptModal').classList.add('hidden');
       updateBioStatusLabel();
       updateTxBioStatusLabel();
+      alert('ورود با اثر انگشت با موفقیت برای حساب شما فعال شد.');
     }
 
     function dismissBiometricPrompt() {
