@@ -2770,7 +2770,8 @@
           const parsed = JSON.parse(jsonMatch[1]);
           const prefix = str.slice(0, jsonMatch.index).trim();
           const pretty = JSON.stringify(parsed, null, 2);
-          return prefix ? `${prefix}\n${pretty}` : pretty;
+          return prefix ? `${prefix}
+${pretty}` : pretty;
         } catch (e) {}
       }
       return str;
@@ -2837,7 +2838,8 @@
         `کد سند: ${data.txId}`,
         `تاریخ و ساعت: ${data.dateStr}`
       ];
-      return `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msgLines.join('\n'))}`;
+      return `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msgLines.join('
+'))}`;
     }
 
     let lastIraqTopupAdminUrl = '';
@@ -3160,7 +3162,6 @@
       return found ? String(getVal(found, ['PinHash', 'pinhash', 'pin_hash']) || '').trim() : '';
     }
 
-    // ذخیره و بررسی رمز مستقیم در ستون PinHash جدول accounts از طریق RPC سوپابیس و ستون PinHash
     async function setPinInDatabaseColumn(accId, pinValue) {
       const cleanId = String(accId || '').trim();
       const cleanVal = String(pinValue || '').trim();
@@ -3366,11 +3367,16 @@
 
     function stripHtmlToPlain(htmlStr) {
       return String(htmlStr || '')
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<\/div>|<\/p>|<\/li>/gi, '\n')
+        .replace(/<br\s*\/?>/gi, '
+')
+        .replace(/<\/div>|<\/p>|<\/li>/gi, '
+')
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
-        .replace(/\n{3,}/g, '\n\n')
+        .replace(/
+{3,}/g, '
+
+')
         .trim();
     }
 
@@ -5060,7 +5066,10 @@
     function openLegacyPinActivationModal(accId) {
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
       const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
-      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت\nنام: ${nameVal}\nکد حساب: ${accId}\nشماره: ${phoneVal}`);
+      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت
+نام: ${nameVal}
+کد حساب: ${accId}
+شماره: ${phoneVal}`);
       document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
       document.getElementById('legacyPinActivationModal').classList.remove('hidden');
       ensureSentinelHistory();
@@ -5405,7 +5414,12 @@
       const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
       const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
-      const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
+      const msg = `امانت‌داری کریمی
+نام: ${name}
+عملیات: ${op}
+مبلغ: ${amt} ${curr}
+سند: ${tid}
+تاریخ: ${date}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -5486,111 +5500,138 @@
         }
         const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
         if (accId) {
-          buyerTotalsByAcc[accId.toLowerCase()] = (buyerTotalsByAcc[accId.toLowerCase()] || 0) + afnVal;
+          buyerTotalsByAcc[accId] = (buyerTotalsByAcc[accId] || 0) + afnVal;
         }
       });
 
-      const remStock = initialStock - totalSalesAfn;
-      totalSalesEl.innerText = `${formatEnMoney(Math.round(totalSalesAfn * 100) / 100)} AFN`;
-      todaySalesEl.innerText = `${formatEnMoney(Math.round(todaySalesAfn * 100) / 100)} AFN`;
-      remStockEl.innerText = `${formatEnMoney(Math.round(remStock * 100) / 100)} AFN`;
-
+      const remainingStock = initialStock - totalSalesAfn;
+      totalSalesEl.innerText = `${formatEnMoney(totalSalesAfn)} AFN`;
+      todaySalesEl.innerText = `${formatEnMoney(todaySalesAfn)} AFN`;
+      remStockEl.innerText = `${formatEnMoney(remainingStock)} AFN`;
       if (statusEl) {
-        if (remStock <= 0) {
-          statusEl.innerText = 'اتمام شارژ شرکت';
+        if (remainingStock <= 0) {
+          statusEl.innerText = 'تمام شده';
           statusEl.style.color = 'var(--danger)';
-        } else if (initialStock > 0 && remStock <= initialStock * 0.15) {
-          statusEl.innerText = 'شارژ شرکت رو به اتمام';
+        } else if (remainingStock < 5000) {
+          statusEl.innerText = 'رو به اتمام';
           statusEl.style.color = 'var(--warning)';
         } else {
-          statusEl.innerText = 'شارژ شرکت در دسترس';
-          statusEl.style.color = 'var(--emerald-800)';
+          statusEl.innerText = 'در دسترس';
+          statusEl.style.color = 'var(--emerald-700)';
         }
       }
 
       const buyers = [];
       const nonBuyers = [];
+      const seenAccIds = new Set();
+
       accountsList.forEach(acc => {
         const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-        if (!accId) return;
-        const accName = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
-        const sumAfn = buyerTotalsByAcc[accId.toLowerCase()] || 0;
-        if (sumAfn > 0) {
-          buyers.push({ accId, accName, sumAfn });
+        if (!accId || seenAccIds.has(accId.toLowerCase())) return;
+        seenAccIds.add(accId.toLowerCase());
+        const accName = String(getVal(acc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+        const phone = toEnglishDigits(getVal(acc, ['Phone', 'phone', 'تلفن']) || '');
+        const boughtAfn = buyerTotalsByAcc[accId] || 0;
+
+        if (boughtAfn > 0) {
+          buyers.push({ accId, accName, phone, boughtAfn });
         } else {
-          nonBuyers.push({ accId, accName });
+          nonBuyers.push({ accId, accName, phone });
         }
       });
 
-      buyers.sort((a, b) => b.sumAfn - a.sumAfn);
+      buyers.sort((a, b) => b.boughtAfn - a.boughtAfn);
 
       if (buyers.length === 0) {
-        buyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">هنوز خریدی ثبت نشده است.</div>';
+        buyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">هیچ حسابی خرید شارژ/کردیت به AFN ثبت نکرده است.</div>';
       } else {
-        buyersBox.innerHTML = buyers.map(b =>
-          `<div class="admin-mini-item"><span>${b.accName} (<span class="eng-num">${b.accId}</span>)</span><strong class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(Math.round(b.sumAfn * 100) / 100)} AFN</strong></div>`
-        ).join('');
+        buyersBox.innerHTML = buyers.map(b => `
+          <div class="admin-mini-item">
+            <span><b>${b.accName}</b> (<span class="eng-num">${b.accId}</span>)</span>
+            <span class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(b.boughtAfn)} AFN</span>
+          </div>`).join('');
       }
 
       if (nonBuyers.length === 0) {
-        nonBuyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
+        nonBuyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها حداقل یک خرید داشته‌اند.</div>';
       } else {
-        nonBuyersBox.innerHTML = nonBuyers.map(nb =>
-          `<div class="admin-mini-item"><span>${nb.accName} (<span class="eng-num">${nb.accId}</span>)</span><span style="color:var(--slate-500);">بدون خرید</span></div>`
-        ).join('');
+        nonBuyersBox.innerHTML = nonBuyers.map(nb => `
+          <div class="admin-mini-item">
+            <span><b>${nb.accName}</b> (<span class="eng-num">${nb.accId}</span>)</span>
+            <span class="eng-num" style="color:var(--slate-500);">${nb.phone || '---'}</span>
+          </div>`).join('');
       }
     }
 
+    function generateStrongRandomPin() {
+      const lowers = 'abcdefghjkmnpqrstuvwxyz';
+      const uppers = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+      const digits = '23456789';
+      const all = lowers + uppers + digits;
+      let out = [
+        lowers[Math.floor(Math.random() * lowers.length)],
+        uppers[Math.floor(Math.random() * uppers.length)],
+        digits[Math.floor(Math.random() * digits.length)]
+      ];
+      for (let i = 0; i < 5; i++) {
+        out.push(all[Math.floor(Math.random() * all.length)]);
+      }
+      return out.sort(() => Math.random() - 0.5).join('');
+    }
+
     async function adminResetAndGenerateAccountPin() {
-      playSound('click');
       if (!activeManagementAdmin) {
         alert('ابتدا وارد بخش مدیریت شوید.');
         return;
       }
       const queryRaw = toEnglishDigits((document.getElementById('mgmtResetAccOrPhoneInput')?.value || '').trim());
-      const customPin = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
-      const resEl = document.getElementById('mgmtGeneratedPinResult');
+      const customPinRaw = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
+      const resBox = document.getElementById('mgmtGeneratedPinResult');
 
       if (!queryRaw) {
         alert('شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید.');
         return;
       }
 
-      showRealLoading('در حال ریست و تولید رمز...', 'جستجو و به‌روزرسانی ستون PinHash در دیتابیس');
+      showRealLoading('در حال ریست و تولید رمز طرف...', 'به‌روزرسانی ستون PinHash در جدول accounts');
       await fetchDataFromSupabaseFresh();
 
       const qLower = queryRaw.toLowerCase();
       const qLast9 = getLast9Digits(queryRaw);
+
       const targetAcc = accountsList.find(acc => {
         const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
-        const ph = String(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']) || '').trim();
-        return aid === qLower || (qLast9.length >= 9 && getLast9Digits(ph) === qLast9);
+        const ph = getLast9Digits(getVal(acc, ['Phone', 'phone', 'تلفن']) || '');
+        if (aid && aid === qLower) return true;
+        if (qLast9.length >= 9 && ph === qLast9) return true;
+        return false;
       });
 
       if (!targetAcc) {
         hideRealLoading();
-        alert('حسابی با این شناسه یا شماره تماس یافت نشد.');
+        alert('حسابی با این شناسه یا شماره تماس پیدا نشد.');
         return;
       }
 
       const targetAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
       const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const newPinValue = customPin || String(Math.floor(100000 + Math.random() * 900000));
+      const newPin = customPinRaw || generateStrongRandomPin();
 
-      const savedOk = await setPinInDatabaseColumn(targetAccId, newPinValue);
+      const ok = await setPinInDatabaseColumn(targetAccId, newPin);
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
-      if (!savedOk) {
+      if (!ok) {
         alert('خطا در ذخیره رمز جدید در ستون PinHash دیتابیس.');
         return;
       }
 
-      if (resEl) {
-        resEl.innerText = `حساب: ${targetName} (${targetAccId}) | رمز جدید: ${newPinValue}`;
-      }
       playSound('success');
-      alert(`رمز حساب ${targetName} (${targetAccId}) با موفقیت ریست و ذخیره شد.\nرمز جدید: ${newPinValue}`);
+      if (resBox) {
+        resBox.innerText = `Account: ${targetAccId} (${targetName}) | New Pin: ${newPin}`;
+      }
+      alert(`رمز جدید برای ${targetName} (${targetAccId}) ریست و ذخیره شد:
+${newPin}`);
     }
   </script>
 </body>
