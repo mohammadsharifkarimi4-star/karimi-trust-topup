@@ -1320,7 +1320,7 @@
 
           <button type="button" class="btn btn-soft-emerald" style="margin-top:8px;" onclick="openSelfRegister()">افتتاح حساب جدید</button>
 
-          <div id="biometricBtnWrapper" class="hidden" style="margin-top:8px;">
+          <div id="biometricBtnWrapper" style="margin-top:8px;">
             <button type="button" class="btn btn-soft-emerald" onclick="loginWithBiometric()">ورود با اثر انگشت / قفل گوشی</button>
           </div>
         </div>
@@ -2820,7 +2820,6 @@
       const rawUserTxs = getUserVisibleTransactions(sheetAccId);
       customerTransactions = sortChronologically(rawUserTxs, false);
 
-      // محاسبه موجودی حساب اصلی جدا از کیف پول شارژ
       customerBalances = {};
       customerTransactions.forEach(tx => {
         if (isCreditWalletTx(tx)) return;
