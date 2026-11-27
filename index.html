@@ -5629,12 +5629,6 @@
         alert('شارژ عراق در تنظیمات غیرفعال است.');
         return;
       }
-      showRealLoading('در حال انجام شارژ...', 'ثبت تراکنش و بروزرسانی موجودی');
-      const prevIds = getUserTransactionIds(payload.accId);
-      const nowIso = new Date().toISOString();
-      const txId = 'TP-' + Math.floor(100000 + Math.random() * 900000);
-      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
-
       if (payload.mode === 'afn') {
         showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط سخت‌گیرانه با شرکت سرویس‌دهنده');
         const detectedOp = detectAfnOperatorFromPhone(payload.targetPhone);
