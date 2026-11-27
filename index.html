@@ -5630,16 +5630,7 @@
         return;
       }
       if (payload.mode === 'afn') {
-        payload.rate = getAfnExchangeRate();
-        payload.requiredIqd = Math.round(Number(payload.afnAmt) * payload.rate);
-      }
-      const txId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
-      const nowIso = new Date().toISOString();
-      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
-      const prevIds = getUserTransactionIds(payload.accId);
-
-      if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط با سرور شارژ');
+        showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط سخت‌گیرانه با شرکت سرویس‌دهنده');
         const detectedOp = detectAfnOperatorFromPhone(payload.targetPhone);
         if (!detectedOp) {
           hideRealLoading();
@@ -5650,67 +5641,152 @@
         const resolvedNetwork = payload.afnNetwork || detectedOp.networkLabel;
         const resolvedOperatorCode = payload.operatorCode || detectedOp.operatorCode;
 
-        let apiOk = false;
-        let apiRef = txId;
-        let lastErr = '';
+        const endpointUrl = (appSettingsState.afn_api_endpoint || '/api/iimobile-topup').trim() || '/api/iimobile-topup';
+        const modeVal = (appSettingsState.afn_api_mode || 'proxy_api').trim() || 'proxy_api';
 
-        const endpointUrl = appSettingsState.afn_api_endpoint || '/api/iimobile-topup';
-        const modeVal = appSettingsState.afn_api_mode || 'proxy_api';
+        function extractRealProviderErrorMessage(respObj, rawBodyStr, parsedJson) {
+          const candidates = [
+            parsedJson && parsedJson.company_message,
+            parsedJson && parsedJson.initiate_company_message,
+            parsedJson && parsedJson.execute_company_message,
+            parsedJson && parsedJson.error_message,
+            parsedJson && parsedJson.error,
+            parsedJson && parsedJson.message,
+            parsedJson && parsedJson.msg,
+            parsedJson && parsedJson.detail,
+            parsedJson && parsedJson.description,
+            parsedJson && parsedJson.reason,
+            parsedJson && parsedJson.raw && parsedJson.raw.company_message,
+            parsedJson && parsedJson.raw && parsedJson.raw.msg,
+            parsedJson && parsedJson.raw && parsedJson.raw.message,
+            parsedJson && parsedJson.raw && parsedJson.raw.error,
+            parsedJson && parsedJson.raw && parsedJson.raw.detail,
+            parsedJson && parsedJson.initiate_raw && parsedJson.initiate_raw.msg,
+            parsedJson && parsedJson.initiate_raw && parsedJson.initiate_raw.message,
+            parsedJson && parsedJson.initiate_raw && parsedJson.initiate_raw.error,
+            parsedJson && parsedJson.execute_raw && parsedJson.execute_raw.msg,
+            parsedJson && parsedJson.execute_raw && parsedJson.execute_raw.message,
+            parsedJson && parsedJson.execute_raw && parsedJson.execute_raw.error
+          ];
 
-        if (!appSettingsState.afn_api_enabled) {
-          apiOk = true;
-          apiRef = `MANUAL-${txId}`;
-          payload.companyResponse = 'ثبت سیستمی کردیت افغانستان';
-        } else {
-          try {
-            const resp = await fetch(endpointUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                operator: resolvedOperatorCode,
-                mode: modeVal,
-                network: resolvedNetwork,
-                phone: intlPhone,
-                amount: Number(payload.afnAmt),
-                rate: Number(payload.rate || getAfnExchangeRate())
-              })
-            });
-            const rawText = await resp.text();
-            let json = null;
-            try { json = JSON.parse(rawText); } catch (e) { json = null; }
-
-            if (resp.ok && json && json.ok) {
-              apiOk = true;
-              const extractedCode = json.txid || json.reference_id || json.tracking_code || json.ref || json.id || (json.raw && (json.raw.txid || json.raw.reference_id || json.raw.id || json.raw.ref)) || '';
-              if (extractedCode) apiRef = String(extractedCode);
-              const extractedCompanyMsg = json.company_message || json.message || json.msg || (json.raw && (json.raw.msg || json.raw.message)) || '';
-              payload.companyResponse = extractedCompanyMsg ? String(extractedCompanyMsg).trim() : '';
-            } else {
-              const companyRaw = json && (
-                json.company_message ||
-                json.initiate_company_message ||
-                (json.raw && (json.raw.msg || json.raw.message || json.raw.error || json.raw.detail)) ||
-                (json.initiate_raw && (json.initiate_raw.msg || json.initiate_raw.message || json.initiate_raw.error || json.initiate_raw.detail)) ||
-                (json.execute_raw && (json.execute_raw.msg || json.execute_raw.message || json.execute_raw.error || json.execute_raw.detail))
-              );
-              const stageTag = json && json.stage ? `[${json.stage}] ` : '';
-              const detailMsg = companyRaw || (json && (json.error || json.message || json.msg || json.detail || json.description || json.reason)) || (rawText && rawText.trim()) || '';
-              if (detailMsg && detailMsg !== 'Bad Request') {
-                lastErr = `${stageTag}${typeof detailMsg === 'string' ? detailMsg : JSON.stringify(detailMsg)}`;
-              } else {
-                const rawSnippet = json ? JSON.stringify(json) : (rawText && rawText.trim()) || '';
-                lastErr = `${stageTag}HTTP ${resp.status} ${resp.statusText || ''}${rawSnippet ? ' | ' + rawSnippet : ''}`.trim();
+          let picked = '';
+          for (const c of candidates) {
+            if (c !== undefined && c !== null) {
+              const s = typeof c === 'string' ? c.trim() : JSON.stringify(c);
+              if (s && s !== 'null' && s !== 'undefined') {
+                picked = s;
+                break;
               }
             }
-          } catch (err) {
-            lastErr = err && err.message ? String(err.message) : 'Network Error';
           }
+
+          const stagePrefix = (parsedJson && parsedJson.stage) ? `[${String(parsedJson.stage).trim()}] ` : '';
+          if (picked && picked !== 'Bad Request') {
+            return `${stagePrefix}${picked}`;
+          }
+
+          const bodyFallback = (rawBodyStr && rawBodyStr.trim()) ? rawBodyStr.trim() : (parsedJson ? JSON.stringify(parsedJson) : '');
+          const httpPart = `HTTP ${respObj.status}${respObj.statusText ? ' ' + respObj.statusText : ''}`.trim();
+          return bodyFallback ? `${stagePrefix}${httpPart} | ${bodyFallback}` : `${stagePrefix}${httpPart}`;
         }
 
-        if (!apiOk) {
+        function evaluateStrictProviderSuccess(respObj, parsedJson) {
+          if (!respObj || !respObj.ok) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (!parsedJson || typeof parsedJson !== 'object') {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (parsedJson.ok !== true) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (parsedJson.success === false || parsedJson.failed === true || parsedJson.error) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+
+          const statusNorm = String(
+            parsedJson.status ||
+            parsedJson.tx_status ||
+            parsedJson.state ||
+            (parsedJson.raw && (parsedJson.raw.status || parsedJson.raw.state)) ||
+            ''
+          ).trim().toLowerCase();
+
+          const negativeStatuses = ['failed', 'fail', 'error', 'rejected', 'declined', 'denied', 'cancelled', 'canceled', 'invalid', 'timeout', 'expired', 'reversed'];
+          if (statusNorm && negativeStatuses.includes(statusNorm)) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+
+          const rawTxCode = (
+            parsedJson.txid ||
+            parsedJson.reference_id ||
+            parsedJson.tracking_code ||
+            parsedJson.ref ||
+            parsedJson.id ||
+            (parsedJson.raw && (parsedJson.raw.txid || parsedJson.raw.reference_id || parsedJson.raw.tracking_code || parsedJson.raw.ref || parsedJson.raw.id)) ||
+            ''
+          );
+          const txCodeStr = String(rawTxCode || '').trim();
+          if (!txCodeStr) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+
+          const rawMsg = (
+            parsedJson.company_message ||
+            parsedJson.message ||
+            parsedJson.msg ||
+            (parsedJson.raw && (parsedJson.raw.company_message || parsedJson.raw.msg || parsedJson.raw.message)) ||
+            ''
+          );
+          const companyMsgStr = typeof rawMsg === 'string' ? rawMsg.trim() : (rawMsg ? JSON.stringify(rawMsg) : '');
+
+          return { confirmed: true, txCode: txCodeStr, companyMsg: companyMsgStr };
+        }
+
+        let apiOk = false;
+        let apiRef = '';
+        let lastErr = '';
+
+        try {
+          const resp = await fetch(endpointUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              operator: resolvedOperatorCode,
+              mode: modeVal,
+              network: resolvedNetwork,
+              phone: intlPhone,
+              amount: Number(payload.afnAmt),
+              rate: Number(payload.rate || getAfnExchangeRate())
+            })
+          });
+
+          const rawText = await resp.text();
+          let json = null;
+          try {
+            json = rawText ? JSON.parse(rawText) : null;
+          } catch (parseErr) {
+            json = null;
+          }
+
+          const verdict = evaluateStrictProviderSuccess(resp, json);
+          if (verdict.confirmed) {
+            apiOk = true;
+            apiRef = verdict.txCode;
+            payload.companyResponse = verdict.companyMsg;
+          } else {
+            apiOk = false;
+            lastErr = extractRealProviderErrorMessage(resp, rawText, json);
+          }
+        } catch (err) {
+          apiOk = false;
+          lastErr = (err && err.message) ? String(err.message) : 'Network connection failed';
+        }
+
+        if (!apiOk || !apiRef) {
           hideRealLoading();
-          notifyAccountEvent('ارسال کردیت ناموفق', lastErr);
-          showTopupRawErrorModal(lastErr);
+          notifyAccountEvent('ارسال کردیت ناموفق', lastErr || 'پاسخ منفی یا خطا در ارتباط با شرکت سرویس‌دهنده');
+          showTopupRawErrorModal(lastErr || 'Provider rejected transaction or connection failed');
           return;
         }
 
@@ -5733,7 +5809,7 @@
         const companyRespNote = payload.companyResponse ? ` | پاسخ شرکت: ${payload.companyResponse}` : '';
         const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان (از کیف پول کردیت ${wId}) — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
 
-        await insertCreditWalletTxRow({
+        const cwInsertRes = await insertCreditWalletTxRow({
           tx_id: txId,
           wallet_id: wId,
           account_id: payload.accId,
@@ -5749,18 +5825,25 @@
           created_at: nowIso
         });
 
-        const afnReceiptObj = {
+        const afnTxRow = {
           TransID: txId,
           AccountID: payload.accId,
           Date: nowIso,
           Amount: Number(payload.requiredIqd),
           Currency: 'IQD',
           Direction: 'بدهکار',
-          OperationType: 'ارسال کردیت (کیف پول کردیت)',
+          OperationType: 'ارسال کردیت',
           Description: officialAfnDesc,
           AssignedUserEmail: assigned,
-          Status: appSettingsState.afn_api_enabled ? 'تایید شده' : 'ثبت شده'
+          Status: 'تایید شده'
         };
+
+        const { error: mainTxInsertErr } = await _supabase.from('transactions').insert([afnTxRow]);
+        if (mainTxInsertErr) {
+          hideRealLoading();
+          alert('خطا در ثبت تراکنش در جدول تراکنش‌ها: ' + mainTxInsertErr.message);
+          return;
+        }
 
         hideRealLoading();
         resetAllOperationForms();
@@ -5771,10 +5854,13 @@
         resetAllOperationForms();
         collapseServiceForms();
         updateLastSyncLabel();
-        notifyAccountEvent('ارسال کردیت انجام شد', `کد پیگیری: ${apiRef} (کسر از کیف کردیت)`);
-        showReceiptForTransactionData(afnReceiptObj);
+        const curIds = getUserTransactionIds(payload.accId);
+        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+        if (curIds.length > prevIds.length || (cwInsertRes && cwInsertRes.ok)) {
+          notifyAccountEvent('ارسال کردیت انجام شد', `کد پیگیری: ${apiRef}`);
+        }
+        showReceiptForTransactionData(afnTxRow);
       } else {
-        showRealLoading('در حال ثبت...', 'ثبت تراکنش');
         const iqChargeAmt = Number(payload.chargeAmt ?? payload.cardAmt) || Number(payload.cardAmt) || 0;
         const iqCardAmt = Number(payload.cardAmt) || iqChargeAmt;
         const apiResult = await callExternalTopupApi({
