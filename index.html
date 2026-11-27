@@ -6711,3 +6711,39 @@
   </script>
 </body>
 </html>
+<script>
+(function () {
+  async function syncAppNoticeFromSupabase() {
+    const targetEl = document.getElementById('homeAnnouncementText');
+    if (!targetEl) return;
+
+    const client =
+      window.supabaseClient ||
+      window.sb ||
+      window.supabase;
+
+    if (!client || typeof client.from !== 'function') return;
+
+    try {
+      const { data, error } = await client
+        .from('app_notice')
+        .select('notice_text')
+        .limit(1);
+
+      if (error || !Array.isArray(data) || data.length === 0) return;
+
+      const freshText = data[0] && data[0].notice_text;
+      if (typeof freshText === 'string' && freshText.trim() !== '') {
+        targetEl.textContent = freshText.trim();
+      }
+    } catch (_) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncAppNoticeFromSupabase);
+  } else {
+    syncAppNoticeFromSupabase();
+  }
+  window.addEventListener('load', syncAppNoticeFromSupabase);
+})();
+</script>
