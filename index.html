@@ -2433,22 +2433,22 @@
         smT.disabled = !tEnabled;
         smT.classList.toggle('disabled-service', !tEnabled);
         const cta = smT.querySelector('.fancy-opt-cta');
-        if (cta) cta.innerText = tEnabled ? 'باز کردن' : 'فعلا در جال کار روی آن هستیم';
-        if (subT && !tEnabled) subT.innerText = 'فعلا در جال کار روی آن هستیم';
+        if (cta) cta.innerText = tEnabled ? 'باز کردن' : 'فعلا در حال کار روی آن هستیم';
+        if (subT && !tEnabled) subT.innerText = 'فعلا در حال کار روی آن هستیم';
       }
       if (smA) {
         smA.disabled = !aEnabled;
         smA.classList.toggle('disabled-service', !aEnabled);
         const cta = smA.querySelector('.fancy-opt-cta');
-        if (cta) cta.innerText = aEnabled ? 'باز کردن' : 'فعلا در جال کار روی آن هستیم';
-        if (subA && !aEnabled) subA.innerText = 'فعلا در جال کار روی آن هستیم';
+        if (cta) cta.innerText = aEnabled ? 'باز کردن' : 'فعلا در حال کار روی آن هستیم';
+        if (subA && !aEnabled) subA.innerText = 'فعلا در حال کار روی آن هستیم';
       }
       if (smI) {
         smI.disabled = !iEnabled;
         smI.classList.toggle('disabled-service', !iEnabled);
         const cta = smI.querySelector('.fancy-opt-cta');
-        if (cta) cta.innerText = iEnabled ? 'باز کردن' : 'فعلا در جال کار روی آن هستیم';
-        if (subI && !iEnabled) subI.innerText = 'فعلا در جال کار روی آن هستیم';
+        if (cta) cta.innerText = iEnabled ? 'باز کردن' : 'فعلا در حال کار روی آن هستیم';
+        if (subI && !iEnabled) subI.innerText = 'فعلا در حال کار روی آن هستیم';
       }
 
       const annEl = document.getElementById('homeAnnouncementText');
@@ -4771,7 +4771,7 @@
       const txBioEnabled = isTxBiometricEnabled();
       document.getElementById('pinModalHeading').innerText = headingText;
       document.getElementById('txPinSummaryText').innerHTML = summaryHtml;
-      document.getElementById('txBiometricActionBox').classList.toggle('hidden', !txBioEnabled);
+     document.getElementById('txBiometricActionBox').classList.toggle('hidden', true);
       document.getElementById('txVerifyPinInput').value = '';
       document.getElementById('txPinConfirmModal').classList.remove('hidden');
       ensureSentinelHistory();
@@ -5405,7 +5405,7 @@
       const resEl = document.getElementById('mgmtCwGrantResult');
 
       if (!walletQueryRaw) {
-        alert('آیدی کیف پول کردیت (مثلاً CW-ACC-1001) را وارد کنید.');
+        alert('آیدی کیف پول کردیت (مثلاً CW-ACC-01) را وارد کنید.');
         return;
       }
       if (isNaN(grantAmtIqd) || grantAmtIqd <= 0) {
