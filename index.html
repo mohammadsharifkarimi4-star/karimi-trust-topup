@@ -2885,48 +2885,77 @@
     function showReceiptForTransactionData(txData) {
       if (!txData || !currentFoundUser) return;
       selectedTxItem = txData;
+      const isCwRec = Boolean(txData.is_credit_wallet_receipt || txData.wallet_id || txData.operation_type);
       const dir = String(getVal(txData, ['Direction', 'direction'])).trim();
-      const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
+      const isCredit = isCwRec
+        ? (String(txData.direction || '').toLowerCase() === 'credit' || dir.includes('بستانکار'))
+        : (dir.includes('بستانکار') || dir.includes('دریافت'));
       const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
-      const amountVal = parseFloat(getVal(txData, ['Amount', 'amount', 'value'])) || 0;
-      const transId = String(getVal(txData, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
-      const opType = getVal(txData, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-      const dateStr = getVal(txData, ['Date', 'date', 'created_at']) || new Date().toISOString();
+      const amountVal = isCwRec
+        ? (parseFloat(toEnglishDigits(txData.amount_iqd ?? txData.Amount ?? 0)) || 0)
+        : (parseFloat(getVal(txData, ['Amount', 'amount', 'value'])) || 0);
+      const transId = String(txData.tx_id || getVal(txData, ['TransID', 'transid', 'id', 'transaction_id']) || '---');
+      const opType = isCwRec
+        ? getCreditWalletOpLabel(txData.operation_type)
+        : (getVal(txData, ['OperationType', 'operationtype', 'type']) || 'تراکنش');
+      const dateStr = txData.created_at || getVal(txData, ['Date', 'date', 'created_at']) || new Date().toISOString();
       const dateOnly = extractDateOnly(dateStr);
       const timeStr = extractTimeOnly(dateStr) || '---';
-      const currStr = getVal(txData, ['Currency', 'currency']) || 'IQD';
-      const statusStr = getVal(txData, ['Status', 'status']) || 'ثبت شده';
-      const descStr = String(getVal(txData, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
+      const currStr = isCwRec ? 'IQD' : (getVal(txData, ['Currency', 'currency']) || 'IQD');
+      const statusStr = isCwRec ? (txData.Status || 'ثبت شده در جدول کیف کردیت') : (getVal(txData, ['Status', 'status']) || 'ثبت شده');
+      const descStr = String(txData.description || getVal(txData, ['Description', 'description', 'desc']) || '---').replaceAll('+', ' ');
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
       const cpName = resolveCounterpartyName(currentFoundUser);
 
       document.getElementById('receiptDateStr').innerText = dateOnly;
 
-      const txCurr = currStr.toUpperCase();
-      const allChron = sortChronologically(customerTransactions, true);
-      let runningBalance = 0, balBefore = 0, balAfter = 0;
-
-      allChron.forEach(t => {
-        const c = String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase();
-        const tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
-        if (c === txCurr) {
-          const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
-          const d = String(getVal(t, ['Direction', 'direction'])).trim();
-          if (tidItem === transId || t === txData) {
-            balBefore = runningBalance;
-            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
-            balAfter = runningBalance;
-          } else {
-            if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+      let balBefore = 0, balAfter = 0;
+      if (isCwRec) {
+        if (txData.balance_before_iqd !== undefined && txData.balance_after_iqd !== undefined) {
+          balBefore = parseFloat(toEnglishDigits(txData.balance_before_iqd)) || 0;
+          balAfter = parseFloat(toEnglishDigits(txData.balance_after_iqd)) || 0;
+        } else {
+          const chron = (Array.isArray(currentCreditWalletTxs) ? currentCreditWalletTxs : [])
+            .slice()
+            .sort((a, b) => getTxTimestamp(a) - getTxTimestamp(b));
+          let running = 0;
+          for (const item of chron) {
+            const a = parseFloat(toEnglishDigits(item.amount_iqd ?? 0)) || 0;
+            const cIsCred = String(item.direction || '').toLowerCase() === 'credit';
+            const cId = String(item.tx_id || item.id || '');
+            if (item === txData || (transId && cId === transId)) {
+              balBefore = running;
+              running = cIsCred ? (running + a) : Math.max(0, running - a);
+              balAfter = running;
+            } else {
+              running = cIsCred ? (running + a) : Math.max(0, running - a);
+            }
           }
         }
-      });
+      } else {
+        const txCurr = currStr.toUpperCase();
+        const allChron = sortChronologically(customerTransactions, true);
+        let runningBalance = 0;
 
-      const isCwRec = Boolean(txData.is_credit_wallet_receipt);
-      const cwBalBefore = isCwRec && txData.balance_before_iqd !== undefined ? (parseFloat(toEnglishDigits(txData.balance_before_iqd)) || 0) : balBefore;
-      const cwBalAfter = isCwRec && txData.balance_after_iqd !== undefined ? (parseFloat(toEnglishDigits(txData.balance_after_iqd)) || 0) : balAfter;
+        allChron.forEach(t => {
+          const c = String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase();
+          const tidItem = String(getVal(t, ['TransID', 'transid', 'id', 'transaction_id']) || '');
+          if (c === txCurr) {
+            const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
+            const d = String(getVal(t, ['Direction', 'direction'])).trim();
+            if (tidItem === transId || t === txData) {
+              balBefore = runningBalance;
+              if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
+              else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+              balAfter = runningBalance;
+            } else {
+              if (d.includes('بستانکار') || d.includes('دریافت')) runningBalance += a;
+              else if (d.includes('بدهکار') || d.includes('پرداخت')) runningBalance -= a;
+            }
+          }
+        });
+      }
+
       const cwMetaHtml = isCwRec ? `
         <div class="receipt-row"><span class="receipt-label">آیدی کیف پول</span><span class="receipt-val eng-num">${txData.wallet_id || getCurrentCreditWalletId()}</span></div>
         ${txData.amount_afn ? `<div class="receipt-row"><span class="receipt-label">مبلغ کردیت (AFN)</span><span class="receipt-val eng-num">${formatEnMoney(txData.amount_afn)} AFN</span></div>` : ''}
@@ -2946,8 +2975,8 @@
         <div class="receipt-row"><span class="receipt-label">عملیات</span><span class="receipt-val">${opType}</span></div>
         <div class="receipt-row"><span class="receipt-label">کد سند</span><span class="receipt-val eng-num">${transId}</span></div>
         <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(cwBalBefore)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(cwBalAfter)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
       `;
       const adminWaBtn = document.getElementById('receiptSendAdminWaBtn');
@@ -3722,7 +3751,7 @@
         chargeModal.classList.remove('open');
         return true;
       }
-      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal', 'chargeAccountModal'];
+      const ids = ['creditWalletModal', 'txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal', 'chargeAccountModal'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
