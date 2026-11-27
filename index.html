@@ -1967,23 +1967,23 @@
 
 
         <div class="info-callout-box" style="margin-top:8px; background:#f0fdf4; border-color:#4ade80;">
-          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px; color:var(--emerald-950);">افزایش موجودی کیف پول کردیت (وقتی کیف شارژ صفر یا منفی/بدهکار است)</div>
+          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px; color:var(--emerald-950);">انتقال مستقیم به کیف پول کردیت (مثبت شدن کیف و بدهکار شدن حساب اصلی)</div>
           <div style="font-size:0.7rem; margin-bottom:6px; line-height:1.55;">
-            با وارد کردن شناسه حساب (Account ID) یا شماره تماس و مبلغ دیناری (مثلاً 5000)، موجودی کیف پول کردیت همان فرد افزایش می‌یابد و هم‌زمان همان مبلغ به عنوان <b>بدهکار</b> به نام «ارسال به کیف پول کردیت» در <b>حساب اصلی (transactions)</b> او ثبت می‌شود.
+            با وارد کردن <b>آیدی کیف پول (CW-...)</b> و مبلغ دیناری (مثلاً 5000)، موجودی همان کیف پول کردیت به اندازه مبلغ واردشده <b>مثبت (+)</b> می‌شود و هم‌زمان همان مبلغ به عنوان <b>بدهکار</b> بابت انتقال به کیف پول کردیت در <b>حساب اصلی (transactions)</b> فرد ثبت می‌گردد.
           </div>
           <div class="form-group" style="margin-bottom:6px;">
-            <label for="mgmtCwTargetAccOrPhone">کد حساب (Account ID) یا شماره تماس</label>
-            <input type="text" id="mgmtCwTargetAccOrPhone" placeholder="مثلاً ACC-1001 یا 077xxxxxxxx" dir="ltr">
+            <label for="mgmtCwTargetAccOrPhone">آیدی کیف پول کردیت (Wallet ID)</label>
+            <input type="text" id="mgmtCwTargetAccOrPhone" placeholder="مثلاً CW-ACC-1001 یا CW-..." dir="ltr">
           </div>
           <div class="form-group" style="margin-bottom:6px;">
-            <label for="mgmtCwGrantAmountIqd">مبلغ افزایش کیف کردیت (IQD)</label>
+            <label for="mgmtCwGrantAmountIqd">مبلغ انتقال به کیف کردیت (IQD)</label>
             <input type="number" id="mgmtCwGrantAmountIqd" placeholder="مثلاً 5000" dir="ltr">
           </div>
           <div class="form-group" style="margin-bottom:6px;">
             <label for="mgmtCwGrantDesc">شرح اختیاری</label>
-            <input type="text" id="mgmtCwGrantDesc" placeholder="ارسال به کیف پول کردیت (دوست/آشنا)">
+            <input type="text" id="mgmtCwGrantDesc" placeholder="انتقال به کیف پول کردیت">
           </div>
-          <button type="button" class="btn btn-primary" onclick="adminGrantCreditWalletWithMainDebt()">ثبت افزایش کیف کردیت و بدهکار کردن حساب اصلی</button>
+          <button type="button" class="btn btn-primary" onclick="adminGrantCreditWalletWithMainDebt()">انتقال به کیف پول و بدهکار کردن حساب اصلی</button>
           <div id="mgmtCwGrantResult" style="margin-top:6px; font-size:0.74rem; font-weight:900; color:var(--emerald-900); text-align:center;"></div>
         </div>
 
@@ -5074,24 +5074,52 @@
       showReceiptForTransactionData(enriched);
     }
 
+    function formatFullDateTimeWithSeconds(rawDate) {
+      if (!rawDate) return '---';
+      const d = new Date(rawDate);
+      if (!isNaN(d.getTime())) {
+        const pad = n => String(n).padStart(2, '0');
+        const y = d.getFullYear();
+        const m = pad(d.getMonth() + 1);
+        const day = pad(d.getDate());
+        const hh = pad(d.getHours());
+        const mm = pad(d.getMinutes());
+        const ss = pad(d.getSeconds());
+        return `${y}-${m}-${day} ${hh}:${mm}:${ss}`;
+      }
+      return toEnglishDigits(String(rawDate)).replace('T', ' ').replace('Z', '').slice(0, 19);
+    }
+
     function buildCreditWalletTxRowsHtml(list) {
       if (!Array.isArray(list) || list.length === 0) {
         return '<div style="font-size:0.72rem; color:var(--slate-500); text-align:center; padding:10px;">تراکنشی در جدول credit_wallet_transactions ثبت نشده است.</div>';
       }
-      return list.map((tx, idx) => {
+      const ascending = list.slice().sort((a, b) => getTxTimestamp(a) - getTxTimestamp(b));
+      const orderedNewToOld = ascending.map((tx, i) => ({ tx, rowNumber: i + 1 })).reverse();
+      return orderedNewToOld.map(({ tx, rowNumber }) => {
+        const origIdx = list.indexOf(tx);
         const isCredit = String(tx.direction || '').toLowerCase() === 'credit';
         const amtIqd = parseFloat(toEnglishDigits(tx.amount_iqd ?? 0)) || 0;
         const amtAfn = parseFloat(toEnglishDigits(tx.amount_afn ?? 0)) || 0;
         const label = getCreditWalletOpLabel(tx.operation_type);
-        const dt = extractDateOnly(tx.created_at || '');
-        const afnPart = amtAfn > 0 ? ` (${formatEnMoney(amtAfn)} AFN)` : '';
+        const fullDt = formatFullDateTimeWithSeconds(tx.created_at || tx.Date || '');
+        const afnPart = amtAfn > 0
+          ? `<div style="font-size:0.68rem; color:var(--slate-600); margin-top:2px;">دینار افغانی: <span class="eng-num" dir="ltr">${formatEnMoney(amtAfn)}</span></div>`
+          : '';
         return `
-          <div class="admin-mini-item" onclick="openCreditWalletTxReceiptByIndex(${idx})" style="cursor:pointer;">
-            <div>
-              <div><b>${label}</b></div>
-              <div style="color:var(--slate-500);">${tx.description || tx.tx_id || ''} • <span class="eng-num">${dt}</span></div>
+          <div class="admin-mini-item" onclick="openCreditWalletTxReceiptByIndex(${origIdx >= 0 ? origIdx : 0})" style="cursor:pointer; align-items:flex-start; gap:10px; padding:8px 6px;">
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="admin-badge-pill eng-num">#${rowNumber}</span>
+                <b>${label}</b>
+              </div>
+              <div style="color:var(--slate-600); font-size:0.7rem; margin-top:3px;">${tx.description || tx.tx_id || ''}</div>
+              <div style="color:var(--slate-500); font-size:0.66rem; margin-top:2px;">تاریخ و ساعت: <span class="eng-num" dir="ltr">${fullDt}</span></div>
             </div>
-            <strong class="eng-num" style="color:${isCredit ? 'var(--emerald-800)' : 'var(--danger)'};">${isCredit ? '+' : '-'}${formatEnMoney(amtIqd)} IQD${afnPart}</strong>
+            <div style="text-align:left; flex-shrink:0;">
+              <strong class="eng-num" dir="ltr" style="color:${isCredit ? 'var(--emerald-800)' : 'var(--danger)'}; font-size:0.8rem;">${isCredit ? '+' : '-'}${formatEnMoney(amtIqd)} IQD</strong>
+              ${afnPart}
+            </div>
           </div>`;
       }).join('');
     }
@@ -5355,45 +5383,60 @@
         return;
       }
 
-      const queryRaw = toEnglishDigits((document.getElementById('mgmtCwTargetAccOrPhone')?.value || '').trim());
+      const walletQueryRaw = toEnglishDigits((document.getElementById('mgmtCwTargetAccOrPhone')?.value || '').trim());
       const grantAmtIqd = parseFloat(toEnglishDigits(document.getElementById('mgmtCwGrantAmountIqd')?.value || '0'));
       const customDesc = String((document.getElementById('mgmtCwGrantDesc')?.value || '')).trim();
       const resEl = document.getElementById('mgmtCwGrantResult');
 
-      if (!queryRaw) {
-        alert('کد حساب (Account ID) یا شماره تماس مشتری را وارد کنید.');
+      if (!walletQueryRaw) {
+        alert('آیدی کیف پول کردیت (مثلاً CW-ACC-1001) را وارد کنید.');
         return;
       }
       if (isNaN(grantAmtIqd) || grantAmtIqd <= 0) {
-        alert('مبلغ افزایش موجودی کیف کردیت (IQD) باید بیشتر از صفر باشد.');
+        alert('مبلغ انتقال به کیف کردیت (IQD) باید بیشتر از صفر باشد.');
         return;
       }
 
-      showRealLoading('در حال افزایش کیف کردیت...', 'ثبت بدهکاری در حساب اصلی و افزایش کیف پول کردیت');
+      showRealLoading('در حال انتقال به کیف پول کردیت...', 'مثبت شدن کیف پول و بدهکار شدن حساب اصلی');
       await fetchDataFromSupabaseFresh();
+      await refreshCreditWalletData(true);
 
-      const qLower = queryRaw.toLowerCase();
-      const qLast9 = getLast9Digits(queryRaw);
-      const targetAcc = accountsList.find(acc => {
-        const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase();
-        const ph = String(getVal(acc, ['Phone', 'phone', 'تلفن', 'mobile']) || '').trim();
-        return aid === qLower || (qLast9.length >= 9 && getLast9Digits(ph) === qLast9);
+      const qUpper = walletQueryRaw.toUpperCase();
+      const normalizedWalletId = qUpper.startsWith('CW-') ? qUpper : `CW-${qUpper}`;
+
+      let matchedWallet = (allCreditWalletsList || []).find(w => {
+        const wid = String(w.wallet_id || '').trim().toUpperCase();
+        return wid === qUpper || wid === normalizedWalletId;
       });
 
-      if (!targetAcc) {
+      let targetAccId = matchedWallet ? String(matchedWallet.account_id || '').trim() : '';
+      if (!targetAccId) {
+        const accByWalletId = (accountsList || []).find(acc => {
+          const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+          const defWid = buildDefaultCreditWalletId(aid).toUpperCase();
+          return defWid === qUpper || defWid === normalizedWalletId;
+        });
+        if (accByWalletId) {
+          targetAccId = String(getVal(accByWalletId, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        }
+      }
+
+      if (!targetAccId) {
         hideRealLoading();
-        alert('حسابی با این شناسه یا شماره تماس یافت نشد.');
+        alert('کیف پولی با این آیدی کیف پول یافت نشد.');
         return;
       }
 
-      const targetAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-      const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const assigned = getVal(targetAcc, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+      const targetAcc = (accountsList || []).find(acc =>
+        String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim().toLowerCase() === targetAccId.toLowerCase()
+      );
+      const targetName = targetAcc ? String(getVal(targetAcc, ['Name', 'name', 'fullname']) || targetAccId).trim() : targetAccId;
+      const assigned = targetAcc ? (getVal(targetAcc, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL) : OWNER_EMAIL;
 
       const wRow = await ensureCreditWalletRow(targetAccId);
       const targetWId = String((wRow && wRow.wallet_id) || buildDefaultCreditWalletId(targetAccId)).trim();
       const prevWBal = Math.max(0, parseFloat(toEnglishDigits((wRow && wRow.balance_iqd) ?? 0)) || 0);
-      const nextWBal = Math.max(0, prevWBal + grantAmtIqd);
+      const nextWBal = prevWBal + grantAmtIqd;
 
       const mainTxId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
       const cwTxId = 'CW-GR-' + Math.floor(100000 + Math.random() * 900000);
@@ -5406,8 +5449,8 @@
         Amount: Number(grantAmtIqd),
         Currency: 'IQD',
         Direction: 'بدهکار',
-        OperationType: 'ارسال به کیف پول کردیت',
-        Description: customDesc || `ارسال ${formatEnMoney(grantAmtIqd)} IQD به کیف پول کردیت (${targetWId}) بابت تامین شارژ`,
+        OperationType: 'انتقال به کیف پول کردیت',
+        Description: customDesc || `بدهکار بابت انتقال ${formatEnMoney(grantAmtIqd)} IQD به کیف پول ${targetWId}`,
         AssignedUserEmail: assigned,
         Status: 'ثبت شده'
       };
@@ -5436,7 +5479,7 @@
         amount_afn: 0,
         exchange_rate: Number(getAfnExchangeRate()),
         main_tx_id: mainTxId,
-        description: customDesc || `افزایش ${formatEnMoney(grantAmtIqd)} IQD به کیف کردیت و ثبت بدهکار در حساب اصلی (${mainTxId})`,
+        description: customDesc || `واریز +${formatEnMoney(grantAmtIqd)} IQD به کیف پول ${targetWId} (بدهکار در حساب اصلی: ${mainTxId})`,
         created_at: nowIso
       });
 
@@ -5452,7 +5495,7 @@
       hideRealLoading();
       playSound('success');
 
-      const summaryMsg = `حساب: ${targetName} (${targetAccId}) | افزایش کیف کردیت: ${formatEnMoney(grantAmtIqd)} IQD (موجودی جدید کیف: ${formatEnMoney(nextWBal)} IQD) | بدهکار ثبت‌شده در حساب اصلی: ${formatEnMoney(grantAmtIqd)} IQD`;
+      const summaryMsg = `کیف پول: ${targetWId} (${targetName}) | واریز به کیف: +${formatEnMoney(grantAmtIqd)} IQD (موجودی کیف: ${formatEnMoney(nextWBal)} IQD) | حساب اصلی (${targetAccId}): بدهکار به مبلغ ${formatEnMoney(grantAmtIqd)} IQD`;
       if (resEl) resEl.innerText = summaryMsg;
       alert(summaryMsg);
     }
