@@ -6713,47 +6713,33 @@
 </html>
 <script>
 (function () {
-  async function testAndLoadNotice() {
-    const box = document.getElementById('homeAnnouncementText');
-    if (!box) return;
+  async function loadCustomerNotice() {
+    const el = document.getElementById('homeAnnouncementText');
+    if (!el) return;
 
-    const client =
-      window.supabaseClient ||
-      window.sb ||
-      window.supabase;
+    const client = window.supabaseClient || window.sb || window.supabase;
+    if (!client || typeof client.from !== 'function') return;
 
-    if (!client || typeof client.from !== 'function') {
-      box.textContent = 'خطا: ارتباط با Supabase پیدا نشد.';
-      return;
-    }
+    try {
+      const { data, error } = await client
+        .from('app_notice')
+        .select('notice_text')
+        .limit(1);
 
-    const res = await client
-      .from('app_notice')
-      .select('notice_text')
-      .limit(1);
+      if (error || !Array.isArray(data) || data.length === 0) return;
 
-    if (res.error) {
-      box.textContent = 'خطای دیتابیس: ' + res.error.message;
-      return;
-    }
-
-    if (!res.data || res.data.length === 0) {
-      box.textContent = 'جدول app_notice خالی است؛ یک ردیف در notice_text بنویسید.';
-      return;
-    }
-
-    const txt = res.data[0].notice_text;
-    if (!txt || String(txt).trim() === '') {
-      box.textContent = 'ستون notice_text در ردیف اول خالی است.';
-      return;
-    }
-
-    box.textContent = String(txt).trim();
+      const text = data[0] && data[0].notice_text;
+      if (typeof text === 'string' && text.trim() !== '') {
+        el.textContent = text.trim();
+      }
+    } catch (_) {}
   }
 
-  window.addEventListener('load', () => {
-    testAndLoadNotice();
-    setTimeout(testAndLoadNotice, 1000);
-  });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadCustomerNotice);
+  } else {
+    loadCustomerNotice();
+  }
+  window.addEventListener('load', loadCustomerNotice);
 })();
 </script>
