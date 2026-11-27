@@ -322,27 +322,25 @@
     }
 
     .wallet-id-strip {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.88);
       border: 1px solid rgba(16, 185, 129, 0.25);
       border-radius: var(--radius-md);
-      padding: 7px 10px;
+      padding: 6px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
     .wallet-id-text {
       font-size: 0.74rem;
       color: var(--slate-700);
       font-weight: 800;
-      word-break: break-word;
     }
 
     .wallet-id-text b {
       color: var(--emerald-900);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
     }
 
     .mini-copy-btn {
@@ -350,11 +348,10 @@
       border: 1px solid #6ee7b7;
       color: var(--emerald-800);
       border-radius: 8px;
-      padding: 4px 10px;
+      padding: 3px 9px;
       font-size: 0.7rem;
       font-weight: 900;
       cursor: pointer;
-      flex-shrink: 0;
     }
 
     .wallet-sub-stats {
@@ -388,15 +385,14 @@
 
     .curr-pill-btn {
       flex: 1;
-      padding: 7px 6px;
+      padding: 6px 5px;
       border: none;
       border-radius: 9px;
       background: transparent;
       color: var(--slate-500);
-      font-size: 0.74rem;
+      font-size: 0.76rem;
       font-weight: 900;
       cursor: pointer;
-      line-height: 1.3;
     }
 
     .curr-pill-btn.active {
@@ -574,7 +570,6 @@
       text-align: center;
       margin-bottom: 8px;
       flex-shrink: 0;
-      line-height: 1.5;
     }
 
     .calc-summary-box.error {
@@ -802,24 +797,23 @@
     .center-dialog-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(6, 40, 30, 0.62);
-      backdrop-filter: blur(3px);
+      background: rgba(6, 40, 30, 0.65);
       z-index: 3000;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 14px;
+      padding: 16px;
     }
 
     .center-dialog-box {
       background: var(--white);
       width: 100%;
-      max-width: 410px;
+      max-width: 390px;
       border-radius: var(--radius-xl);
-      padding: 18px 15px;
+      padding: 20px 16px;
       text-align: center;
-      box-shadow: 0 24px 50px rgba(6, 40, 30, 0.25);
-      border: 1.5px solid #a7f3d0;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+      border: 1.5px solid #bbf7d0;
       max-height: 90dvh;
       overflow-y: auto;
     }
@@ -941,7 +935,7 @@
       background: var(--white);
       border: 1.5px solid #a7f3d0;
       border-radius: var(--radius-xl);
-      padding: 14px;
+      padding: 15px 14px;
       box-shadow: var(--shadow-card);
       text-align: center;
     }
@@ -1150,12 +1144,12 @@
       background: var(--emerald-50);
       border: 1px solid #a7f3d0;
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 9px 11px;
       margin-bottom: 10px;
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       font-weight: 800;
       color: var(--emerald-900);
-      line-height: 1.65;
+      line-height: 1.55;
       text-align: right;
     }
 
@@ -1205,38 +1199,35 @@
     .admin-mini-list {
       background: var(--slate-50);
       border: 1px solid var(--slate-200);
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 8px 10px;
       margin-bottom: 10px;
-      max-height: 250px;
+      max-height: 150px;
       overflow-y: auto;
       text-align: right;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
     .admin-mini-item {
-      background: var(--white);
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 10px 11px;
-      font-size: 0.73rem;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--slate-200);
+      font-size: 0.72rem;
       font-weight: 800;
       color: var(--slate-800);
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
-      cursor: pointer;
+      justify-content: space-between;
+      gap: 8px;
     }
 
-    /* کارت مرتب و خوش‌فرم کیف پول کردیت در صفحه اصلی */
+    .admin-mini-item:last-child {
+      border-bottom: none;
+    }
+
+
     .credit-wallet-card {
-      background: linear-gradient(155deg, #ffffff 0%, #f0fdf7 60%, #dcf7eb 100%);
+      background: linear-gradient(145deg, #ffffff 0%, #effcf6 60%, #e0f7ec 100%);
       border: 1.5px solid #6ee7b7;
       border-radius: var(--radius-xl);
-      padding: 13px 14px;
+      padding: 12px 14px;
       box-shadow: var(--shadow-card);
       flex-shrink: 0;
     }
@@ -1245,53 +1236,47 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .credit-wallet-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: var(--white);
       border: 1px solid #6ee7b7;
       color: var(--emerald-900);
-      padding: 4px 10px;
+      padding: 3px 10px;
       border-radius: 999px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 900;
     }
     .credit-wallet-balance-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.75);
-      border: 1px solid #bbf7d0;
-      border-radius: 14px;
-      padding: 9px 12px;
-      margin-bottom: 8px;
+      margin: 4px 0 8px 0;
     }
     .credit-wallet-balance-val {
-      font-size: 1.32rem;
+      font-size: 1.35rem;
       font-weight: 900;
       color: var(--emerald-950);
-      line-height: 1.2;
     }
     .credit-wallet-actions {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 7px;
-      margin-top: 9px;
+      gap: 6px;
+      margin-top: 8px;
     }
     .credit-wallet-act-btn {
-      padding: 9px 6px;
-      border-radius: 11px;
-      border: 1px solid #86efac;
+      padding: 8px 6px;
+      border-radius: 10px;
+      border: 1px solid #a7f3d0;
       background: var(--white);
       color: var(--emerald-900);
       font-size: 0.7rem;
       font-weight: 900;
       cursor: pointer;
       text-align: center;
-      line-height: 1.3;
     }
     .credit-wallet-act-btn.primary-cw {
       background: linear-gradient(135deg, var(--emerald-600) 0%, var(--teal-700) 100%);
@@ -1299,43 +1284,15 @@
       border-color: transparent;
     }
 
-    .cw-modal-header {
-      background: linear-gradient(135deg, var(--emerald-800) 0%, var(--teal-700) 100%);
-      color: var(--white);
-      border-radius: 16px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cw-tx-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-      border-bottom: 1px solid var(--slate-100);
-      padding-bottom: 6px;
-    }
-
-    .cw-tx-desc-clean {
-      color: var(--slate-700);
-      font-size: 0.71rem;
-      line-height: 1.65;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-    }
-
-    .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; unicode-bidi: isolate; }
+    .eng-num { font-family: 'Vazirmatn', Tahoma, sans-serif; direction: ltr; display: inline-block; }
     .hidden { display: none !important; }
-
+  
     .tx-badge-icon.verified-green {
       background: #dcfce7 !important;
       color: #15803d !important;
       border: 1.5px solid #22c55e !important;
     }
+
   </style>
 </head>
 <body>
@@ -1471,7 +1428,7 @@
 
           <div class="wallet-hero-card">
             <div class="wallet-top-meta">
-              <span class="wallet-badge">موجودی حساب اصلی</span>
+              <span class="wallet-badge">موجودی حساب</span>
               <button type="button" class="eye-toggle-btn" onclick="toggleBalanceVisibility()">
                 <span id="eyeToggleIcon">👁️</span>
               </button>
@@ -1479,7 +1436,7 @@
 
             <div class="wallet-balance-row">
               <div>
-                <span class="wallet-balance-label">مانده خالص حساب اصلی (<span id="odometerCurrencyLabel">IQD</span>)</span>
+                <span class="wallet-balance-label">مانده خالص (<span id="odometerCurrencyLabel">IQD</span>)</span>
                 <div id="odometerValue" class="wallet-main-amount eng-num">0</div>
               </div>
               <span id="walletCurrBadge" class="wallet-currency-chip eng-num">IQD</span>
@@ -1499,6 +1456,30 @@
                 <span style="color:var(--slate-500);">بدهکار (-)</span>
                 <span id="odometerDebit" class="eng-num" style="color:var(--danger);">0</span>
               </div>
+            </div>
+          </div>
+
+
+          <div class="credit-wallet-card" id="creditWalletHomeCard">
+            <div class="credit-wallet-top">
+              <span class="credit-wallet-pill">📲 کیف پول ارسال کردیت (IQD)</span>
+              <button type="button" class="mini-copy-btn" onclick="copyCreditWalletId()">کپی آیدی کیف</button>
+            </div>
+            <div class="credit-wallet-balance-row">
+              <div>
+                <span class="wallet-balance-label">موجودی کیف کردیت (همیشه ≥ ۰)</span>
+                <div id="creditWalletBalanceDisplay" class="credit-wallet-balance-val eng-num">0</div>
+              </div>
+              <span class="wallet-currency-chip eng-num">IQD</span>
+            </div>
+            <div class="wallet-id-strip">
+              <div class="wallet-id-text">آیدی کیف پول: <b id="dashCreditWalletId" class="eng-num">CW---</b></div>
+              <span style="font-size:0.68rem; color:var(--emerald-800); font-weight:800;">نرخ: <span id="dashCreditWalletRate" class="eng-num">24.5</span> IQD</span>
+            </div>
+            <div class="credit-wallet-actions">
+              <button type="button" class="credit-wallet-act-btn primary-cw" onclick="openCreditWalletModal('from_main')">از حساب به کیف</button>
+              <button type="button" class="credit-wallet-act-btn" onclick="openCreditWalletModal('wallet_transfer')">ارسال بین کیف‌ها</button>
+              <button type="button" class="credit-wallet-act-btn" onclick="openCreditWalletModal('tx_history')">تراکنش‌های کیف</button>
             </div>
           </div>
 
@@ -1533,35 +1514,6 @@
             </div>
           </div>
 
-          <!-- کیف پول مستقل ارسال کردیت (مرتب و خوش‌فرم در جایگاه مناسب) -->
-          <div class="credit-wallet-card" id="creditWalletHomeCard">
-            <div class="credit-wallet-top">
-              <span class="credit-wallet-pill">📲 کیف پول کردیت (مستقل از حساب اصلی)</span>
-              <button type="button" class="mini-copy-btn" onclick="copyCreditWalletId()">کپی آیدی</button>
-            </div>
-            <div class="credit-wallet-balance-row">
-              <div>
-                <span class="wallet-balance-label">موجودی کیف کردیت (IQD)</span>
-                <div id="creditWalletBalanceDisplay" class="credit-wallet-balance-val eng-num">0</div>
-              </div>
-              <div style="text-align:left;">
-                <span class="wallet-currency-chip eng-num">IQD</span>
-                <div style="font-size:0.66rem; color:var(--emerald-800); font-weight:800; margin-top:4px;">
-                  نرخ: <span id="dashCreditWalletRate" class="eng-num">24.5</span>
-                </div>
-              </div>
-            </div>
-            <div class="wallet-id-strip">
-              <div class="wallet-id-text">آیدی کیف: <b id="dashCreditWalletId" class="eng-num">CW---</b></div>
-              <span style="font-size:0.66rem; color:var(--emerald-800); font-weight:800;">ثبت مستقل در جدول کیف</span>
-            </div>
-            <div class="credit-wallet-actions">
-              <button type="button" class="credit-wallet-act-btn primary-cw" onclick="openCreditWalletModal('from_main')">از حساب به کیف</button>
-              <button type="button" class="credit-wallet-act-btn" onclick="openCreditWalletModal('wallet_transfer')">ارسال بین کیف‌ها</button>
-              <button type="button" class="credit-wallet-act-btn" onclick="openCreditWalletModal('tx_history')">تراکنش‌های کیف</button>
-            </div>
-          </div>
-
           <div class="admin-notice-card" id="homeAnnouncementCard">
             <div class="admin-notice-badge">📢 اطلاعیه و راهنمای مشتریان</div>
             <div id="homeAnnouncementText" style="font-size:0.8rem; font-weight:800; color:var(--emerald-950); line-height:1.75; text-align:right;">
@@ -1570,20 +1522,39 @@
           </div>
         </div>
 
-        <!-- تب ۲: تراکنش‌های حساب اصلی و تراکنش‌های شارژ رسمی -->
+        <!-- تب ۲: تراکنش‌ها و تراکنش‌های شارژ در پایین -->
         <div id="tabTxView" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
           <div class="tx-feed-card">
             <div class="tx-feed-head">
-              <span style="font-size:0.88rem; font-weight:900; color:var(--slate-900);">تراکنش‌های حساب اصلی</span>
+              <span style="font-size:0.88rem; font-weight:900; color:var(--slate-900);">تراکنش‌ها</span>
               <span id="txCountBadge" class="eng-num" style="font-size:0.72rem; background:var(--emerald-50); color:var(--emerald-800); border:1px solid #a7f3d0; padding:2px 8px; border-radius:8px; font-weight:800;">0</span>
             </div>
             <div id="transactionsContainer"></div>
+          </div>
+
+          <div class="tx-feed-card" id="bottomCreditWalletMenuSection">
+            <div class="tx-feed-head" style="background:#f0fdf4; border-bottom-color:#86efac;">
+              <span style="font-size:0.88rem; font-weight:900; color:#065f46;">💳 تراکنش‌های کیف پول کردیت</span>
+              <span id="bottomCreditWalletTxCount" class="eng-num" style="font-size:0.72rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:2px 8px; border-radius:8px; font-weight:900;">0</span>
+            </div>
+            <div id="bottomCreditWalletTxList" style="padding:8px 12px;"></div>
           </div>
 
           <div class="tx-feed-card" id="bottomChargeTxSection">
             <div class="tx-feed-head" style="background:#ecfdf5; border-bottom-color:#a7f3d0;">
               <span style="font-size:0.88rem; font-weight:900; color:#065f46;">📲 تراکنش‌های شارژ رسمی</span>
               <span id="chargeTabCountBadge" class="eng-num" style="font-size:0.72rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:2px 8px; border-radius:8px; font-weight:900;">0</span>
+            </div>
+            <div id="chargeTabTransactionsContainer"></div>
+          </div>
+        </div>
+
+        <!-- تب تراکنش‌های شارژ در منوی پایین -->
+        <div id="tabChargeTxView" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
+          <div class="tx-feed-card">
+            <div class="tx-feed-head">
+              <span style="font-size:0.88rem; font-weight:900; color:var(--slate-900);">تراکنش‌های شارژ</span>
+              <span id="chargeTabCountBadge" class="eng-num" style="font-size:0.72rem; background:var(--emerald-50); color:var(--emerald-800); border:1px solid #a7f3d0; padding:2px 8px; border-radius:8px; font-weight:800;">0</span>
             </div>
             <div id="chargeTabTransactionsContainer"></div>
           </div>
@@ -1620,7 +1591,7 @@
                   <div class="fancy-opt-badge">📲</div>
                   <div>
                     <span class="fancy-opt-title">کردیت</span>
-                    <span class="fancy-opt-sub">ارسال مستقیم کردیت از کیف پول کردیت (بدون کسر از حساب اصلی)</span>
+                    <span class="fancy-opt-sub">ارسال مستقیم کردیت (فقط کردیت؛ بدون بسته‌های اینترنت و تماس)</span>
                   </div>
                 </div>
                 <span class="fancy-opt-cta">باز کردن فرم</span>
@@ -1715,20 +1686,16 @@
             </button>
           </div>
 
-          <!-- پنل ۲: ارسال کردیت (افغانستان — فقط از کیف کردیت) -->
+          <!-- پنل ۲: ارسال کردیت (افغانستان) -->
           <div id="panelTopupAfn" class="action-panel collapsed">
             <div class="panel-banner-header">
-              <h4>ارسال کردیت (از کیف پول کردیت)</h4>
+              <h4>ارسال کردیت</h4>
               <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
             </div>
 
             <div class="mandatory-sync-banner" id="mandatoryBannerAfn">
               <span class="mandatory-sync-text" id="mandatoryBannerTextAfn">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
               <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
-            </div>
-
-            <div class="info-callout-box">
-              در صورت تایید شرکت، مبلغ معادل دینار <b>فقط از کیف پول کردیت</b> کسر و در جدول <code>credit_wallet_transactions</code> ثبت می‌شود؛ موجودی حساب اصلی تغییر نمی‌کند.
             </div>
 
             <div class="form-group">
@@ -1817,6 +1784,7 @@
               <div class="wallet-id-text">آیدی کیف کردیت: <b id="profileCreditWalletId" class="eng-num">CW---</b> (<span id="profileCreditWalletBal" class="eng-num">0</span> IQD)</div>
               <button type="button" class="mini-copy-btn" onclick="openCreditWalletModal('from_main')">مدیریت کیف</button>
             </div>
+
           </div>
 
           <div class="menu-stack-card">
@@ -1918,6 +1886,7 @@
         <span class="admin-badge-pill" id="mgmtActiveAdminLabel">قفل</span>
       </div>
 
+      <!-- فرم ورود مدیر -->
       <div id="mgmtLoginBox">
         <p style="font-size:0.74rem; color:var(--slate-600); margin-bottom:10px; line-height:1.5;">
           برای دسترسی به تنظیمات فعال/غیرفعال بودن بخش‌ها و نرخ تبدیل در جدول <code>app_settings</code>، شناسه/ایمیل مدیر و رمز را وارد کنید.
@@ -1933,6 +1902,7 @@
         <button type="button" class="btn btn-primary" onclick="verifyManagementLogin()" style="margin-bottom:6px;">ورود به پنل مدیریت</button>
       </div>
 
+      <!-- پنل کنترل تنظیمات پس از ورود مدیر -->
       <div id="mgmtControlsBox" class="hidden">
         <div class="admin-toggle-row">
           <span>فعال بودن انتقال موجودی (transfer_enabled)</span>
@@ -1995,10 +1965,11 @@
         <button type="button" class="btn btn-primary" onclick="saveAppSettingsToSupabase()" style="margin-bottom:8px;">ذخیره و اعمال تنظیمات در دیتابیس</button>
         <button type="button" class="btn btn-soft-emerald" onclick="reloadAppSettingsFromDb()" style="margin-bottom:10px;">خواندن مجدد از دیتابیس</button>
 
+
         <div class="info-callout-box" style="margin-top:8px; background:#f0fdf4; border-color:#4ade80;">
-          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px; color:var(--emerald-950);">افزایش موجودی کیف پول کردیت (وقتی کیف شارژ صفر یا کم است)</div>
+          <div style="font-size:0.82rem; font-weight:900; margin-bottom:6px; color:var(--emerald-950);">افزایش موجودی کیف پول کردیت (وقتی کیف شارژ صفر یا منفی/بدهکار است)</div>
           <div style="font-size:0.7rem; margin-bottom:6px; line-height:1.55;">
-            با وارد کردن شناسه حساب (Account ID) یا شماره تماس و مبلغ دیناری، موجودی کیف پول کردیت همان فرد افزایش می‌یابد و هم‌زمان همان مبلغ به عنوان <b>بدهکار</b> بابت تامین شارژ در <b>حساب اصلی (transactions)</b> ثبت می‌شود.
+            با وارد کردن شناسه حساب (Account ID) یا شماره تماس و مبلغ دیناری (مثلاً 5000)، موجودی کیف پول کردیت همان فرد افزایش می‌یابد و هم‌زمان همان مبلغ به عنوان <b>بدهکار</b> به نام «ارسال به کیف پول کردیت» در <b>حساب اصلی (transactions)</b> او ثبت می‌شود.
           </div>
           <div class="form-group" style="margin-bottom:6px;">
             <label for="mgmtCwTargetAccOrPhone">کد حساب (Account ID) یا شماره تماس</label>
@@ -2010,7 +1981,7 @@
           </div>
           <div class="form-group" style="margin-bottom:6px;">
             <label for="mgmtCwGrantDesc">شرح اختیاری</label>
-            <input type="text" id="mgmtCwGrantDesc" placeholder="ارسال به کیف پول کردیت بابت تامین شارژ">
+            <input type="text" id="mgmtCwGrantDesc" placeholder="ارسال به کیف پول کردیت (دوست/آشنا)">
           </div>
           <button type="button" class="btn btn-primary" onclick="adminGrantCreditWalletWithMainDebt()">ثبت افزایش کیف کردیت و بدهکار کردن حساب اصلی</button>
           <div id="mgmtCwGrantResult" style="margin-top:6px; font-size:0.74rem; font-weight:900; color:var(--emerald-900); text-align:center;"></div>
@@ -2186,16 +2157,33 @@
     </div>
   </div>
 
-  <!-- مودال رسید تراکنش (هم برای تراکنش‌های حساب اصلی و هم رسید دقیق جدول کیف کردیت) -->
+  <!-- مودال تراکنش‌های شارژ -->
+  <div id="chargeTxModal" class="fullscreen-modal">
+    <div class="modal-header">
+      <h3 style="font-size:0.94rem; font-weight:900;">تراکنش‌های شارژ</h3>
+      <button type="button" class="icon-circle-btn" style="width:auto; padding:0 12px; font-size:0.76rem;" onclick="closeChargeTransactionsView()">بازگشت</button>
+    </div>
+    <div class="modal-scroll-body">
+      <div class="tx-feed-card">
+        <div class="tx-feed-head">
+          <span style="font-size:0.86rem; font-weight:900; color:var(--slate-900);">لیست تراکنش‌های شارژ</span>
+          <span id="chargeModalCountBadge" class="eng-num" style="font-size:0.72rem; background:var(--emerald-50); color:var(--emerald-800); border:1px solid #a7f3d0; padding:2px 8px; border-radius:8px; font-weight:800;">0</span>
+        </div>
+        <div id="chargeTransactionsContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال رسید تراکنش -->
   <div id="txDetailModal" class="fullscreen-modal">
     <div class="modal-header">
-      <h3 id="receiptModalTitle" style="font-size:0.94rem; font-weight:900;">رسید تراکنش</h3>
+      <h3 style="font-size:0.94rem; font-weight:900;">رسید تراکنش</h3>
       <button type="button" class="icon-circle-btn" style="width:auto; padding:0 12px; font-size:0.76rem;" onclick="closeTxDetailModal()">بازگشت</button>
     </div>
     <div class="modal-scroll-body">
       <div class="receipt-box">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px dashed var(--slate-200); padding-bottom:8px;">
-          <span id="receiptSourceBadge" style="font-size:0.86rem; font-weight:900; color:var(--emerald-900);">امانت‌داری کریمی</span>
+          <span style="font-size:0.88rem; font-weight:900; color:var(--emerald-900);">امانت‌داری کریمی</span>
           <span id="receiptDateStr" class="eng-num" style="font-size:0.72rem; color:var(--slate-500); font-weight:800;">---</span>
         </div>
         <div id="modalBody" style="display:flex; flex-direction:column; gap:9px;"></div>
@@ -2206,14 +2194,12 @@
     </div>
   </div>
 
+
   <!-- مودال کیف پول ارسال کردیت (credit_wallets & credit_wallet_transactions) -->
   <div id="creditWalletModal" class="center-dialog-backdrop hidden">
     <div class="center-dialog-box" style="text-align:right; max-width:430px;">
-      <div class="cw-modal-header">
-        <div>
-          <h3 style="font-size:0.95rem; font-weight:900; color:var(--white);">کیف پول ارسال کردیت (IQD)</h3>
-          <span style="font-size:0.68rem; color:var(--emerald-100); font-weight:700;">موجودی و رسیدها مستقل از حساب اصلی</span>
-        </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="font-size:0.96rem; font-weight:900; color:var(--emerald-950);">کیف پول ارسال کردیت (IQD)</h3>
         <button type="button" class="mini-copy-btn" onclick="closeCreditWalletModal()">بستن</button>
       </div>
 
@@ -2231,7 +2217,7 @@
       <!-- تب ۱: انتقال دینار از حساب اصلی به کیف پول کردیت -->
       <div id="cwPaneFromMain">
         <div class="info-callout-box">
-          موجودی دینار (IQD) را از حساب اصلی خود به کیف پول کردیت منتقل کنید تا بتوانید کردیت ارسال نمایید. پس از انتقال به کیف، ارسال کردیت فقط از موجودی کیف کسر می‌شود.
+          موجودی دینار (IQD) را از حساب اصلی خود به کیف پول کردیت منتقل کنید تا بتوانید کردیت ارسال نمایید. موجودی کیف پول همیشه صفر یا مثبت می‌ماند.
         </div>
         <div class="calc-summary-box" id="cwMainAvailBox">
           موجودی دینار حساب اصلی: <b id="cwMainAccountIqdAvail" class="eng-num">0</b> IQD
@@ -2263,13 +2249,13 @@
         <button type="button" class="btn btn-primary" onclick="executeWalletToWalletTransfer()" style="margin-bottom:6px;">ارسال به کیف پول مقصد</button>
       </div>
 
-      <!-- تب ۳: تراکنش‌های اختصاصی کیف پول کردیت (با قابلیت کلیک برای مشاهده رسید دقیق جدول کیف) -->
+      <!-- تب ۳: تراکنش‌های اختصاصی کیف پول کردیت -->
       <div id="cwPaneHistory" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-size:0.76rem; font-weight:900; color:var(--emerald-950);">تراکنش‌های جدول کیف (برای رسید کلیک کنید)</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:0.78rem; font-weight:900; color:var(--slate-800);">تراکنش‌های جدول credit_wallet_transactions</span>
           <button type="button" class="mini-copy-btn" onclick="refreshCreditWalletData(true)">به‌روزرسانی</button>
         </div>
-        <div id="cwTransactionsListBox" class="admin-mini-list" style="max-height:260px;">در حال بارگذاری...</div>
+        <div id="cwTransactionsListBox" class="admin-mini-list" style="max-height:220px;">در حال بارگذاری...</div>
       </div>
 
       <button type="button" class="btn btn-outline" style="margin-top:6px;" onclick="closeCreditWalletModal()">بستن</button>
@@ -2701,14 +2687,14 @@
       listBox.innerHTML = items.map(pkg => {
         const info = resolveIraqPackagePricing(pkg, opName);
         return `
-          <div class="admin-mini-item" style="flex-direction:row; justify-content:space-between; align-items:center;">
+          <div class="admin-mini-item" style="align-items:center;">
             <div>
               <div>قیمت شارژ: <b class="eng-num">${formatEnMoney(info.cardAmount)} IQD</b></div>
               <div style="color:var(--emerald-800);">قیمت آنجا / کسر: <b class="eng-num">${formatEnMoney(info.chargeAmount)} IQD</b></div>
             </div>
             <div style="display:flex; gap:5px; flex-shrink:0;">
-              <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); editAdminIqItem('${info.id}')">ویرایش</button>
-              <button type="button" class="mini-copy-btn" style="background:var(--danger-soft); border-color:#fca5a5; color:var(--danger);" onclick="event.stopPropagation(); deleteAdminIqItem('${info.id}')">حذف</button>
+              <button type="button" class="mini-copy-btn" onclick="editAdminIqItem('${info.id}')">ویرایش</button>
+              <button type="button" class="mini-copy-btn" style="background:var(--danger-soft); border-color:#fca5a5; color:var(--danger);" onclick="deleteAdminIqItem('${info.id}')">حذف</button>
             </div>
           </div>`;
       }).join('');
@@ -2896,93 +2882,6 @@
       alert('تنظیمات با موفقیت در جدول app_settings ذخیره و اعمال شد.');
     }
 
-    // نمایش رسید اختصاصی از رکورد جدول کیف پول کردیت (credit_wallet_transactions)
-    function showReceiptForCreditWalletTx(cwTx) {
-      if (!cwTx || !currentFoundUser) return;
-      selectedTxItem = {
-        ...cwTx,
-        TransID: cwTx.tx_id || '---',
-        Date: cwTx.created_at || new Date().toISOString(),
-        Amount: parseFloat(toEnglishDigits(cwTx.amount_iqd ?? 0)) || 0,
-        Currency: 'IQD',
-        Direction: String(cwTx.direction || '').toLowerCase() === 'credit' ? 'بستانکار' : 'بدهکار',
-        OperationType: getCreditWalletOpLabel(cwTx.operation_type),
-        Description: cwTx.description || '---',
-        Status: 'تایید شده'
-      };
-
-      const isCredit = String(cwTx.direction || '').toLowerCase() === 'credit';
-      const amtColor = isCredit ? 'var(--emerald-700)' : 'var(--danger)';
-      const amtIqd = parseFloat(toEnglishDigits(cwTx.amount_iqd ?? 0)) || 0;
-      const amtAfn = parseFloat(toEnglishDigits(cwTx.amount_afn ?? 0)) || 0;
-      const wId = cwTx.wallet_id || getCurrentCreditWalletId();
-      const txId = cwTx.tx_id || '---';
-      const opLabel = getCreditWalletOpLabel(cwTx.operation_type);
-      const dateStr = cwTx.created_at || new Date().toISOString();
-      const dateOnly = extractDateOnly(dateStr);
-      const timeStr = extractTimeOnly(dateStr) || '---';
-      const descStr = String(cwTx.description || '---').replaceAll('+', ' ');
-      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
-      const cpName = resolveCounterpartyName(currentFoundUser);
-
-      // محاسبه مانده کیف قبل و بعد بر اساس تراکنش‌های ثبت‌شده در جدول کیف
-      const chronAsc = currentCreditWalletTxs.slice().sort((a, b) => {
-        const ta = getTxTimestamp({ Date: a.created_at });
-        const tb = getTxTimestamp({ Date: b.created_at });
-        return ta - tb;
-      });
-      let runBal = 0, balBefore = 0, balAfter = 0;
-      chronAsc.forEach(item => {
-        const val = parseFloat(toEnglishDigits(item.amount_iqd ?? 0)) || 0;
-        const inc = String(item.direction || '').toLowerCase() === 'credit';
-        if (item === cwTx || (item.tx_id && item.tx_id === txId)) {
-          balBefore = runBal;
-          runBal = inc ? (runBal + val) : Math.max(0, runBal - val);
-          balAfter = runBal;
-        } else {
-          runBal = inc ? (runBal + val) : Math.max(0, runBal - val);
-        }
-      });
-
-      document.getElementById('receiptModalTitle').innerText = 'رسید تراکنش کیف پول کردیت';
-      document.getElementById('receiptSourceBadge').innerText = `کیف کردیت (${wId})`;
-      document.getElementById('receiptDateStr').innerText = dateOnly;
-      document.getElementById('receiptSendAdminWaBtn')?.classList.add('hidden');
-
-      const afnRowHtml = amtAfn > 0
-        ? `<div class="receipt-row"><span class="receipt-label">مبلغ کردیت</span><span class="receipt-val eng-num">${formatEnMoney(amtAfn)} AFN</span></div>`
-        : '';
-
-      document.getElementById('modalBody').innerHTML = `
-        <div style="background:var(--emerald-50); border:1.5px solid #6ee7b7; border-radius:var(--radius-md); padding:11px 12px; line-height:1.75; text-align:right; color:var(--emerald-950); font-size:0.81rem; font-weight:800; word-break:break-word;">
-          <div style="font-size:0.72rem; color:var(--emerald-700); font-weight:900; margin-bottom:4px;">شرح رسمی رسید کیف پول کردیت</div>
-          <div>${descStr}</div>
-        </div>
-        <div class="receipt-row"><span class="receipt-label">صاحب حساب</span><span class="receipt-val">${nameVal}</span></div>
-        <div class="receipt-row"><span class="receipt-label">طرف حساب</span><span class="receipt-val">${cpName}</span></div>
-        <div class="receipt-row"><span class="receipt-label">آیدی کیف پول</span><span class="receipt-val eng-num">${wId}</span></div>
-        <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت</span><span class="receipt-val eng-num">${dateOnly} ${timeStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">عملیات</span><span class="receipt-val">${opLabel}</span></div>
-        <div class="receipt-row"><span class="receipt-label">کد سند کیف</span><span class="receipt-val eng-num">${txId}</span></div>
-        ${afnRowHtml}
-        <div class="receipt-row"><span class="receipt-label">مبلغ کسر/واریز کیف</span><span class="receipt-val eng-num" style="color:${amtColor};">${isCredit ? '+' : '-'}${formatEnMoney(amtIqd)} IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده قبل کیف</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده بعد کیف</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">ثبت‌شده در جدول کیف</span></div>
-      `;
-
-      document.getElementById('txDetailModal').classList.add('open');
-      ensureSentinelHistory();
-    }
-
-    function openCreditWalletTxReceiptByIndex(idx) {
-      playSound('click');
-      const item = currentCreditWalletTxs[idx];
-      if (!item) return;
-      showReceiptForCreditWalletTx(item);
-    }
-
-    // نمایش رسید تراکنش حساب اصلی
     function showReceiptForTransactionData(txData) {
       if (!txData || !currentFoundUser) return;
       selectedTxItem = txData;
@@ -3001,8 +2900,6 @@
       const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
       const cpName = resolveCounterpartyName(currentFoundUser);
 
-      document.getElementById('receiptModalTitle').innerText = 'رسید تراکنش';
-      document.getElementById('receiptSourceBadge').innerText = 'امانت‌داری کریمی';
       document.getElementById('receiptDateStr').innerText = dateOnly;
 
       const txCurr = currStr.toUpperCase();
@@ -3027,6 +2924,16 @@
         }
       });
 
+      const isCwRec = Boolean(txData.is_credit_wallet_receipt);
+      const cwBalBefore = isCwRec && txData.balance_before_iqd !== undefined ? (parseFloat(toEnglishDigits(txData.balance_before_iqd)) || 0) : balBefore;
+      const cwBalAfter = isCwRec && txData.balance_after_iqd !== undefined ? (parseFloat(toEnglishDigits(txData.balance_after_iqd)) || 0) : balAfter;
+      const cwMetaHtml = isCwRec ? `
+        <div class="receipt-row"><span class="receipt-label">آیدی کیف پول</span><span class="receipt-val eng-num">${txData.wallet_id || getCurrentCreditWalletId()}</span></div>
+        ${txData.amount_afn ? `<div class="receipt-row"><span class="receipt-label">مبلغ کردیت (AFN)</span><span class="receipt-val eng-num">${formatEnMoney(txData.amount_afn)} AFN</span></div>` : ''}
+        ${txData.exchange_rate ? `<div class="receipt-row"><span class="receipt-label">نرخ تبدیل</span><span class="receipt-val eng-num">${txData.exchange_rate} IQD</span></div>` : ''}
+        ${txData.target_phone ? `<div class="receipt-row"><span class="receipt-label">شماره مقصد</span><span class="receipt-val eng-num">${txData.target_phone}</span></div>` : ''}
+        ${txData.external_ref ? `<div class="receipt-row"><span class="receipt-label">کد پیگیری شرکت</span><span class="receipt-val eng-num">${txData.external_ref}</span></div>` : ''}
+      ` : '';
       document.getElementById('modalBody').innerHTML = `
         <div style="background:var(--emerald-50); border:1.5px solid #6ee7b7; border-radius:var(--radius-md); padding:11px 12px; line-height:1.75; text-align:right; color:var(--emerald-950); font-size:0.82rem; font-weight:800;">
           <div style="font-size:0.72rem; color:var(--emerald-700); font-weight:900; margin-bottom:4px;">شرح رسمی رسید</div>
@@ -3034,12 +2941,13 @@
         </div>
         <div class="receipt-row"><span class="receipt-label">صاحب حساب</span><span class="receipt-val">${nameVal}</span></div>
         <div class="receipt-row"><span class="receipt-label">طرف حساب</span><span class="receipt-val">${cpName}</span></div>
+        ${cwMetaHtml}
         <div class="receipt-row"><span class="receipt-label">تاریخ و ساعت</span><span class="receipt-val eng-num">${dateOnly} ${timeStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">عملیات</span><span class="receipt-val">${opType}</span></div>
         <div class="receipt-row"><span class="receipt-label">کد سند</span><span class="receipt-val eng-num">${transId}</span></div>
         <div class="receipt-row"><span class="receipt-label">مبلغ</span><span class="receipt-val eng-num" style="color:${amtColor};">${formatEnMoney(amountVal)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(balBefore)} ${currStr}</span></div>
-        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(balAfter)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مانده قبل</span><span class="receipt-val eng-num">${formatEnMoney(cwBalBefore)} ${currStr}</span></div>
+        <div class="receipt-row"><span class="receipt-label">مانده بعد</span><span class="receipt-val eng-num">${formatEnMoney(cwBalAfter)} ${currStr}</span></div>
         <div class="receipt-row"><span class="receipt-label">وضعیت</span><span class="receipt-val">${statusStr}</span></div>
       `;
       const adminWaBtn = document.getElementById('receiptSendAdminWaBtn');
@@ -3463,6 +3371,7 @@
       return found ? String(getVal(found, ['PinHash', 'pinhash', 'pin_hash']) || '').trim() : '';
     }
 
+    // ذخیره و بررسی رمز مستقیم در ستون PinHash جدول accounts از طریق RPC سوپابیس و ستون PinHash
     async function setPinInDatabaseColumn(accId, pinValue) {
       const cleanId = String(accId || '').trim();
       const cleanVal = String(pinValue || '').trim();
@@ -3813,7 +3722,7 @@
         chargeModal.classList.remove('open');
         return true;
       }
-      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal', 'chargeAccountModal', 'creditWalletModal'];
+      const ids = ['txPinConfirmModal', 'setPinModal', 'legacyPinActivationModal', 'biometricPromptModal', 'errorModal', 'notifSettingsModal', 'topupRawErrorModal', 'managementModal', 'chargeAccountModal'];
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
@@ -4096,11 +4005,13 @@
 
       document.getElementById('tabHomeView').classList.add('hidden');
       document.getElementById('tabTxView').classList.add('hidden');
+      document.getElementById('tabChargeTxView')?.classList.add('hidden');
       document.getElementById('tabServicesView').classList.add('hidden');
       document.getElementById('tabProfileView').classList.add('hidden');
 
       document.getElementById('navHomeBtn').classList.remove('active');
       document.getElementById('navTxBtn').classList.remove('active');
+      document.getElementById('navChargeTxBtn')?.classList.remove('active');
       document.getElementById('navServicesBtn').classList.remove('active');
       document.getElementById('navProfileBtn').classList.remove('active');
 
@@ -4114,6 +4025,11 @@
         document.getElementById('navTxBtn').classList.add('active');
         document.getElementById('headerSubtitleText').innerText = 'تراکنش‌ها';
         renderTransactionsList();
+      } else if (tab === 'charge_tx') {
+        document.getElementById('tabChargeTxView')?.classList.remove('hidden');
+        document.getElementById('navChargeTxBtn')?.classList.add('active');
+        document.getElementById('headerSubtitleText').innerText = 'تراکنش‌های شارژ';
+        renderChargeTabList();
       } else if (tab === 'services') {
         document.getElementById('tabServicesView').classList.remove('hidden');
         document.getElementById('navServicesBtn').classList.add('active');
@@ -4177,11 +4093,13 @@
         activeBottomTab = 'services';
         document.getElementById('tabHomeView').classList.add('hidden');
         document.getElementById('tabTxView').classList.add('hidden');
+        document.getElementById('tabChargeTxView')?.classList.add('hidden');
         document.getElementById('tabServicesView').classList.remove('hidden');
         document.getElementById('tabProfileView').classList.add('hidden');
 
         document.getElementById('navHomeBtn').classList.remove('active');
         document.getElementById('navTxBtn').classList.remove('active');
+        document.getElementById('navChargeTxBtn')?.classList.remove('active');
         document.getElementById('navServicesBtn').classList.add('active');
         document.getElementById('navProfileBtn').classList.remove('active');
         document.getElementById('headerSubtitleText').innerText = 'انتقال و شارژ';
@@ -4223,7 +4141,6 @@
       balanceHidden = !balanceHidden;
       document.getElementById('eyeToggleIcon').innerText = balanceHidden ? '🙈' : '👁️';
       updateBalanceDisplay();
-      updateCreditWalletUi();
     }
 
     function copyAccountId() {
@@ -4689,6 +4606,30 @@
       });
     }
 
+    function hasCompletedMandatorySync(mode) {
+      if (mandatorySyncCompletedForMode[mode]) return true;
+      alert('قبل از انجام تراکنش حسابت را به‌روزرسانی کن.');
+      return false;
+    }
+
+    async function mandatoryRefreshBeforeForm(mode) {
+      playSound('click');
+      const accId = localStorage.getItem('karimi_accId') ||
+        (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
+      if (accId) {
+        await forceSyncBeforeOperation(accId);
+      } else {
+        await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
+      }
+      if (mode) {
+        mandatorySyncCompletedForMode[mode] = true;
+      } else {
+        mandatorySyncCompletedForMode = { transfer: true, afn: true, iq: true };
+      }
+      updateMandatoryBannerUi();
+      playSound('success');
+    }
+
     function recomputeCustomerBalances(sheetAccId) {
       const rawUserTxs = getUserVisibleTransactions(sheetAccId);
       customerTransactions = sortChronologically(rawUserTxs, false);
@@ -4819,6 +4760,7 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
+      // optional sync
       if (!appSettingsState.transfer_enabled) {
         alert('انتقال موجودی توسط مدیریت غیرفعال است.');
         return;
@@ -4864,6 +4806,7 @@
     function getNetIqdBalance() {
       return (customerBalances['IQD'] && customerBalances['IQD'].net) ? customerBalances['IQD'].net : 0;
     }
+
 
     // =========================================================================
     // بخش کیف پول ارسال کردیت (credit_wallets و credit_wallet_transactions)
@@ -5054,44 +4997,91 @@
       switch (String(opType || '')) {
         case 'credit_topup': return 'خرید/ارسال کردیت';
         case 'topup_from_main': return 'انتقال از حساب اصلی به کیف کردیت';
-        case 'admin_grant_debt': return 'افزایش کیف کردیت توسط مدیریت';
+        case 'admin_grant_debt': return 'افزایش کیف کردیت توسط مدیریت (بدهکار حساب اصلی)';
         case 'wallet_transfer_out': return 'ارسال به کیف پول کردیت دیگر';
         case 'wallet_transfer_in': return 'دریافت از کیف پول کردیت دیگر';
         default: return opType || 'تراکنش کیف کردیت';
       }
     }
 
-    function renderCreditWalletTransactionsBox() {
-      const box = document.getElementById('cwTransactionsListBox');
-      if (!box) return;
-      if (!currentCreditWalletTxs || currentCreditWalletTxs.length === 0) {
-        box.innerHTML = '<div style="font-size:0.72rem; color:var(--slate-500); text-align:center; padding:12px;">تراکنشی در کیف پول کردیت ثبت نشده است.</div>';
-        return;
+    function openCreditWalletTxReceiptByIndex(idx) {
+      playSound('click');
+      const list = Array.isArray(currentCreditWalletTxs) ? currentCreditWalletTxs : [];
+      const row = list[idx];
+      if (!row || !currentFoundUser) return;
+      const chron = list.slice().sort((a, b) => getTxTimestamp(a) - getTxTimestamp(b));
+      let running = 0;
+      let balBefore = 0;
+      let balAfter = 0;
+      const targetId = String(row.tx_id || row.id || '');
+
+      for (const item of chron) {
+        const amt = parseFloat(toEnglishDigits(item.amount_iqd ?? 0)) || 0;
+        const isCred = String(item.direction || '').toLowerCase() === 'credit';
+        const curId = String(item.tx_id || item.id || '');
+        if (item === row || (targetId && curId === targetId)) {
+          balBefore = running;
+          running = isCred ? (running + amt) : Math.max(0, running - amt);
+          balAfter = running;
+        } else {
+          running = isCred ? (running + amt) : Math.max(0, running - amt);
+        }
       }
-      box.innerHTML = currentCreditWalletTxs.map((tx, idx) => {
+
+      const enriched = {
+        ...row,
+        TransID: targetId || '---',
+        OperationType: getCreditWalletOpLabel(row.operation_type),
+        Direction: String(row.direction || '').toLowerCase() === 'credit' ? 'بستانکار (کیف کردیت)' : 'بدهکار (کیف کردیت)',
+        Amount: parseFloat(toEnglishDigits(row.amount_iqd ?? 0)) || 0,
+        Currency: 'IQD',
+        Date: row.created_at || new Date().toISOString(),
+        Description: row.description || getCreditWalletOpLabel(row.operation_type),
+        Status: 'ثبت شده در جدول کیف کردیت',
+        balance_before_iqd: balBefore,
+        balance_after_iqd: balAfter,
+        is_credit_wallet_receipt: true
+      };
+      showReceiptForTransactionData(enriched);
+    }
+
+    function buildCreditWalletTxRowsHtml(list) {
+      if (!Array.isArray(list) || list.length === 0) {
+        return '<div style="font-size:0.72rem; color:var(--slate-500); text-align:center; padding:10px;">تراکنشی در جدول credit_wallet_transactions ثبت نشده است.</div>';
+      }
+      return list.map((tx, idx) => {
         const isCredit = String(tx.direction || '').toLowerCase() === 'credit';
         const amtIqd = parseFloat(toEnglishDigits(tx.amount_iqd ?? 0)) || 0;
         const amtAfn = parseFloat(toEnglishDigits(tx.amount_afn ?? 0)) || 0;
         const label = getCreditWalletOpLabel(tx.operation_type);
         const dt = extractDateOnly(tx.created_at || '');
-        const afnPart = amtAfn > 0 ? `<span class="eng-num" style="font-size:0.68rem; color:var(--emerald-800); display:block;">(${formatEnMoney(amtAfn)} AFN)</span>` : '';
-        const cleanDesc = String(tx.description || tx.tx_id || '').replaceAll('+', ' ');
+        const afnPart = amtAfn > 0 ? ` (${formatEnMoney(amtAfn)} AFN)` : '';
         return `
-          <div class="admin-mini-item" onclick="openCreditWalletTxReceiptByIndex(${idx})">
-            <div class="cw-tx-card-top">
-              <div>
-                <div style="font-size:0.78rem; font-weight:900; color:var(--slate-900);"><b>${label}</b></div>
-                <div style="color:var(--slate-500); font-size:0.67rem; margin-top:2px;">کد سند: <span class="eng-num">${tx.tx_id || '---'}</span> • <span class="eng-num">${dt}</span></div>
-              </div>
-              <div style="text-align:left; flex-shrink:0;">
-                <strong class="eng-num" style="color:${isCredit ? 'var(--emerald-800)' : 'var(--danger)'}; font-size:0.78rem;">${isCredit ? '+' : '-'}${formatEnMoney(amtIqd)} IQD</strong>
-                ${afnPart}
-              </div>
+          <div class="admin-mini-item" onclick="openCreditWalletTxReceiptByIndex(${idx})" style="cursor:pointer;">
+            <div>
+              <div><b>${label}</b></div>
+              <div style="color:var(--slate-500);">${tx.description || tx.tx_id || ''} • <span class="eng-num">${dt}</span></div>
             </div>
-            <div class="cw-tx-desc-clean">${cleanDesc}</div>
-            <div style="font-size:0.66rem; color:var(--emerald-700); font-weight:900; text-align:left;">مشاهده رسید کامل کیف ‹</div>
+            <strong class="eng-num" style="color:${isCredit ? 'var(--emerald-800)' : 'var(--danger)'};">${isCredit ? '+' : '-'}${formatEnMoney(amtIqd)} IQD${afnPart}</strong>
           </div>`;
       }).join('');
+    }
+
+    function renderBottomCreditWalletMenuSection() {
+      const listEl = document.getElementById('bottomCreditWalletTxList');
+      const badgeEl = document.getElementById('bottomCreditWalletTxCount');
+      if (!listEl || !badgeEl) return;
+      const list = Array.isArray(currentCreditWalletTxs) ? currentCreditWalletTxs : [];
+      badgeEl.innerText = toEnglishDigits(list.length);
+      listEl.innerHTML = buildCreditWalletTxRowsHtml(list);
+    }
+
+    function renderCreditWalletTransactionsBox() {
+      const box = document.getElementById('cwTransactionsListBox');
+      if (box) {
+        box.innerHTML = buildCreditWalletTxRowsHtml(currentCreditWalletTxs);
+      }
+      renderBottomCreditWalletMenuSection();
     }
 
     async function insertCreditWalletTxRow(rowObj) {
@@ -5393,17 +5383,17 @@
         Status: 'ثبت شده'
       };
 
-      const { error: mainErr } = await _supabase.from('transactions').insert([mainDebtRow]);
-      if (mainErr) {
+      const { error: mainTxErr } = await _supabase.from('transactions').insert([mainDebtRow]);
+      if (mainTxErr) {
         hideRealLoading();
-        alert('خطا در ثبت بدهکاری حساب اصلی: ' + mainErr.message);
+        alert('خطا در ثبت بدهکاری در حساب اصلی: ' + mainTxErr.message);
         return;
       }
 
-      const wRes = await updateCreditWalletBalanceInDb(targetWId, targetAccId, nextWBal);
-      if (!wRes.ok) {
+      const wUpd = await updateCreditWalletBalanceInDb(targetWId, targetAccId, nextWBal);
+      if (!wUpd.ok) {
         hideRealLoading();
-        alert('خطا در افزایش کیف پول کردیت: ' + wRes.error);
+        alert('خطا در افزایش موجودی کیف پول کردیت: ' + wUpd.error);
         return;
       }
 
@@ -5411,17 +5401,18 @@
         tx_id: cwTxId,
         wallet_id: targetWId,
         account_id: targetAccId,
-        target_wallet_id: targetWId,
-        target_account_id: targetAccId,
         operation_type: 'admin_grant_debt',
         direction: 'credit',
         amount_iqd: Number(grantAmtIqd),
         amount_afn: 0,
         exchange_rate: Number(getAfnExchangeRate()),
         main_tx_id: mainTxId,
-        description: customDesc || `افزایش ${formatEnMoney(grantAmtIqd)} IQD به کیف پول کردیت (${targetName}) توسط مدیریت`,
+        description: customDesc || `افزایش ${formatEnMoney(grantAmtIqd)} IQD به کیف کردیت و ثبت بدهکار در حساب اصلی (${mainTxId})`,
         created_at: nowIso
       });
+
+      document.getElementById('mgmtCwGrantAmountIqd').value = '';
+      document.getElementById('mgmtCwGrantDesc').value = '';
 
       await fetchDataFromSupabaseFresh();
       if (currentFoundUser) {
@@ -5429,509 +5420,923 @@
         processDashboard(curId, false);
         await refreshCreditWalletData(true);
       }
-      renderAdminAfnReports();
       hideRealLoading();
       playSound('success');
 
-      const summaryMsg = `انجام شد: ${formatEnMoney(grantAmtIqd)} IQD به کیف (${targetWId}) اضافه و در حساب اصلی (${targetAccId}) بدهکار ثبت شد.`;
+      const summaryMsg = `حساب: ${targetName} (${targetAccId}) | افزایش کیف کردیت: ${formatEnMoney(grantAmtIqd)} IQD (موجودی جدید کیف: ${formatEnMoney(nextWBal)} IQD) | بدهکار ثبت‌شده در حساب اصلی: ${formatEnMoney(grantAmtIqd)} IQD`;
       if (resEl) resEl.innerText = summaryMsg;
       alert(summaryMsg);
     }
 
     function recalcTopupCost() {
+      const netIqd = getNetIqdBalance();
+      const creditWalletIqd = getCurrentCreditWalletBalanceIqd();
       const rate = getAfnExchangeRate();
-      const walletIqd = getCurrentCreditWalletBalanceIqd();
-      const mainIqd = getNetIqdBalance();
 
-      const afnVal = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput')?.value || '0')) || 0;
-      const calcAfnIqd = afnVal > 0 ? Math.round(afnVal * rate) : 0;
-      const afnCalcEl = document.getElementById('afnCalculatedIqd');
+      const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value)) || 0;
+      const reqIqd = Math.round(afnAmt * rate);
       const afnBox = document.getElementById('afnCalcBox');
-      const afnMsg = document.getElementById('topupAfnEligibilityMsg');
+      const afnErr = document.getElementById('topupAfnEligibilityMsg');
       const afnBtn = document.getElementById('btnExecuteTopupAfn');
-
-      if (afnCalcEl) afnCalcEl.innerText = formatEnMoney(calcAfnIqd);
+      document.getElementById('afnCalculatedIqd').innerText = `${formatEnMoney(reqIqd)} (موجودی کیف کردیت: ${formatEnMoney(creditWalletIqd)} IQD)`;
 
       if (!appSettingsState.topup_afn_enabled) {
-        if (afnBox) afnBox.className = 'calc-summary-box error';
-        if (afnMsg) afnMsg.innerText = 'ارسال کردیت در حال حاضر غیرفعال است.';
+        afnBox.classList.add('error');
+        afnErr.innerText = 'ارسال کردیت در جدول تنظیمات غیرفعال است.';
         if (afnBtn) afnBtn.disabled = true;
-      } else if (afnVal > 0 && calcAfnIqd > walletIqd) {
-        if (afnBox) afnBox.className = 'calc-summary-box error';
-        if (afnMsg) {
-          afnMsg.innerText = `موجودی کیف کردیت (${formatEnMoney(walletIqd)} IQD) برای ${formatEnMoney(calcAfnIqd)} IQD کافی نیست. از دکمه «از حساب به کیف» موجودی را به کیف منتقل کنید.`;
-        }
+      } else if (creditWalletIqd <= 0 || reqIqd > creditWalletIqd) {
+        afnBox.classList.add('error');
+        afnErr.innerText = 'موجودی کیف پول کردیت کافی نیست. ابتدا از حساب اصلی به کیف کردیت منتقل کنید.';
         if (afnBtn) afnBtn.disabled = true;
       } else {
-        if (afnBox) afnBox.className = 'calc-summary-box';
-        if (afnMsg) {
-          afnMsg.innerText = `موجودی کیف کردیت: ${formatEnMoney(walletIqd)} IQD (نرخ: ${rate}) — فقط از کیف کردیت کسر می‌شود`;
-          afnMsg.style.color = 'var(--emerald-800)';
-        }
+        afnBox.classList.remove('error');
+        afnErr.innerText = '';
         if (afnBtn) afnBtn.disabled = false;
       }
 
-      const iqInfo = getSelectedIraqPackageInfo();
-      const iqChargeIqd = iqInfo.chargeAmount;
-      const iqCalcEl = document.getElementById('iqCalculatedIqd');
+      const iqPkgInfo = getSelectedIraqPackageInfo();
+      const cardAmt = iqPkgInfo.cardAmount;
+      const chargeAmt = iqPkgInfo.chargeAmount;
       const iqBox = document.getElementById('iqCalcBox');
-      const iqMsg = document.getElementById('topupIqEligibilityMsg');
+      const iqErr = document.getElementById('topupIqEligibilityMsg');
       const iqBtn = document.getElementById('btnExecuteTopupIq');
-
-      if (iqCalcEl) iqCalcEl.innerText = formatEnMoney(iqChargeIqd);
+      document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(chargeAmt);
 
       if (!appSettingsState.topup_iq_enabled) {
-        if (iqBox) iqBox.className = 'calc-summary-box error';
-        if (iqMsg) iqMsg.innerText = 'شارژ عراق در حال حاضر غیرفعال است.';
+        iqBox.classList.add('error');
+        iqErr.innerText = 'شارژ عراق در جدول تنظیمات غیرفعال است.';
         if (iqBtn) iqBtn.disabled = true;
-      } else if (iqChargeIqd > mainIqd) {
-        if (iqBox) iqBox.className = 'calc-summary-box error';
-        if (iqMsg) {
-          iqMsg.innerText = `موجودی حساب اصلی (${formatEnMoney(mainIqd)} IQD) برای ${formatEnMoney(iqChargeIqd)} IQD کافی نیست.`;
-          iqMsg.style.color = 'var(--danger)';
-        }
+      } else if (netIqd <= 0 || chargeAmt > netIqd) {
+        iqBox.classList.add('error');
+        iqErr.innerText = 'موجودی دینار کافی نیست.';
         if (iqBtn) iqBtn.disabled = true;
       } else {
-        if (iqBox) iqBox.className = 'calc-summary-box';
-        if (iqMsg) iqMsg.innerText = '';
+        iqBox.classList.remove('error');
+        iqErr.innerText = '';
         if (iqBtn) iqBtn.disabled = false;
       }
     }
 
-    async function executeCustomerTopup(topupType) {
-      if (!currentFoundUser) return;
+    const AFN_PREFIX_OPERATOR_MAP = {
+      '070': { code: 'awcc', label: 'افغان بی‌سیم' },
+      '071': { code: 'awcc', label: 'افغان بی‌سیم' },
+      '072': { code: 'roshan', label: 'روشن' },
+      '079': { code: 'roshan', label: 'روشن' },
+      '073': { code: 'etisalat', label: 'اتصالات' },
+      '078': { code: 'etisalat', label: 'اتصالات' },
+      '074': { code: 'salam', label: 'سلام' },
+      '077': { code: 'atoma', label: 'ام‌تی‌ان' },
+      '076': { code: 'atoma', label: 'ام‌تی‌ان' }
+    };
 
-      if (topupType === 'afn' && !appSettingsState.topup_afn_enabled) {
+    function detectAfnOperatorFromPhone(rawPhone) {
+      const digits = toEnglishDigits(String(rawPhone || '')).replace(/\D/g, '');
+      let localPhone = '';
+      if (/^07\d{8}$/.test(digits)) {
+        localPhone = digits;
+      } else if (/^937\d{8}$/.test(digits)) {
+        localPhone = '0' + digits.slice(2);
+      } else {
+        return null;
+      }
+      const prefix = localPhone.slice(0, 3);
+      const matched = AFN_PREFIX_OPERATOR_MAP[prefix];
+      if (!matched) return null;
+      return {
+        localPhone: localPhone,
+        intlPhone: '93' + localPhone.slice(1),
+        prefix: prefix,
+        operatorCode: matched.code,
+        networkLabel: matched.label
+      };
+    }
+
+    async function executeCustomerTopup(mode) {
+      if (!currentFoundUser) return;
+      // optional sync
+      if (mode === 'afn' && !appSettingsState.topup_afn_enabled) {
         alert('ارسال کردیت توسط مدیریت غیرفعال است.');
         return;
       }
-      if (topupType === 'iq' && !appSettingsState.topup_iq_enabled) {
+      if (mode === 'iq' && !appSettingsState.topup_iq_enabled) {
         alert('شارژ عراق توسط مدیریت غیرفعال است.');
         return;
       }
 
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       await forceSyncBeforeOperation(accId);
-      if (topupType === 'afn') {
-        await refreshCreditWalletData(true);
-      }
-
-      const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const mainIqdBalance = getNetIqdBalance();
-      const walletIqdBalance = getCurrentCreditWalletBalanceIqd();
+      const netIqd = getNetIqdBalance();
       const rate = getAfnExchangeRate();
+      const accName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
+      const accPhone = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
 
-      if (topupType === 'afn') {
-        const phone = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+      let payloadData = null;
+      let summaryHtml = '';
+      if (mode === 'afn') {
+        const rawPhoneInput = toEnglishDigits(document.getElementById('afnTargetPhone').value.trim());
+        const detectedOp = detectAfnOperatorFromPhone(rawPhoneInput);
         const afnAmt = parseFloat(toEnglishDigits(document.getElementById('afnAmountInput').value));
-
-        if (!/^07\d{8}$/.test(phone)) {
-          alert('شماره موبایل مقصد باید ۱۰ رقم و با 07 شروع شود.');
+        if (!detectedOp) {
+          alert('شماره واردشده باید شماره معتبر شبکه‌های تایید شده افغانستان باشد (مانند 070، 071، 072، 073، 074، 076، 077، 078، 079).');
           return;
         }
+        const targetPhone = detectedOp.localPhone;
+        const afnNetwork = detectedOp.networkLabel;
+        const operatorCode = detectedOp.operatorCode;
         if (isNaN(afnAmt) || afnAmt <= 0) {
-          alert('مبلغ (AFN) را وارد کنید.');
+          alert('مبلغ را وارد کنید.');
           return;
         }
-        const iqdCost = Math.round(afnAmt * rate);
-        if (iqdCost > walletIqdBalance) {
-          alert(`موجودی کیف پول کردیت (${formatEnMoney(walletIqdBalance)} IQD) کافی نیست. ابتدا از حساب اصلی به کیف کردیت منتقل کنید.`);
+        await refreshCreditWalletData(false);
+        const creditWalletIqd = getCurrentCreditWalletBalanceIqd();
+        const requiredIqd = Math.round(afnAmt * rate);
+        if (requiredIqd > creditWalletIqd || creditWalletIqd <= 0) {
+          alert('موجودی کیف پول کردیت کافی نیست.');
           return;
         }
-        if (!isTxBiometricEnabled()) {
-          const hasPin = await ensureAccountHasPin(accId);
-          if (!hasPin) return;
-        }
-        openOperationAuthModal(
-          'تایید ارسال کردیت (از کیف پول کردیت)',
-          `ارسال <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به شماره <span class="eng-num">${phone}</span> — کسر <b class="eng-num">${formatEnMoney(iqdCost)} IQD</b> <u>فقط از کیف پول کردیت</u> (بدون کسر از حساب اصلی)`,
-          { kind: 'topup_afn', data: { accId, accName, phone, afnAmt, iqdCost, rate } }
-        );
+        payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
+        summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
-        const pkgInfo = getSelectedIraqPackageInfo();
-        const net = document.getElementById('iqNetworkSelect').value;
-        const cardAmt = pkgInfo.cardAmount;
-        const chargeAmt = pkgInfo.chargeAmount;
-
-        if (!cardAmt || cardAmt <= 0) {
-          alert('بسته شارژ عراق را انتخاب کنید.');
-          return;
-        }
-        if (chargeAmt > mainIqdBalance) {
-          alert('موجودی حساب اصلی کافی نیست.');
-          return;
-        }
-        if (!isTxBiometricEnabled()) {
-          const hasPin = await ensureAccountHasPin(accId);
-          if (!hasPin) return;
-        }
-        openOperationAuthModal(
-          'تایید شارژ عراق',
-          `شارژ <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (${net}) — مبلغ کسر: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>`,
-          { kind: 'topup_iq', data: { accId, accName, net, cardAmt, chargeAmt } }
-        );
-      }
-    }
-
-    async function callAfghanistanTopupApi({ accId, accName, phone, afnAmt, iqdCost, txId }) {
-      const endpoint = (appSettingsState.afn_api_endpoint || '/api/iimobile-topup').trim() || '/api/iimobile-topup';
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 20000);
-      try {
-        const resp = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            accountId: accId,
-            accountName: accName,
-            phone: phone,
-            amountAfn: afnAmt,
-            amountIqd: iqdCost,
-            txId: txId
-          }),
-          signal: controller.signal
-        });
-        const rawText = await resp.text().catch(() => '');
-        let data = {};
-        try {
-          data = rawText ? JSON.parse(rawText) : {};
-        } catch (e) {
-          data = { rawText };
-        }
-        const extractedError =
-          data.error ||
-          data.message ||
-          data.msg ||
-          data.detail ||
-          data.reason ||
-          (data.data && (data.data.error || data.data.message || data.data.msg)) ||
-          (typeof data.rawText === 'string' && data.rawText.trim() ? data.rawText.trim() : '') ||
-          `HTTP ${resp.status} ${resp.statusText || 'Topup API Error'}`;
-
-        if (!resp.ok || data.success === false || data.ok === false) {
-          return {
-            ok: false,
-            error: typeof extractedError === 'string' ? extractedError : JSON.stringify(extractedError),
-            raw: data
-          };
-        }
-        return {
-          ok: true,
-          referenceId: data.referenceId || data.refId || data.reference || data.id || txId,
-          raw: data
-        };
-      } catch (err) {
-        return {
-          ok: false,
-          error: (err && err.name === 'AbortError')
-            ? 'Request timeout while contacting topup server'
-            : ((err && err.message) ? err.message : 'Network error while contacting topup server')
-        };
-      } finally {
-        clearTimeout(timer);
-      }
-    }
-
-    async function processConfirmedOperation(actionObj) {
-      if (!actionObj || !currentFoundUser) return;
-      const { kind, data } = actionObj;
-      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
-
-      if (kind === 'transfer') {
-        showRealLoading('در حال ثبت انتقال...', 'بروزرسانی حساب مبدا و مقصد');
-        await fetchDataFromSupabaseFresh();
-
-        const fromId = data.fromId;
-        const myTxs = getUserVisibleTransactions(fromId);
-        let currNet = 0;
-        myTxs.forEach(t => {
-          if (String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase() === data.curr) {
-            const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
-            const d = String(getVal(t, ['Direction', 'direction'])).trim();
-            if (d.includes('بستانکار') || d.includes('دریافت')) currNet += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) currNet -= a;
-          }
-        });
-
-        if (currNet < data.amt) {
-          hideRealLoading();
-          alert('موجودی کافی نیست.');
-          return;
-        }
-
-        const nowIso = new Date().toISOString();
-        const code = 'TR-' + Math.floor(100000 + Math.random() * 900000);
-
-        const outRow = {
-          TransID: code + '-OUT',
-          AccountID: fromId,
-          Date: nowIso,
-          Amount: Number(data.amt),
-          Currency: data.curr,
-          Direction: 'بدهکار',
-          OperationType: 'انتقال موجودی',
-          Description: `انتقال ${formatEnMoney(data.amt)} ${data.curr} به ${data.toName} (${data.toId})`,
-          AssignedUserEmail: assigned,
-          Status: 'ثبت شده'
-        };
-
-        const inRow = {
-          TransID: code + '-IN',
-          AccountID: data.toId,
-          Date: nowIso,
-          Amount: Number(data.amt),
-          Currency: data.curr,
-          Direction: 'بستانکار',
-          OperationType: 'دریافت انتقال',
-          Description: `دریافت ${formatEnMoney(data.amt)} ${data.curr} از ${data.fromName} (${fromId})`,
-          AssignedUserEmail: data.assignedEmail,
-          Status: 'ثبت شده'
-        };
-
-        const { error } = await _supabase.from('transactions').insert([outRow, inRow]);
-        await fetchDataFromSupabaseFresh();
-        processDashboard(fromId, false);
-        hideRealLoading();
-
-        if (error) {
-          alert('خطا در انتقال: ' + error.message);
-          return;
-        }
-
-        playSound('success');
-        resetAllOperationForms();
-        resetMandatorySyncState('transfer');
-        notifyAccountEvent(
-          'انتقال موجودی — امانت‌داری کریمی',
-          `انتقال ${formatEnMoney(data.amt)} ${data.curr} به ${data.toName} (${data.toId}) ثبت شد.`
-        );
-        showReceiptForTransactionData(outRow);
-        return;
-      }
-
-      if (kind === 'topup_afn') {
-        showRealLoading('در حال ارسال کردیت...', 'بررسی کیف کردیت و اتصال به شرکت');
-        await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
-        await refreshCreditWalletData(true);
-
-        const curWalletBal = getCurrentCreditWalletBalanceIqd();
-        if (data.iqdCost > curWalletBal) {
-          hideRealLoading();
-          alert(`موجودی کیف پول کردیت (${formatEnMoney(curWalletBal)} IQD) کافی نیست.`);
-          return;
-        }
-
-        const txCode = 'AFN-' + Math.floor(100000 + Math.random() * 900000);
-        const nowIso = new Date().toISOString();
-
-        if (!appSettingsState.afn_api_enabled) {
-          hideRealLoading();
-          showTopupRawErrorModal('Afghanistan credit API is disabled in app_settings.');
-          return;
-        }
-
-        const apiRes = await callAfghanistanTopupApi({
-          accId: data.accId,
-          accName: data.accName,
-          phone: data.phone,
-          afnAmt: data.afnAmt,
-          iqdCost: data.iqdCost,
-          txId: txCode
-        });
-
-        if (!apiRes.ok) {
-          hideRealLoading();
-          showTopupRawErrorModal(apiRes.error || 'Recharge request failed');
-          return;
-        }
-
-        const refCode = apiRes.referenceId || txCode;
-        const walletId = getCurrentCreditWalletId();
-        const nextWalletBal = Math.max(0, curWalletBal - Number(data.iqdCost));
-
-        // فقط موجودی کیف کردیت و جدول credit_wallet_transactions آپدیت می‌شود (حساب اصلی و جدول اصلی دست‌نخورده می‌ماند)
-        const wUpdateRes = await updateCreditWalletBalanceInDb(walletId, data.accId, nextWalletBal);
-        if (!wUpdateRes.ok) {
-          hideRealLoading();
-          alert('کردیت ارسال شد اما در بروزرسانی موجودی کیف کردیت خطا رخ داد: ' + wUpdateRes.error);
-          return;
-        }
-
-        const cwTxRow = {
-          tx_id: txCode,
-          wallet_id: walletId,
-          account_id: data.accId,
-          target_wallet_id: walletId,
-          target_account_id: data.accId,
-          operation_type: 'credit_topup',
-          direction: 'debit',
-          amount_iqd: Number(data.iqdCost),
-          amount_afn: Number(data.afnAmt),
-          exchange_rate: Number(data.rate),
-          description: `رسید رسمی ارسال کردیت افغانستان (از کیف پول کردیت ${walletId}) — صاحب حساب: ${data.accName} | مبلغ ${formatEnMoney(data.afnAmt)} AFN (معادل ${formatEnMoney(data.iqdCost)} IQD) به شماره ${data.phone} با کد پیگیری ${refCode} موفقانه ارسال شد. | پاسخ شرکت: Recharge Successful`,
-          created_at: nowIso
-        };
-
-        await insertCreditWalletTxRow(cwTxRow);
-        await refreshCreditWalletData(true);
-        processDashboard(data.accId, false);
-        hideRealLoading();
-
-        playSound('success');
-        resetAllOperationForms();
-        resetMandatorySyncState('afn');
-        notifyAccountEvent(
-          'ارسال کردیت از کیف کردیت — امانت‌داری کریمی',
-          `ارسال ${formatEnMoney(data.afnAmt)} AFN به ${data.phone} (${formatEnMoney(data.iqdCost)} IQD) فقط از کیف کردیت (${walletId}) کسر شد.`
-        );
-        showReceiptForCreditWalletTx(cwTxRow);
-        return;
-      }
-
-      if (kind === 'topup_iq') {
-        showRealLoading('در حال ثبت شارژ عراق...', 'ثبت تراکنش در حساب اصلی');
-        await fetchDataFromSupabaseFresh();
-
-        const myTxs = getUserVisibleTransactions(data.accId);
-        let currIqd = 0;
-        myTxs.forEach(t => {
-          if (String(getVal(t, ['Currency', 'currency']) || 'IQD').toUpperCase() === 'IQD') {
-            const a = parseFloat(getVal(t, ['Amount', 'amount', 'value'])) || 0;
-            const d = String(getVal(t, ['Direction', 'direction'])).trim();
-            if (d.includes('بستانکار') || d.includes('دریافت')) currIqd += a;
-            else if (d.includes('بدهکار') || d.includes('پرداخت')) currIqd -= a;
-          }
-        });
-
-        if (currIqd < data.chargeAmt) {
-          hideRealLoading();
+        const network = document.getElementById('iqNetworkSelect').value;
+        const iqPkgInfo = getSelectedIraqPackageInfo();
+        const cardAmt = iqPkgInfo.cardAmount;
+        const chargeAmt = iqPkgInfo.chargeAmount;
+        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > netIqd) {
           alert('موجودی دینار کافی نیست.');
           return;
         }
-
-        const txCode = 'IQ-' + Math.floor(100000 + Math.random() * 900000);
-        const nowIso = new Date().toISOString();
-
-        const txRow = {
-          TransID: txCode,
-          AccountID: data.accId,
-          Date: nowIso,
-          Amount: Number(data.chargeAmt),
-          Currency: 'IQD',
-          Direction: 'بدهکار',
-          OperationType: 'شارژ عراق',
-          Description: `رسید رسمی شارژ عراق (${data.net}) — صاحب حساب: ${data.accName} | شارژ ${formatEnMoney(data.cardAmt)} IQD با مبلغ کسر ${formatEnMoney(data.chargeAmt)} IQD ثبت شد. | کد سند: ${txCode}`,
-          AssignedUserEmail: assigned,
-          Status: 'در انتظار ارسال رمز'
-        };
-
-        const { error } = await _supabase.from('transactions').insert([txRow]);
-        await fetchDataFromSupabaseFresh();
-        processDashboard(data.accId, false);
-        hideRealLoading();
-
-        if (error) {
-          alert('خطا در ثبت شارژ: ' + error.message);
-          return;
-        }
-
-        playSound('success');
-        resetAllOperationForms();
-        resetMandatorySyncState('iq');
-        notifyAccountEvent(
-          'شارژ عراق — امانت‌داری کریمی',
-          `ثبت شارژ ${formatEnMoney(data.cardAmt)} IQD (${data.net}) با مبلغ کسر ${formatEnMoney(data.chargeAmt)} IQD.`
-        );
-        showReceiptForTransactionData(txRow);
+        payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt, chargeAmt, pkgLabel: iqPkgInfo.label };
+        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از حساب: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
       }
+
+      if (!isTxBiometricEnabled()) {
+        const hasPin = await ensureAccountHasPin(accId);
+        if (!hasPin) return;
+      }
+
+      openOperationAuthModal('تایید عملیات شارژ', summaryHtml, { kind: 'topup', data: payloadData });
+    }
+
+    async function ensureAccountHasPin(accId) {
+      showRealLoading('در حال بررسی رمز...', 'بررسی امنیت');
+      await fetchDataFromSupabaseFresh();
+      const refreshed = accountsList.find(u =>
+        String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === String(accId).toLowerCase()
+      );
+      if (refreshed) currentFoundUser = refreshed;
+      hideRealLoading();
+
+      const stored = getStoredPinHashForAccount(currentFoundUser, accId);
+      if (!stored) {
+        openLegacyPinActivationModal(accId);
+        return false;
+      }
+      return true;
     }
 
     function closeTxPinConfirmModal() {
-      playSound('click');
-      pendingAction = null;
       document.getElementById('txPinConfirmModal').classList.add('hidden');
+      pendingAction = null;
     }
 
-    async function confirmPendingOperation() {
-      playSound('click');
-      if (!pendingAction || !currentFoundUser) return;
-      const pin = toEnglishDigits(document.getElementById('txVerifyPinInput').value.trim());
-      if (!pin) {
-        alert('رمز ثابت را وارد کنید.');
-        return;
-      }
-      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const ok = await verifyPinAgainstDatabaseColumn(accId, pin, currentFoundUser);
-      if (!ok) {
-        alert('رمز ثابت صحیح نیست.');
-        return;
-      }
-      const act = pendingAction;
-      pendingAction = null;
+    async function executeConfirmedAction(actionObj) {
       document.getElementById('txPinConfirmModal').classList.add('hidden');
-      await processConfirmedOperation(act);
+      pendingAction = null;
+      if (actionObj.kind === 'transfer') {
+        await runAccountTransfer(actionObj.data);
+      } else if (actionObj.kind === 'topup') {
+        await runTopupAfterPin(actionObj.data);
+      }
     }
 
     async function confirmOperationWithDeviceLock() {
-      playSound('click');
       if (!pendingAction || !currentFoundUser) return;
-      if (!isTxBiometricEnabled()) {
-        alert('تایید تراکنش با قفل گوشی غیرفعال است. لطفاً از پسورد/پین استفاده کنید.');
+      const ok = await triggerBiometricAuth('تایید انجام تراکنش با اثر انگشت یا قفل گوشی');
+      if (!ok) {
+        alert('تایید اثر انگشت/قفل گوشی انجام نشد. می‌توانید از رمز ثابت استفاده کنید.');
         return;
       }
+      const actionObj = pendingAction;
+      await executeConfirmedAction(actionObj);
+    }
+
+    async function confirmPendingOperation() {
+      if (!pendingAction || !currentFoundUser) return;
       const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const verified = await promptDeviceBiometricAuth(accId, 'تایید تراکنش با قفل گوشی');
-      if (!verified) {
-        alert('تایید با قفل گوشی انجام نشد یا لغو شد. می‌توانید از رمز ثابت استفاده کنید.');
+      const hasPin = await ensureAccountHasPin(accId);
+      if (!hasPin) return;
+
+      const pinRaw = toEnglishDigits(document.getElementById('txVerifyPinInput').value.trim());
+      if (!pinRaw) {
+        alert('رمز ثابت را وارد کنید.');
         return;
       }
-      const act = pendingAction;
-      pendingAction = null;
-      document.getElementById('txPinConfirmModal').classList.add('hidden');
-      await processConfirmedOperation(act);
+
+      const isValidPin = await verifyPinAgainstDatabaseColumn(accId, pinRaw, currentFoundUser);
+      if (!isValidPin) {
+        alert('رمز ثابت اشتباه است.');
+        return;
+      }
+
+      const actionObj = pendingAction;
+      await executeConfirmedAction(actionObj);
+    }
+
+    async function runAccountTransfer(d) {
+      await forceSyncBeforeOperation(d.fromId);
+      if (!appSettingsState.transfer_enabled) {
+        alert('انتقال موجودی در تنظیمات غیرفعال است.');
+        return;
+      }
+      showRealLoading('در حال انتقال...', 'ثبت تراکنش');
+      const prevIds = getUserTransactionIds(d.fromId);
+      const nowIso = new Date().toISOString();
+      const baseCode = 'TR-' + Math.floor(100000 + Math.random() * 900000);
+      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || d.assignedEmail || OWNER_EMAIL;
+
+      const debitRow = {
+        TransID: `${baseCode}-D`,
+        AccountID: d.fromId,
+        Date: nowIso,
+        Amount: Number(d.amt),
+        Currency: d.curr,
+        Direction: 'بدهکار',
+        OperationType: 'انتقال موجودی',
+        Description: `به ${d.toName} (${d.toId})`,
+        AssignedUserEmail: assigned,
+        Status: 'ثبت شده'
+      };
+
+      const creditRow = {
+        TransID: `${baseCode}-C`,
+        AccountID: d.toId,
+        Date: nowIso,
+        Amount: Number(d.amt),
+        Currency: d.curr,
+        Direction: 'بستانکار',
+        OperationType: 'دریافت انتقال',
+        Description: `از ${d.fromName} (${d.fromId})`,
+        AssignedUserEmail: d.assignedEmail || assigned,
+        Status: 'ثبت شده'
+      };
+
+      const { error } = await _supabase.from('transactions').insert([debitRow, creditRow]);
+      hideRealLoading();
+
+      if (error) {
+        alert('خطا در انتقال: ' + error.message);
+        return;
+      }
+
+      resetAllOperationForms();
+      resetMandatorySyncState();
+      collapseServiceForms();
+      await fetchDataFromSupabaseFresh();
+      processDashboard(d.fromId, false);
+      resetAllOperationForms();
+      collapseServiceForms();
+      updateLastSyncLabel();
+      const curIds = getUserTransactionIds(d.fromId);
+      try { localStorage.setItem(`karimi_seen_tx_ids_${d.fromId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+      if (curIds.length > prevIds.length) {
+        notifyAccountEvent('انتقال موجودی انجام شد', `${formatEnMoney(d.amt)} ${d.curr} به ${d.toName} منتقل شد.`);
+      }
+      showReceiptForTransactionData(debitRow);
+    }
+
+    async function runTopupAfterPin(payload) {
+      await forceSyncBeforeOperation(payload.accId);
+      if (payload.mode === 'afn' && !appSettingsState.topup_afn_enabled) {
+        alert('ارسال کردیت در تنظیمات غیرفعال است.');
+        return;
+      }
+      if (payload.mode === 'iq' && !appSettingsState.topup_iq_enabled) {
+        alert('شارژ عراق در تنظیمات غیرفعال است.');
+        return;
+      }
+      if (payload.mode === 'afn') {
+        const prevIds = getUserTransactionIds(payload.accId);
+        const nowIso = new Date().toISOString();
+        const txId = 'AFN-' + Math.floor(100000 + Math.random() * 900000);
+        const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+
+        showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط با شرکت سرویس‌دهنده');
+        const detectedOp = detectAfnOperatorFromPhone(payload.targetPhone);
+        if (!detectedOp) {
+          hideRealLoading();
+          showTopupRawErrorModal('Unsupported Afghan mobile prefix or network');
+          return;
+        }
+        const intlPhone = payload.intlPhone || detectedOp.intlPhone;
+        const resolvedNetwork = payload.afnNetwork || detectedOp.networkLabel;
+        const resolvedOperatorCode = payload.operatorCode || detectedOp.operatorCode;
+
+        const endpointUrl = (appSettingsState.afn_api_endpoint || '/api/iimobile-topup').trim() || '/api/iimobile-topup';
+        const modeVal = (appSettingsState.afn_api_mode || 'proxy_api').trim() || 'proxy_api';
+
+        function extractRealProviderErrorMessage(respObj, rawBodyStr, parsedJson) {
+          const candidates = [
+            parsedJson && parsedJson.company_message,
+            parsedJson && parsedJson.initiate_company_message,
+            parsedJson && parsedJson.execute_company_message,
+            parsedJson && parsedJson.error_message,
+            parsedJson && parsedJson.error,
+            parsedJson && parsedJson.message,
+            parsedJson && parsedJson.msg,
+            parsedJson && parsedJson.detail,
+            parsedJson && parsedJson.description,
+            parsedJson && parsedJson.reason,
+            parsedJson && parsedJson.raw && parsedJson.raw.company_message,
+            parsedJson && parsedJson.raw && parsedJson.raw.msg,
+            parsedJson && parsedJson.raw && parsedJson.raw.message,
+            parsedJson && parsedJson.raw && parsedJson.raw.error,
+            parsedJson && parsedJson.raw && parsedJson.raw.detail,
+            parsedJson && parsedJson.initiate_raw && parsedJson.initiate_raw.msg,
+            parsedJson && parsedJson.initiate_raw && parsedJson.initiate_raw.message,
+            parsedJson && parsedJson.initiate_raw && parsedJson.initiate_raw.error,
+            parsedJson && parsedJson.execute_raw && parsedJson.execute_raw.msg,
+            parsedJson && parsedJson.execute_raw && parsedJson.execute_raw.message,
+            parsedJson && parsedJson.execute_raw && parsedJson.execute_raw.error
+          ];
+
+          let picked = '';
+          for (const c of candidates) {
+            if (c !== undefined && c !== null) {
+              const s = typeof c === 'string' ? c.trim() : JSON.stringify(c);
+              if (s && s !== 'null' && s !== 'undefined') {
+                picked = s;
+                break;
+              }
+            }
+          }
+
+          const stagePrefix = (parsedJson && parsedJson.stage) ? `[${String(parsedJson.stage).trim()}] ` : '';
+          if (picked && picked !== 'Bad Request') {
+            return `${stagePrefix}${picked}`;
+          }
+
+          const bodyFallback = (rawBodyStr && rawBodyStr.trim()) ? rawBodyStr.trim() : (parsedJson ? JSON.stringify(parsedJson) : '');
+          const httpPart = `HTTP ${respObj.status}${respObj.statusText ? ' ' + respObj.statusText : ''}`.trim();
+          return bodyFallback ? `${stagePrefix}${httpPart} | ${bodyFallback}` : `${stagePrefix}${httpPart}`;
+        }
+
+        function evaluateStrictProviderSuccess(respObj, parsedJson) {
+          if (!respObj || !respObj.ok) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (!parsedJson || typeof parsedJson !== 'object') {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (parsedJson.ok !== true) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (parsedJson.success === false || parsedJson.failed === true || parsedJson.error) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+
+          const statusNorm = String(
+            parsedJson.status ||
+            parsedJson.tx_status ||
+            parsedJson.state ||
+            (parsedJson.raw && (parsedJson.raw.status || parsedJson.raw.state)) ||
+            ''
+          ).trim().toLowerCase();
+
+          const negativeStatuses = ['failed', 'fail', 'error', 'rejected', 'declined', 'denied', 'cancelled', 'canceled', 'invalid', 'timeout', 'expired', 'reversed'];
+          if (statusNorm && negativeStatuses.includes(statusNorm)) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+
+          const rawTxCode = (
+            parsedJson.txid ||
+            parsedJson.txnid ||
+            parsedJson.transaction_id ||
+            parsedJson.reference_id ||
+            parsedJson.tracking_code ||
+            parsedJson.ref ||
+            parsedJson.id ||
+            (parsedJson.raw && (parsedJson.raw.txid || parsedJson.raw.txnid || parsedJson.raw.transaction_id || parsedJson.raw.reference_id || parsedJson.raw.tracking_code || parsedJson.raw.ref || parsedJson.raw.id)) ||
+            ''
+          );
+          const txCodeStr = String(rawTxCode || '').trim() || ('II-' + Date.now().toString().slice(-6));
+
+          const rawMsg = (
+            parsedJson.company_message ||
+            parsedJson.message ||
+            parsedJson.msg ||
+            (parsedJson.raw && (parsedJson.raw.company_message || parsedJson.raw.msg || parsedJson.raw.message)) ||
+            ''
+          );
+          const companyMsgStr = typeof rawMsg === 'string' ? rawMsg.trim() : (rawMsg ? JSON.stringify(rawMsg) : '');
+
+          return { confirmed: true, txCode: txCodeStr, companyMsg: companyMsgStr };
+        }
+
+        let apiOk = false;
+        let apiRef = '';
+        let lastErr = '';
+
+        try {
+          const resp = await fetch(endpointUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              operator: resolvedOperatorCode,
+              mode: modeVal,
+              network: resolvedNetwork,
+              phone: intlPhone,
+              amount: Number(payload.afnAmt),
+              rate: Number(payload.rate || getAfnExchangeRate())
+            })
+          });
+
+          const rawText = await resp.text();
+          let json = null;
+          try {
+            json = rawText ? JSON.parse(rawText) : null;
+          } catch (parseErr) {
+            json = null;
+          }
+
+          const verdict = evaluateStrictProviderSuccess(resp, json);
+          if (verdict.confirmed) {
+            apiOk = true;
+            apiRef = verdict.txCode;
+            payload.companyResponse = verdict.companyMsg;
+          } else {
+            apiOk = false;
+            lastErr = extractRealProviderErrorMessage(resp, rawText, json);
+          }
+        } catch (err) {
+          apiOk = false;
+          lastErr = (err && err.message) ? String(err.message) : 'Network connection failed';
+        }
+
+        if (!apiOk || !apiRef) {
+          hideRealLoading();
+          notifyAccountEvent('ارسال کردیت ناموفق', lastErr || 'پاسخ منفی یا خطا در ارتباط با شرکت سرویس‌دهنده');
+          showTopupRawErrorModal(lastErr || 'Provider rejected transaction or connection failed');
+          return;
+        }
+
+        await ensureCreditWalletRow(payload.accId);
+        const wId = getCurrentCreditWalletId();
+        const curWBal = getCurrentCreditWalletBalanceIqd();
+        if (curWBal < Number(payload.requiredIqd)) {
+          hideRealLoading();
+          alert('موجودی کیف پول کردیت کافی نیست.');
+          return;
+        }
+        const nextWBal = Math.max(0, curWBal - Number(payload.requiredIqd));
+        const wUpdateRes = await updateCreditWalletBalanceInDb(wId, payload.accId, nextWBal);
+        if (!wUpdateRes.ok) {
+          hideRealLoading();
+          alert('خطا در کسر مبلغ از کیف پول کردیت: ' + wUpdateRes.error);
+          return;
+        }
+
+        const companyRespNote = payload.companyResponse ? ` | پاسخ شرکت: ${payload.companyResponse}` : '';
+        const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان (از کیف پول کردیت ${wId}) — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
+
+        const cwInsertRes = await insertCreditWalletTxRow({
+          tx_id: txId,
+          wallet_id: wId,
+          account_id: payload.accId,
+          operation_type: 'credit_topup',
+          direction: 'debit',
+          amount_iqd: Number(payload.requiredIqd),
+          amount_afn: Number(payload.afnAmt),
+          exchange_rate: Number(payload.rate),
+          target_phone: String(payload.targetPhone),
+          operator_code: String(resolvedOperatorCode),
+          external_ref: String(apiRef),
+          description: officialAfnDesc,
+          created_at: nowIso
+        });
+
+        if (!cwInsertRes || !cwInsertRes.ok) {
+          hideRealLoading();
+          alert('خطا در ثبت تراکنش در جدول تراکنش‌های کیف کردیت: ' + (cwInsertRes && cwInsertRes.error ? cwInsertRes.error : 'خطای نامشخص'));
+          return;
+        }
+
+        const cwReceiptTx = {
+          tx_id: txId,
+          TransID: txId,
+          wallet_id: wId,
+          account_id: payload.accId,
+          operation_type: 'credit_topup',
+          OperationType: 'ارسال کردیت (کیف پول کردیت)',
+          direction: 'debit',
+          Direction: 'بدهکار (کیف کردیت)',
+          amount_iqd: Number(payload.requiredIqd),
+          Amount: Number(payload.requiredIqd),
+          amount_afn: Number(payload.afnAmt),
+          exchange_rate: Number(payload.rate),
+          target_phone: String(payload.targetPhone),
+          operator_code: String(resolvedOperatorCode),
+          external_ref: String(apiRef),
+          Currency: 'IQD',
+          Status: 'تایید شده',
+          created_at: nowIso,
+          Date: nowIso,
+          description: officialAfnDesc,
+          Description: officialAfnDesc,
+          balance_before_iqd: Number(curWBal),
+          balance_after_iqd: Number(nextWBal),
+          is_credit_wallet_receipt: true
+        };
+
+        hideRealLoading();
+        resetAllOperationForms();
+        collapseServiceForms();
+        await fetchDataFromSupabaseFresh();
+        processDashboard(payload.accId, false);
+        await refreshCreditWalletData(true);
+        resetAllOperationForms();
+        collapseServiceForms();
+        updateLastSyncLabel();
+        if (cwInsertRes && cwInsertRes.ok) {
+          notifyAccountEvent('ارسال کردیت انجام شد', `کد پیگیری: ${apiRef}`);
+        }
+        showReceiptForTransactionData(cwReceiptTx);
+      } else {
+        const prevIds = getUserTransactionIds(payload.accId);
+        const nowIso = new Date().toISOString();
+        const txId = 'IQ-' + Math.floor(100000 + Math.random() * 900000);
+        const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+        const iqChargeAmt = Number(payload.chargeAmt ?? payload.cardAmt) || Number(payload.cardAmt) || 0;
+        const iqCardAmt = Number(payload.cardAmt) || iqChargeAmt;
+        const apiResult = await callExternalTopupApi({
+          txId,
+          accountId: payload.accId,
+          accountName: payload.accName,
+          network: payload.network,
+          amount: iqChargeAmt,
+          cardAmount: iqCardAmt,
+          currency: 'IQD'
+        });
+        const refSuffix = (apiResult.handledByExternalApi && apiResult.referenceId) ? ` | کد پیگیری: ${apiResult.referenceId}` : '';
+        const iqTxRow = {
+          TransID: txId,
+          AccountID: payload.accId,
+          Date: nowIso,
+          Amount: iqChargeAmt,
+          Currency: 'IQD',
+          Direction: 'بدهکار',
+          OperationType: 'شارژ عراق',
+          Description: `رسید رسمی شارژ عراق — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
+          AssignedUserEmail: assigned,
+          Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
+        };
+        const { error } = await _supabase.from('transactions').insert([iqTxRow]);
+        hideRealLoading();
+
+        if (error) {
+          alert('خطا در ثبت تراکنش: ' + error.message);
+          return;
+        }
+
+        resetAllOperationForms();
+        collapseServiceForms();
+        await fetchDataFromSupabaseFresh();
+        processDashboard(payload.accId, false);
+        resetAllOperationForms();
+        collapseServiceForms();
+        updateLastSyncLabel();
+        const curIds = getUserTransactionIds(payload.accId);
+        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
+        if (curIds.length > prevIds.length) {
+          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
+        }
+
+        const dateOnlyNow = extractDateOnly(nowIso);
+        const timeOnlyNow = extractTimeOnly(nowIso) || '';
+        const waAdminUrl = buildIraqTopupAdminWhatsAppUrl({
+          accName: payload.accName,
+          accId: payload.accId,
+          accPhone: payload.accPhone || toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---'),
+          network: payload.network,
+          cardAmt: payload.cardAmt,
+          txId: txId,
+          dateStr: `${dateOnlyNow} ${timeOnlyNow}`.trim()
+        });
+        lastIraqTopupAdminUrl = waAdminUrl;
+
+        showReceiptForTransactionData(iqTxRow);
+        window.open(waAdminUrl, '_blank');
+      }
+    }
+
+    function openLegacyPinActivationModal(accId) {
+      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری';
+      const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '';
+      const msg = encodeURIComponent(`فعال‌سازی رمز ثابت\nنام: ${nameVal}\nکد حساب: ${accId}\nشماره: ${phoneVal}`);
+      document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
+      document.getElementById('legacyPinActivationModal').classList.remove('hidden');
+      ensureSentinelHistory();
+    }
+
+    function closeLegacyPinActivationModal() {
+      document.getElementById('legacyPinActivationModal').classList.add('hidden');
+    }
+
+    function openSetPinModal() {
+      playSound('click');
+      if (!currentFoundUser) return;
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      if (!getStoredPinHashForAccount(currentFoundUser, accId)) {
+        openLegacyPinActivationModal(accId);
+        return;
+      }
+      document.getElementById('oldAccountPinInput').value = '';
+      document.getElementById('newAccountPinInput').value = '';
+      document.getElementById('confirmAccountPinInput').value = '';
+      document.getElementById('setPinModal').classList.remove('hidden');
+      ensureSentinelHistory();
+    }
+
+    function closeSetPinModal() {
+      document.getElementById('setPinModal').classList.add('hidden');
+    }
+
+    async function saveAccountPassword() {
+      if (!currentFoundUser) return;
+      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      const oldPin = toEnglishDigits(document.getElementById('oldAccountPinInput').value.trim());
+      const p1 = toEnglishDigits(document.getElementById('newAccountPinInput').value.trim());
+      const p2 = toEnglishDigits(document.getElementById('confirmAccountPinInput').value.trim());
+
+      const validOld = await verifyPinAgainstDatabaseColumn(accId, oldPin, currentFoundUser);
+      if (!validOld) {
+        alert('رمز فعلی صحیح نیست.');
+        return;
+      }
+      if (p1.length < 4 || p1 !== p2) {
+        alert('رمز جدید حداقل ۴ کاراکتر و یکسان باشد.');
+        return;
+      }
+
+      showRealLoading('در حال ذخیره...', 'به‌روزرسانی ستون PinHash');
+      const ok = await setPinInDatabaseColumn(accId, p1);
+      await fetchDataFromSupabaseFresh();
+      const refreshed = accountsList.find(u =>
+        String(getVal(u, ['AccountID', 'accountid', 'ID', 'account_id'])).trim().toLowerCase() === accId.toLowerCase()
+      );
+      if (refreshed) currentFoundUser = refreshed;
+      hideRealLoading();
+
+      if (!ok) {
+        alert('خطا در ذخیره رمز.');
+        return;
+      }
+      closeSetPinModal();
+      updatePinMenuLabel(accId);
+      notifyAccountEvent('رمز ثابت تغییر کرد', 'رمز ثابت حساب شما با موفقیت بروزرسانی شد.');
+    }
+
+    function updatePinMenuLabel(accId) {
+      const hasPin = Boolean(getStoredPinHashForAccount(currentFoundUser, accId));
+      document.getElementById('setPinMenuTitle').innerText = hasPin ? 'تغییر رمز ثابت' : 'فعال‌سازی رمز ثابت';
+    }
+
+    function isTxBiometricEnabled() {
+      const saved = localStorage.getItem('karimi_tx_biometric_enabled');
+      if (saved === null) return true;
+      return saved === 'true';
+    }
+
+    function updateBioStatusLabel() {
+      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      document.getElementById('bioStatusSub').innerText = enabled ? 'فعال (اثر انگشت / قفل گوشی)' : 'غیرفعال';
+    }
+
+    function updateTxBioStatusLabel() {
+      const enabled = isTxBiometricEnabled();
+      document.getElementById('txBioStatusSub').innerText = enabled
+        ? 'فعال — تایید با قفل گوشی (رمز ثابت پشتیبان)'
+        : 'غیرفعال — فقط رمز ثابت';
+    }
+
+    function getCapacitorBiometricPlugin() {
+      try {
+        const cap = window.Capacitor;
+        if (!cap) return null;
+        if (cap.Plugins) {
+          return cap.Plugins.NativeBiometric || cap.Plugins.BiometricAuth || cap.Plugins.Biometric || null;
+        }
+        if (typeof cap.registerPlugin === 'function') {
+          return cap.registerPlugin('NativeBiometric');
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    async function triggerBiometricAuth(reasonText = 'تایید هویت با اثر انگشت یا قفل گوشی (PIN / الگو / رمز)') {
+      const bioPlugin = getCapacitorBiometricPlugin();
+      if (bioPlugin) {
+        try {
+          if (typeof bioPlugin.isAvailable === 'function') {
+            await bioPlugin.isAvailable().catch(() => null);
+          }
+          if (typeof bioPlugin.verifyIdentity === 'function') {
+            await bioPlugin.verifyIdentity({
+              reason: reasonText,
+              title: 'امانت‌داری کریمی',
+              subtitle: 'قفل گوشی (اثر انگشت، PIN، الگو یا رمز عبور)',
+              description: reasonText,
+              negativeButtonText: 'رمز ثابت برنامه',
+              useFallback: true,
+              allowDeviceCredential: true,
+              deviceCredentialTitle: 'قفل صفحه گوشی',
+              deviceCredentialSubtitle: 'پین، الگو یا رمز عبور دستگاه را وارد کنید'
+            });
+            return true;
+          }
+          if (typeof bioPlugin.authenticate === 'function') {
+            await bioPlugin.authenticate({
+              reason: reasonText,
+              title: 'امانت‌داری کریمی',
+              allowDeviceCredential: true,
+              fallbackTitle: 'استفاده از قفل گوشی'
+            });
+            return true;
+          }
+        } catch (err) {
+          return false;
+        }
+      }
+
+      try {
+        const bridges = [window.AndroidBridge, window.Android, window.NativeBridge];
+        for (const br of bridges) {
+          if (br && typeof br.requestDeviceAuth === 'function') {
+            const res = br.requestDeviceAuth(reasonText);
+            return Boolean(res);
+          }
+        }
+      } catch (e) {}
+
+      if (window.PublicKeyCredential && navigator.credentials && typeof navigator.credentials.get === 'function') {
+        try {
+          const cred = await navigator.credentials.get({
+            publicKey: {
+              challenge: new Uint8Array([14, 28, 42, 56, 70, 84, 98, 112, 126, 140, 154, 168, 182, 196, 210, 224]),
+              timeout: 60000,
+              userVerification: 'required'
+            }
+          });
+          if (cred) return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    async function loginWithBiometric() {
+      playSound('click');
+      requestExternalNotificationPermission();
+      const bioPhone = localStorage.getItem('karimi_biometric_phone');
+      const bioAccId = localStorage.getItem('karimi_biometric_accId');
+      if (localStorage.getItem('karimi_biometric_enabled') !== 'true' || !bioPhone || !bioAccId) {
+        alert('اثر انگشت فعال نیست.');
+        return;
+      }
+      const ok = await triggerBiometricAuth('ورود به حساب با اثر انگشت یا قفل گوشی');
+      if (!ok) {
+        alert('احراز هویت با قفل گوشی تایید نشد.');
+        return;
+      }
+      showRealLoading('در حال ورود...', 'دریافت اطلاعات');
+      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
+      hideRealLoading();
+      autoLogin(bioPhone, bioAccId, true);
+      subscribeRealtimeAccountEvents(bioAccId);
+      subscribeRealtimeSettings();
+      updateLastSyncLabel();
+    }
+
+    async function confirmEnableBiometric() {
+      playSound('success');
+      const ok = await triggerBiometricAuth('فعال‌سازی اثر انگشت یا قفل گوشی برای حساب');
+      if (!ok) {
+        alert('تایید قفل گوشی انجام نشد.');
+        return;
+      }
+      const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+      const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      localStorage.setItem('karimi_biometric_enabled', 'true');
+      localStorage.setItem('karimi_biometric_phone', phoneVal);
+      localStorage.setItem('karimi_biometric_accId', sheetAccId);
+      if (localStorage.getItem('karimi_tx_biometric_enabled') === null) {
+        localStorage.setItem('karimi_tx_biometric_enabled', 'true');
+      }
+      document.getElementById('biometricPromptModal').classList.add('hidden');
+      updateBioStatusLabel();
+      updateTxBioStatusLabel();
+    }
+
+    function dismissBiometricPrompt() {
+      playSound('click');
+      document.getElementById('biometricPromptModal').classList.add('hidden');
+    }
+
+    async function toggleBiometricSetting() {
+      playSound('click');
+      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
+      if (enabled) {
+        localStorage.setItem('karimi_biometric_enabled', 'false');
+        updateBioStatusLabel();
+      } else {
+        await confirmEnableBiometric();
+      }
+    }
+
+    async function toggleTxBiometricSetting() {
+      playSound('click');
+      const current = isTxBiometricEnabled();
+      if (current) {
+        localStorage.setItem('karimi_tx_biometric_enabled', 'false');
+        updateTxBioStatusLabel();
+      } else {
+        const ok = await triggerBiometricAuth('فعال‌سازی تایید تراکنش با اثر انگشت یا قفل گوشی');
+        if (!ok) {
+          alert('تایید قفل گوشی انجام نشد.');
+          return;
+        }
+        localStorage.setItem('karimi_tx_biometric_enabled', 'true');
+        if (currentFoundUser) {
+          const phoneVal = getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']);
+          const sheetAccId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+          localStorage.setItem('karimi_biometric_enabled', 'true');
+          localStorage.setItem('karimi_biometric_phone', phoneVal);
+          localStorage.setItem('karimi_biometric_accId', sheetAccId);
+        }
+        updateBioStatusLabel();
+        updateTxBioStatusLabel();
+      }
+    }
+
+    function syncProfileTabData() {
+      if (!currentFoundUser) return;
+      document.getElementById('profileFullName').innerText = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
+      document.getElementById('profileCounterpartyName').innerText = resolveCounterpartyName(currentFoundUser);
+      document.getElementById('profileAccIdVal').innerText = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
+      document.getElementById('profilePhoneVal').innerText = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
+      updateBioStatusLabel();
+      updateTxBioStatusLabel();
+      updateNotifModeLabel();
+      updateManagementBadgeUi();
+      updateChargeTransactionsBadge();
     }
 
     function renderTransactionsList() {
-      const container = document.getElementById('transactionsContainer');
-      document.getElementById('txCountBadge').innerText = toEnglishDigits(customerTransactions.length);
+      const homeContainer = document.getElementById('transactionsContainer');
+      document.getElementById('txCountBadge').innerText = `${toEnglishDigits(customerTransactions.length)}`;
 
       if (customerTransactions.length === 0) {
-        container.innerHTML = `<div class="empty-state-box"><div style="font-size:0.88rem; font-weight:800; color:var(--slate-500);">تراکنشی ثبت نشده است</div></div>`;
-        renderChargeTabList();
+        homeContainer.innerHTML = `<div class="empty-state-box"><div style="font-size:0.86rem; font-weight:800; color:var(--slate-500);">تراکنشی ثبت نشده است</div></div>`;
         return;
       }
 
-      const groups = {};
-      const order = [];
-      customerTransactions.forEach((tx, idx) => {
-        const dKey = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
-        if (!groups[dKey]) {
-          groups[dKey] = [];
-          order.push(dKey);
+      const sortedList = sortChronologically(customerTransactions, false);
+      const groups = [];
+      const groupMap = {};
+
+      sortedList.forEach(tx => {
+        const dayKey = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '');
+        if (!groupMap[dayKey]) {
+          groupMap[dayKey] = { date: dayKey, items: [] };
+          groups.push(groupMap[dayKey]);
         }
-        groups[dKey].push({ tx, idx });
+        groupMap[dayKey].items.push(tx);
       });
 
       let html = '';
-      order.forEach(dKey => {
-        const dayName = getPersianDayName(dKey);
-        html += `<div class="day-divider"><span class="eng-num">${dKey}</span><span>${dayName}</span></div>`;
-        groups[dKey].forEach(({ tx, idx }) => {
+      groups.forEach(group => {
+        const dayName = getPersianDayName(group.date);
+        const dayTitle = dayName ? `${dayName} — ${toEnglishDigits(group.date)}` : toEnglishDigits(group.date);
+        html += `<div class="day-divider"><span>${dayTitle}</span><span class="eng-num">${toEnglishDigits(group.items.length)}</span></div>`;
+
+        group.items.forEach(tx => {
+          const tid = String(getVal(tx, ['TransID', 'transid', 'id', 'transaction_id']) || '');
           const dir = String(getVal(tx, ['Direction', 'direction']));
           const isCredit = dir.includes('بستانکار') || dir.includes('دریافت');
           const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
           const opType = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-          const timeStr = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at']));
+          const timeStr = extractTimeOnly(getVal(tx, ['Date', 'date', 'created_at'])) || '';
           const descStr = String(getVal(tx, ['Description', 'description', 'desc']) || '').replaceAll('+', ' ');
           const currStr = getVal(tx, ['Currency', 'currency']) || 'IQD';
-          const statusStr = String(getVal(tx, ['Status', 'status']) || '');
-          const isVerifiedTx = statusStr.includes('تایید') || statusStr.includes('موفق') || opType.includes('کردیت') || opType.includes('شارژ');
-          const badgeClass = isVerifiedTx ? 'verified-green' : (isCredit ? 'credit' : 'debit');
-          const badgeSymbol = isVerifiedTx ? '✓' : (isCredit ? '↓' : '↑');
+
+          const origIdx = tid
+            ? customerTransactions.findIndex(item => String(getVal(item, ['TransID', 'transid', 'id', 'transaction_id'])) === tid)
+            : customerTransactions.indexOf(tx);
 
           html += `
-            <div class="tx-item-row" onclick="openDetailModal(${idx})">
-              <div class="tx-badge-icon ${badgeClass}">${badgeSymbol}</div>
+            <div class="tx-item-row" onclick="openDetailModal(${origIdx >= 0 ? origIdx : 0})">
+              <div class="tx-badge-icon ${(String(getVal(tx, ['Status', 'status']) || '').includes('تایید') || String(getVal(tx, ['Status', 'status']) || '').includes('موفق')) ? 'verified-green' : (isCredit ? 'credit' : 'debit')}">${(String(getVal(tx, ['Status', 'status']) || '').includes('تایید') || String(getVal(tx, ['Status', 'status']) || '').includes('موفق')) ? '✓' : (isCredit ? '↓' : '↑')}</div>
               <div class="tx-main-info">
                 <div class="tx-op-title">${opType}</div>
                 <div class="tx-desc-sub">${descStr}</div>
@@ -5943,324 +6348,169 @@
             </div>`;
         });
       });
-      container.innerHTML = html;
+
+      homeContainer.innerHTML = html;
+      updateChargeTransactionsBadge();
       renderChargeTabList();
     }
 
     function openDetailModal(idx) {
       playSound('click');
-      const tx = customerTransactions[idx];
-      if (!tx || !currentFoundUser) return;
-      showReceiptForTransactionData(tx);
+      selectedTxItem = customerTransactions[idx];
+      if (!selectedTxItem) return;
+      showReceiptForTransactionData(selectedTxItem);
     }
 
     function closeTxDetailModal() {
       playSound('click');
       document.getElementById('txDetailModal').classList.remove('open');
-      selectedTxItem = null;
     }
 
     function shareReceiptToWhatsApp() {
-      if (!selectedTxItem || !currentFoundUser) return;
-      const nameVal = getVal(currentFoundUser, ['Name', 'name', 'fullname']) || '---';
-      const cpName = resolveCounterpartyName(currentFoundUser);
-      const opType = getVal(selectedTxItem, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
-      const amt = formatEnMoney(getVal(selectedTxItem, ['Amount', 'amount', 'value']) || 0);
-      const curr = getVal(selectedTxItem, ['Currency', 'currency']) || 'IQD';
-      const dateStr = extractDateOnly(getVal(selectedTxItem, ['Date', 'date', 'created_at']));
-      const txId = getVal(selectedTxItem, ['TransID', 'transid', 'id', 'transaction_id']) || '---';
-      const descStr = String(getVal(selectedTxItem, ['Description', 'description', 'desc']) || '').replaceAll('+', ' ');
-      const lines = [
-        'امانت‌داری کریمی',
-        `صاحب حساب: ${nameVal}`,
-        `طرف حساب: ${cpName}`,
-        `عملیات: ${opType}`,
-        `مبلغ: ${amt} ${curr}`,
-        `تاریخ: ${dateStr}`,
-        `کد سند: ${txId}`,
-        `شرح: ${descStr}`
-      ];
-      window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank');
-    }
-
-    function getStoredPinForAccount(accId) {
-      return getStoredPinHashForAccount(currentFoundUser, accId);
-    }
-
-    function updatePinMenuLabel(accId) {
-      const hasPin = Boolean(getStoredPinForAccount(accId));
-      const el = document.getElementById('setPinMenuTitle');
-      if (el) el.innerText = hasPin ? 'تغییر رمز ثابت' : 'ایجاد رمز ثابت';
-    }
-
-    async function ensureAccountHasPin(accId) {
-      if (getStoredPinForAccount(accId)) return true;
-      const nameVal = currentFoundUser ? (getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری') : 'مشتری';
-      const enc = encodeURIComponent(`درخواست فعال‌سازی رمز ثابت حساب\nنام: ${nameVal}\nکد حساب: ${accId}`);
-      document.getElementById('legacyActivateWhatsAppBtn').href = `https://wa.me/${OWNER_WHATSAPP}?text=${enc}`;
-      document.getElementById('legacyPinActivationModal').classList.remove('hidden');
-      ensureSentinelHistory();
-      return false;
-    }
-
-    function closeLegacyPinActivationModal() {
       playSound('click');
-      document.getElementById('legacyPinActivationModal').classList.add('hidden');
-    }
+      if (!selectedTxItem) return;
+      const tx = selectedTxItem;
+      const amt = formatEnMoney(getVal(tx, ['Amount', 'amount', 'value']) || 0);
+      const curr = getVal(tx, ['Currency', 'currency']) || 'IQD';
+      const op = getVal(tx, ['OperationType', 'operationtype', 'type']) || 'تراکنش';
+      const tid = getVal(tx, ['TransID', 'transid', 'id']) || '---';
+      const date = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']));
+      const name = getVal(currentFoundUser, ['Name', 'name']) || 'مشتری';
 
-    async function openSetPinModal() {
-      playSound('click');
-      if (!currentFoundUser) return;
-      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const hasPin = Boolean(getStoredPinForAccount(accId));
-      document.getElementById('oldAccountPinInput').value = '';
-      document.getElementById('newAccountPinInput').value = '';
-      document.getElementById('confirmAccountPinInput').value = '';
-      document.getElementById('oldAccountPinInput').parentElement.classList.toggle('hidden', !hasPin);
-      document.getElementById('setPinModal').classList.remove('hidden');
-      ensureSentinelHistory();
-    }
-
-    function closeSetPinModal() {
-      playSound('click');
-      document.getElementById('setPinModal').classList.add('hidden');
-    }
-
-    async function saveAccountPassword() {
-      if (!currentFoundUser) return;
-      const accId = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
-      const existingPin = getStoredPinForAccount(accId);
-      const oldPin = toEnglishDigits(document.getElementById('oldAccountPinInput').value.trim());
-      const newPin = toEnglishDigits(document.getElementById('newAccountPinInput').value.trim());
-      const confPin = toEnglishDigits(document.getElementById('confirmAccountPinInput').value.trim());
-
-      if (existingPin) {
-        const oldOk = await verifyPinAgainstDatabaseColumn(accId, oldPin, currentFoundUser);
-        if (!oldOk) {
-          alert('رمز فعلی صحیح نیست.');
-          return;
-        }
-      }
-
-      if (newPin.length < 6 || !/[a-z]/.test(newPin) || !/[A-Z]/.test(newPin) || !/[0-9]/.test(newPin)) {
-        alert('رمز ثابت باید حداقل ۶ کاراکتر و شامل حروف کوچک، حروف بزرگ و عدد باشد.');
-        return;
-      }
-      if (newPin !== confPin) {
-        alert('رمز و تکرار آن یکسان نیست.');
-        return;
-      }
-
-      showRealLoading('در حال ذخیره رمز...', 'ثبت در ستون PinHash دیتابیس');
-      await initSupabaseFromEnv();
-      const savedOk = await setPinInDatabaseColumn(accId, newPin);
-      if (!savedOk) {
-        hideRealLoading();
-        alert('خطا در ذخیره رمز در ستون PinHash دیتابیس.');
-        return;
-      }
-      await fetchDataFromSupabaseFresh();
-      hideRealLoading();
-
-      playSound('success');
-      updatePinMenuLabel(accId);
-      closeSetPinModal();
-      alert('رمز ثابت شما با موفقیت ثبت شد.');
-    }
-
-    function isTxBiometricEnabled() {
-      const v = localStorage.getItem('karimi_tx_biometric_enabled');
-      if (v === null) return true;
-      return v === 'true';
-    }
-
-    function updateBioStatusLabel() {
-      const enabled = localStorage.getItem('karimi_biometric_enabled') === 'true';
-      const el = document.getElementById('bioStatusSub');
-      if (el) el.innerText = enabled ? 'فعال' : 'غیرفعال';
-    }
-
-    function updateTxBioStatusLabel() {
-      const enabled = isTxBiometricEnabled();
-      const el = document.getElementById('txBioStatusSub');
-      if (el) el.innerText = enabled ? 'فعال — رمز ثابت پشتیبان' : 'غیرفعال — فقط رمز ثابت';
-    }
-
-    async function promptDeviceBiometricAuth(accId, reasonText = 'تایید هویت با قفل گوشی') {
-      const credIdB64 = localStorage.getItem('karimi_webauthn_cred_' + accId);
-      if (window.PublicKeyCredential && credIdB64) {
-        try {
-          const bin = atob(credIdB64);
-          const credIdBytes = new Uint8Array(bin.length);
-          for (let i = 0; i < bin.length; i++) credIdBytes[i] = bin.charCodeAt(i);
-          const challenge = new Uint8Array(32);
-          window.crypto.getRandomValues(challenge);
-          const assertion = await navigator.credentials.get({
-            publicKey: {
-              challenge,
-              allowCredentials: [{ id: credIdBytes, type: 'public-key' }],
-              userVerification: 'required',
-              timeout: 45000
-            }
-          });
-          if (assertion) return true;
-        } catch (e) {
-          return false;
-        }
-      }
-      return false;
-    }
-
-    async function enrollDeviceBiometric(accId) {
-      if (window.PublicKeyCredential && window.crypto) {
-        try {
-          const challenge = new Uint8Array(32);
-          window.crypto.getRandomValues(challenge);
-          const userId = new Uint8Array(16);
-          window.crypto.getRandomValues(userId);
-          const pubKey = await navigator.credentials.create({
-            publicKey: {
-              challenge,
-              rp: { name: 'امانت‌داری کریمی' },
-              user: {
-                id: userId,
-                name: accId || 'customer',
-                displayName: accId || 'customer'
-              },
-              pubKeyCredParams: [{ alg: -7, type: 'public-key' }, { alg: -257, type: 'public-key' }],
-              authenticatorSelection: {
-                authenticatorAttachment: 'platform',
-                userVerification: 'required'
-              },
-              timeout: 45000
-            }
-          });
-          if (pubKey && pubKey.rawId) {
-            const bytes = new Uint8Array(pubKey.rawId);
-            let bin = '';
-            for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-            localStorage.setItem('karimi_webauthn_cred_' + accId, btoa(bin));
-            return true;
-          }
-        } catch (e) {}
-      }
-      return false;
-    }
-
-    async function toggleBiometricSetting() {
-      playSound('click');
-      const cur = localStorage.getItem('karimi_biometric_enabled') === 'true';
-      if (cur) {
-        localStorage.setItem('karimi_biometric_enabled', 'false');
-        updateBioStatusLabel();
-        document.getElementById('biometricBtnWrapper').classList.add('hidden');
-      } else {
-        const accId = localStorage.getItem('karimi_accId') || (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
-        const enrolled = await enrollDeviceBiometric(accId);
-        if (!enrolled) {
-          alert('اثر انگشت یا قفل بیومتریک روی این دستگاه/مرورگر در دسترس نیست یا لغو شد.');
-          return;
-        }
-        localStorage.setItem('karimi_biometric_enabled', 'true');
-        updateBioStatusLabel();
-      }
-    }
-
-    async function toggleTxBiometricSetting() {
-      playSound('click');
-      const cur = isTxBiometricEnabled();
-      if (cur) {
-        localStorage.setItem('karimi_tx_biometric_enabled', 'false');
-        updateTxBioStatusLabel();
-      } else {
-        const accId = localStorage.getItem('karimi_accId') || (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
-        const enrolled = await enrollDeviceBiometric(accId);
-        if (!enrolled) {
-          alert('تایید بیومتریک روی این دستگاه در دسترس نیست یا لغو شد.');
-          return;
-        }
-        localStorage.setItem('karimi_tx_biometric_enabled', 'true');
-        updateTxBioStatusLabel();
-      }
-    }
-
-    async function confirmEnableBiometric() {
-      playSound('click');
-      const accId = localStorage.getItem('karimi_accId') || (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
-      const enrolled = await enrollDeviceBiometric(accId);
-      if (!enrolled) {
-        alert('فعال‌سازی اثر انگشت/قفل گوشی روی این دستگاه انجام نشد.');
-        return;
-      }
-      localStorage.setItem('karimi_biometric_enabled', 'true');
-      localStorage.setItem('karimi_tx_biometric_enabled', 'true');
-      document.getElementById('biometricPromptModal').classList.add('hidden');
-      updateBioStatusLabel();
-      updateTxBioStatusLabel();
-    }
-
-    function dismissBiometricPrompt() {
-      playSound('click');
-      localStorage.setItem('karimi_biometric_enabled', 'false');
-      document.getElementById('biometricPromptModal').classList.add('hidden');
-      updateBioStatusLabel();
-    }
-
-    async function loginWithBiometric() {
-      playSound('click');
-      const savedPhone = localStorage.getItem('karimi_phone');
-      const savedAccId = localStorage.getItem('karimi_accId');
-      if (!savedPhone || !savedAccId) return;
-      const ok = await promptDeviceBiometricAuth(savedAccId, 'ورود سریع به حساب');
-      if (!ok) {
-        alert('احراز هویت با اثر انگشت/قفل گوشی انجام نشد. لطفاً با شماره و رمز ثابت وارد شوید.');
-        return;
-      }
-      showRealLoading('در حال ورود...', 'احراز هویت موفق');
-      await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
-      hideRealLoading();
-      autoLogin(savedPhone, savedAccId, true);
-      subscribeRealtimeAccountEvents(savedAccId);
-      subscribeRealtimeSettings();
+      const msg = `امانت‌داری کریمی\nنام: ${name}\nعملیات: ${op}\nمبلغ: ${amt} ${curr}\nسند: ${tid}\nتاریخ: ${date}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function openChargeAccountModal() {
       playSound('click');
-      const accId = currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim() : (localStorage.getItem('karimi_accId') || '---');
-      const accName = currentFoundUser ? String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim() : 'مشتری';
       const phoneEl = document.getElementById('chargeAccAdminPhone');
       const waBtn = document.getElementById('chargeAccountWhatsAppBtn');
       if (phoneEl) phoneEl.innerText = OWNER_WHATSAPP;
+
+      const accName = currentFoundUser ? (getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری') : 'مشتری';
+      const accId = currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim() : (localStorage.getItem('karimi_accId') || '---');
+      const accPhone = currentFoundUser ? toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '') : (localStorage.getItem('karimi_phone') || '');
+      const msg = `درخواست شارژ کردن حساب — امانت‌داری کریمی
+نام: ${accName}
+کد حساب: ${accId}
+شماره: ${accPhone || '---'}
+توضیح: لطفاً نحوه واریز وجه از طریق فرد دارای حساب یا هماهنگی شارژ حساب را اعلام فرمایید.`;
+
       if (waBtn) {
-        const msg = `سلام ادمین، درخواست شارژ حساب در امانت‌داری کریمی را دارم.\nنام: ${accName}\nکد حساب: ${accId}`;
         waBtn.href = `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msg)}`;
       }
-      document.getElementById('chargeAccountModal')?.classList.remove('hidden');
+      const modal = document.getElementById('chargeAccountModal');
+      if (modal) modal.classList.remove('hidden');
       ensureSentinelHistory();
     }
 
     function closeChargeAccountModal() {
       playSound('click');
-      document.getElementById('chargeAccountModal')?.classList.add('hidden');
+      const modal = document.getElementById('chargeAccountModal');
+      if (modal) modal.classList.add('hidden');
     }
 
-    function syncProfileTabData() {
-      if (!currentFoundUser) return;
-      const rawName = String(getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const phoneVal = toEnglishDigits(getVal(currentFoundUser, ['Phone', 'phone', 'تلفن']) || '---');
-      const accIdVal = String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '---').trim();
-      const cpName = resolveCounterpartyName(currentFoundUser);
-      document.getElementById('profileAvatarLetter').innerText = rawName.charAt(0) || 'م';
-      document.getElementById('profileFullName').innerText = rawName;
-      document.getElementById('profileCounterpartyName').innerText = cpName;
-      document.getElementById('profileAccIdVal').innerText = accIdVal;
-      document.getElementById('profilePhoneVal').innerText = phoneVal;
-      updatePinMenuLabel(accIdVal);
-      updateBioStatusLabel();
-      updateTxBioStatusLabel();
-      updateNotifModeLabel();
-      updateManagementBadgeUi();
-      updateCreditWalletUi();
+    function parseAfnAmountFromTx(tx) {
+      const desc = String(getVal(tx, ['Description', 'description', 'desc']) || '');
+      const matchAfn = toEnglishDigits(desc).match(/مبلغ\s*([0-9,.]+)\s*AFN/i);
+      if (matchAfn && matchAfn[1]) {
+        const n = parseFloat(matchAfn[1].replace(/,/g, ''));
+        if (!isNaN(n) && n > 0) return n;
+      }
+      const curr = String(getVal(tx, ['Currency', 'currency']) || '').toUpperCase();
+      const amt = parseFloat(getVal(tx, ['Amount', 'amount', 'value'])) || 0;
+      if (curr === 'AFN') return amt > 0 ? amt : 0;
+      if (curr === 'IQD' && amt > 0) {
+        const rate = getAfnExchangeRate();
+        return rate > 0 ? Math.round((amt / rate) * 100) / 100 : amt;
+      }
+      return 0;
+    }
+
+    function renderAdminAfnReports() {
+      const stockInput = document.getElementById('mgmtAfnCompanyStockInput');
+      const totalSalesEl = document.getElementById('mgmtTotalSalesAfn');
+      const todaySalesEl = document.getElementById('mgmtTodaySalesAfn');
+      const remStockEl = document.getElementById('mgmtRemainingStockAfn');
+      const statusEl = document.getElementById('mgmtStockStatusAfn');
+      const buyersBox = document.getElementById('mgmtBuyersListBox');
+      const nonBuyersBox = document.getElementById('mgmtNonBuyersListBox');
+      if (!totalSalesEl || !todaySalesEl || !remStockEl || !buyersBox || !nonBuyersBox) return;
+
+      const initialStock = parseFloat(toEnglishDigits(stockInput ? stockInput.value : '50000')) || 0;
+      const todayStr = extractDateOnly(new Date().toISOString());
+
+      let totalSalesAfn = 0;
+      let todaySalesAfn = 0;
+      const buyerTotalsByAcc = {};
+
+      transactionsList.forEach(tx => {
+        const op = String(getVal(tx, ['OperationType', 'operationtype', 'type']) || '').trim();
+        const isTopup = isChargeTransaction(tx) || op.includes('شارژ') || op.includes('کردیت');
+        if (!isTopup) return;
+        const afnVal = parseAfnAmountFromTx(tx);
+        if (afnVal <= 0) return;
+
+        totalSalesAfn += afnVal;
+        const txDate = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at', 'CreatedAt']) || '');
+        if (txDate === todayStr) {
+          todaySalesAfn += afnVal;
+        }
+        const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        if (accId) {
+          buyerTotalsByAcc[accId.toLowerCase()] = (buyerTotalsByAcc[accId.toLowerCase()] || 0) + afnVal;
+        }
+      });
+
+      const remStock = initialStock - totalSalesAfn;
+      totalSalesEl.innerText = `${formatEnMoney(Math.round(totalSalesAfn * 100) / 100)} AFN`;
+      todaySalesEl.innerText = `${formatEnMoney(Math.round(todaySalesAfn * 100) / 100)} AFN`;
+      remStockEl.innerText = `${formatEnMoney(Math.round(remStock * 100) / 100)} AFN`;
+
+      if (statusEl) {
+        if (remStock <= 0) {
+          statusEl.innerText = 'اتمام شارژ شرکت';
+          statusEl.style.color = 'var(--danger)';
+        } else if (initialStock > 0 && remStock <= initialStock * 0.15) {
+          statusEl.innerText = 'شارژ شرکت رو به اتمام';
+          statusEl.style.color = 'var(--warning)';
+        } else {
+          statusEl.innerText = 'شارژ شرکت در دسترس';
+          statusEl.style.color = 'var(--emerald-800)';
+        }
+      }
+
+      const buyers = [];
+      const nonBuyers = [];
+      accountsList.forEach(acc => {
+        const accId = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
+        if (!accId) return;
+        const accName = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
+        const sumAfn = buyerTotalsByAcc[accId.toLowerCase()] || 0;
+        if (sumAfn > 0) {
+          buyers.push({ accId, accName, sumAfn });
+        } else {
+          nonBuyers.push({ accId, accName });
+        }
+      });
+
+      buyers.sort((a, b) => b.sumAfn - a.sumAfn);
+
+      if (buyers.length === 0) {
+        buyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">هنوز خریدی ثبت نشده است.</div>';
+      } else {
+        buyersBox.innerHTML = buyers.map(b =>
+          `<div class="admin-mini-item"><span>${b.accName} (<span class="eng-num">${b.accId}</span>)</span><strong class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(Math.round(b.sumAfn * 100) / 100)} AFN</strong></div>`
+        ).join('');
+      }
+
+      if (nonBuyers.length === 0) {
+        nonBuyersBox.innerHTML = '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
+      } else {
+        nonBuyersBox.innerHTML = nonBuyers.map(nb =>
+          `<div class="admin-mini-item"><span>${nb.accName} (<span class="eng-num">${nb.accId}</span>)</span><span style="color:var(--slate-500);">بدون خرید</span></div>`
+        ).join('');
+      }
     }
 
     async function adminResetAndGenerateAccountPin() {
@@ -6270,15 +6520,15 @@
         return;
       }
       const queryRaw = toEnglishDigits((document.getElementById('mgmtResetAccOrPhoneInput')?.value || '').trim());
-      const customPinRaw = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
-      const resBox = document.getElementById('mgmtGeneratedPinResult');
+      const customPin = toEnglishDigits((document.getElementById('mgmtCustomOrGeneratedPinInput')?.value || '').trim());
+      const resEl = document.getElementById('mgmtGeneratedPinResult');
 
       if (!queryRaw) {
-        alert('کد حساب (Account ID) یا شماره تماس طرف را وارد کنید.');
+        alert('شناسه حساب (Account ID) یا شماره تماس مشتری را وارد کنید.');
         return;
       }
 
-      showRealLoading('در حال ریست و تولید رمز...', 'بروزرسانی ستون PinHash در جدول accounts');
+      showRealLoading('در حال ریست و تولید رمز...', 'جستجو و به‌روزرسانی ستون PinHash در دیتابیس');
       await fetchDataFromSupabaseFresh();
 
       const qLower = queryRaw.toLowerCase();
@@ -6297,122 +6547,22 @@
 
       const targetAccId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
       const targetName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری').trim();
-      const generatedPin = customPinRaw || ('Kr' + Math.floor(100000 + Math.random() * 900000));
+      const newPinValue = customPin || String(Math.floor(100000 + Math.random() * 900000));
 
-      const saved = await setPinInDatabaseColumn(targetAccId, generatedPin);
+      const savedOk = await setPinInDatabaseColumn(targetAccId, newPinValue);
       await fetchDataFromSupabaseFresh();
       hideRealLoading();
 
-      if (!saved) {
-        alert('خطا در ذخیره رمز جدید در ستون PinHash حساب.');
+      if (!savedOk) {
+        alert('خطا در ذخیره رمز جدید در ستون PinHash دیتابیس.');
         return;
       }
 
+      if (resEl) {
+        resEl.innerText = `حساب: ${targetName} (${targetAccId}) | رمز جدید: ${newPinValue}`;
+      }
       playSound('success');
-      const infoText = `${targetName} (${targetAccId}) — رمز جدید: ${generatedPin}`;
-      if (resBox) resBox.innerText = infoText;
-      navigator.clipboard?.writeText(generatedPin).catch(() => {});
-      alert(`رمز جدید تولید و در ستون PinHash ذخیره شد:\n${infoText}`);
-    }
-
-    function renderAdminAfnReports() {
-      const totalStock = parseFloat(toEnglishDigits(document.getElementById('mgmtAfnCompanyStockInput')?.value || '50000')) || 0;
-      const rate = getAfnExchangeRate();
-      const todayStr = new Date().toISOString().slice(0, 10);
-
-      let totalSoldAfn = 0;
-      let todaySoldAfn = 0;
-      const buyerTotals = {};
-
-      transactionsList.forEach(tx => {
-        const accId = String(getVal(tx, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-        const op = String(getVal(tx, ['OperationType', 'operationtype', 'type']) || '').trim();
-        const desc = String(getVal(tx, ['Description', 'description', 'desc']) || '').trim();
-        const dt = extractDateOnly(getVal(tx, ['Date', 'date', 'created_at']) || '');
-        const amt = parseFloat(toEnglishDigits(getVal(tx, ['Amount', 'amount', 'value']) || 0)) || 0;
-        const curr = String(getVal(tx, ['Currency', 'currency']) || '').trim().toUpperCase();
-
-        const isAfnPurchase = op.includes('کردیت') || op.toLowerCase().includes('afn') || desc.includes('AFN');
-        if (!isAfnPurchase || amt <= 0) return;
-
-        let afnSold = 0;
-        if (curr === 'AFN') {
-          afnSold = amt;
-        } else {
-          const afnMatch = toEnglishDigits(desc).match(/(\d+(?:\.\d+)?)\s*AFN/i);
-          if (afnMatch) {
-            afnSold = parseFloat(afnMatch[1]) || 0;
-          } else if (curr === 'IQD' && rate > 0) {
-            afnSold = Math.round((amt / rate) * 100) / 100;
-          }
-        }
-
-        if (afnSold > 0) {
-          totalSoldAfn += afnSold;
-          if (dt === todayStr) todaySoldAfn += afnSold;
-          if (accId) {
-            buyerTotals[accId] = (buyerTotals[accId] || 0) + afnSold;
-          }
-        }
-      });
-
-      const remStock = Math.max(0, totalStock - totalSoldAfn);
-      const totalEl = document.getElementById('mgmtTotalSalesAfn');
-      const todayEl = document.getElementById('mgmtTodaySalesAfn');
-      const remEl = document.getElementById('mgmtRemainingStockAfn');
-      const statusEl = document.getElementById('mgmtStockStatusAfn');
-
-      if (totalEl) totalEl.innerText = `${formatEnMoney(totalSoldAfn)} AFN`;
-      if (todayEl) todayEl.innerText = `${formatEnMoney(todaySoldAfn)} AFN`;
-      if (remEl) remEl.innerText = `${formatEnMoney(remStock)} AFN`;
-      if (statusEl) {
-        statusEl.innerText = remStock <= 0 ? 'تمام شده' : (remStock < 5000 ? 'رو به اتمام' : 'در دسترس');
-        statusEl.style.color = remStock <= 0 ? 'var(--danger)' : (remStock < 5000 ? 'var(--warning)' : 'var(--emerald-950)');
-      }
-
-      const buyersBox = document.getElementById('mgmtBuyersListBox');
-      const nonBuyersBox = document.getElementById('mgmtNonBuyersListBox');
-
-      const buyersArr = [];
-      const nonBuyersArr = [];
-
-      accountsList.forEach(acc => {
-        const aid = String(getVal(acc, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim();
-        const aname = String(getVal(acc, ['Name', 'name', 'fullname']) || 'بدون نام').trim();
-        if (!aid) return;
-        const boughtAfn = buyerTotals[aid] || 0;
-        if (boughtAfn > 0) {
-          buyersArr.push({ aid, aname, boughtAfn });
-        } else {
-          nonBuyersArr.push({ aid, aname });
-        }
-      });
-
-      if (buyersBox) {
-        buyersBox.innerHTML = buyersArr.length
-          ? buyersArr.map(b => `<div class="admin-mini-item"><span><b>${b.aname}</b> (${b.aid})</span><strong class="eng-num" style="color:var(--emerald-800);">${formatEnMoney(b.boughtAfn)} AFN</strong></div>`).join('')
-          : '<div style="font-size:0.7rem; color:var(--slate-500);">هیچ حسابی خرید کردیت نداشته است.</div>';
-      }
-
-      if (nonBuyersBox) {
-        nonBuyersBox.innerHTML = nonBuyersArr.length
-          ? nonBuyersArr.map(nb => `<div class="admin-mini-item"><span><b>${nb.aname}</b> (${nb.aid})</span><span style="color:var(--slate-500);">بدون خرید</span></div>`).join('')
-          : '<div style="font-size:0.7rem; color:var(--slate-500);">همه حساب‌ها خرید داشته‌اند.</div>';
-      }
-    }
-
-    async function mandatoryRefreshBeforeForm(mode) {
-      playSound('click');
-      const accId = localStorage.getItem('karimi_accId') ||
-        (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
-      if (!accId) return;
-      await forceSyncBeforeOperation(accId);
-      if (mode === 'afn') {
-        await refreshCreditWalletData(true);
-      }
-      mandatorySyncCompletedForMode[mode] = true;
-      updateMandatoryBannerUi();
-      playSound('success');
+      alert(`رمز حساب ${targetName} (${targetAccId}) با موفقیت ریست و ذخیره شد.\nرمز جدید: ${newPinValue}`);
     }
   </script>
 </body>
