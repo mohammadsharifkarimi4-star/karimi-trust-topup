@@ -6713,16 +6713,32 @@
 </html>
 <script>
 (function () {
+  function findSupabaseClient() {
+    const candidates = [
+      window.supabaseClient,
+      window.sb,
+      window.supabase
+    ];
+    for (const c of candidates) {
+      if (c && typeof c.from === 'function') return c;
+    }
+    for (const key of Object.keys(window)) {
+      try {
+        const val = window[key];
+        if (val && typeof val === 'object' && typeof val.from === 'function' && typeof val.auth === 'object') {
+          return val;
+        }
+      } catch (_) {}
+    }
+    return null;
+  }
+
   async function syncAppNoticeFromSupabase() {
     const targetEl = document.getElementById('homeAnnouncementText');
     if (!targetEl) return;
 
-    const client =
-      window.supabaseClient ||
-      window.sb ||
-      window.supabase;
-
-    if (!client || typeof client.from !== 'function') return;
+    const client = findSupabaseClient();
+    if (!client) return;
 
     try {
       const { data, error } = await client
@@ -6739,11 +6755,20 @@
     } catch (_) {}
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', syncAppNoticeFromSupabase);
-  } else {
+  function runWithRetry() {
     syncAppNoticeFromSupabase();
+    setTimeout(syncAppNoticeFromSupabase, 800);
+    setTimeout(syncAppNoticeFromSupabase, 2000);
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runWithRetry);
+  } else {
+    runWithRetry();
+  }
+  window.addEventListener('load', runWithRetry);
+})();
+</script>
   window.addEventListener('load', syncAppNoticeFromSupabase);
 })();
 </script>
