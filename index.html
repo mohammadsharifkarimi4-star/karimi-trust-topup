@@ -5629,8 +5629,14 @@
         alert('شارژ عراق در تنظیمات غیرفعال است.');
         return;
       }
+      showRealLoading('در حال انجام شارژ...', 'ثبت تراکنش و بروزرسانی موجودی');
+      const prevIds = getUserTransactionIds(payload.accId);
+      const nowIso = new Date().toISOString();
+      const txId = 'TP-' + Math.floor(100000 + Math.random() * 900000);
+      const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
+
       if (payload.mode === 'afn') {
-        showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط با شرکت سرویس‌دهنده');
+        showRealLoading('در حال ارسال کردیت...', 'تشخیص خودکار شبکه و ارتباط سخت‌گیرانه با شرکت سرویس‌دهنده');
         const detectedOp = detectAfnOperatorFromPhone(payload.targetPhone);
         if (!detectedOp) {
           hideRealLoading();
@@ -5690,25 +5696,19 @@
           return bodyFallback ? `${stagePrefix}${httpPart} | ${bodyFallback}` : `${stagePrefix}${httpPart}`;
         }
 
-        function evaluateProviderResponse(respObj, parsedJson, fallbackTxId) {
+        function evaluateStrictProviderSuccess(respObj, parsedJson) {
           if (!respObj || !respObj.ok) {
             return { confirmed: false, txCode: '', companyMsg: '' };
           }
           if (!parsedJson || typeof parsedJson !== 'object') {
             return { confirmed: false, txCode: '', companyMsg: '' };
           }
-
-          const rawMsg = (
-            parsedJson.company_message ||
-            parsedJson.execute_company_message ||
-            parsedJson.initiate_company_message ||
-            parsedJson.message ||
-            parsedJson.msg ||
-            (parsedJson.raw && (parsedJson.raw.company_message || parsedJson.raw.msg || parsedJson.raw.message)) ||
-            (parsedJson.execute_raw && (parsedJson.execute_raw.msg || parsedJson.execute_raw.message)) ||
-            ''
-          );
-          const companyMsgStr = typeof rawMsg === 'string' ? rawMsg.trim() : (rawMsg ? JSON.stringify(rawMsg) : '');
+          if (parsedJson.ok !== true) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+          if (parsedJson.success === false || parsedJson.failed === true || parsedJson.error) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
 
           const statusNorm = String(
             parsedJson.status ||
@@ -5720,32 +5720,7 @@
 
           const negativeStatuses = ['failed', 'fail', 'error', 'rejected', 'declined', 'denied', 'cancelled', 'canceled', 'invalid', 'timeout', 'expired', 'reversed'];
           if (statusNorm && negativeStatuses.includes(statusNorm)) {
-            return { confirmed: false, txCode: '', companyMsg: companyMsgStr };
-          }
-
-          const explicitFail = (
-            parsedJson.ok === false ||
-            String(parsedJson.ok || '').trim().toLowerCase() === 'false' ||
-            parsedJson.success === false ||
-            String(parsedJson.success || '').trim().toLowerCase() === 'false' ||
-            parsedJson.failed === true ||
-            Boolean(parsedJson.error)
-          );
-          if (explicitFail) {
-            return { confirmed: false, txCode: '', companyMsg: companyMsgStr };
-          }
-
-          const positiveStatuses = ['success', 'succeeded', 'ok', 'completed', 'complete', 'approved', 'accepted', 'done', 'sent', 'delivered', 'true', '1'];
-          const hasPositiveFlag = (
-            parsedJson.ok === true ||
-            String(parsedJson.ok || '').trim().toLowerCase() === 'true' ||
-            parsedJson.success === true ||
-            String(parsedJson.success || '').trim().toLowerCase() === 'true' ||
-            positiveStatuses.includes(statusNorm)
-          );
-
-          if (!hasPositiveFlag) {
-            return { confirmed: false, txCode: '', companyMsg: companyMsgStr };
+            return { confirmed: false, txCode: '', companyMsg: '' };
           }
 
           const rawTxCode = (
@@ -5755,10 +5730,21 @@
             parsedJson.ref ||
             parsedJson.id ||
             (parsedJson.raw && (parsedJson.raw.txid || parsedJson.raw.reference_id || parsedJson.raw.tracking_code || parsedJson.raw.ref || parsedJson.raw.id)) ||
-            (parsedJson.execute_raw && (parsedJson.execute_raw.txid || parsedJson.execute_raw.reference_id || parsedJson.execute_raw.id)) ||
             ''
           );
-          const txCodeStr = String(rawTxCode || '').trim() || fallbackTxId;
+          const txCodeStr = String(rawTxCode || '').trim();
+          if (!txCodeStr) {
+            return { confirmed: false, txCode: '', companyMsg: '' };
+          }
+
+          const rawMsg = (
+            parsedJson.company_message ||
+            parsedJson.message ||
+            parsedJson.msg ||
+            (parsedJson.raw && (parsedJson.raw.company_message || parsedJson.raw.msg || parsedJson.raw.message)) ||
+            ''
+          );
+          const companyMsgStr = typeof rawMsg === 'string' ? rawMsg.trim() : (rawMsg ? JSON.stringify(rawMsg) : '');
 
           return { confirmed: true, txCode: txCodeStr, companyMsg: companyMsgStr };
         }
@@ -5789,7 +5775,7 @@
             json = null;
           }
 
-          const verdict = evaluateProviderResponse(resp, json, txId);
+          const verdict = evaluateStrictProviderSuccess(resp, json);
           if (verdict.confirmed) {
             apiOk = true;
             apiRef = verdict.txCode;
@@ -5826,7 +5812,7 @@
           return;
         }
 
-        const companyRespNote = payload.companyResponse ? ` | پاسخ رسمی شرکت: ${payload.companyResponse}` : '';
+        const companyRespNote = payload.companyResponse ? ` | پاسخ شرکت: ${payload.companyResponse}` : '';
         const officialAfnDesc = `رسید رسمی ارسال کردیت افغانستان (از کیف پول کردیت ${wId}) — صاحب حساب: ${payload.accName} | مبلغ ${formatEnMoney(payload.afnAmt)} AFN (معادل ${formatEnMoney(payload.requiredIqd)} IQD) به شماره ${payload.targetPhone} (${resolvedNetwork}) با کد پیگیری ${apiRef} موفقانه ارسال شد.${companyRespNote}`;
 
         const cwInsertRes = await insertCreditWalletTxRow({
@@ -5880,7 +5866,8 @@
           notifyAccountEvent('ارسال کردیت انجام شد', `کد پیگیری: ${apiRef}`);
         }
         showReceiptForTransactionData(afnTxRow);
-      } else { || Number(payload.cardAmt) || 0;
+      } else {
+        const iqChargeAmt = Number(payload.chargeAmt ?? payload.cardAmt) || Number(payload.cardAmt) || 0;
         const iqCardAmt = Number(payload.cardAmt) || iqChargeAmt;
         const apiResult = await callExternalTopupApi({
           txId,
