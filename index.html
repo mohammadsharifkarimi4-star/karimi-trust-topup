@@ -432,7 +432,7 @@
 
     .quick-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 6px;
     }
 
@@ -763,7 +763,7 @@
       border-top: 1.5px solid #cbd5e1;
       padding: 6px 8px calc(8px + env(safe-area-inset-bottom)) 8px;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 4px;
       z-index: 2000;
       box-shadow: var(--shadow-nav);
@@ -1429,9 +1429,9 @@
           <div class="wallet-hero-card">
             <div class="wallet-top-meta">
               <span class="wallet-badge">موجودی حساب</span>
-              <button type="button" class="eye-toggle-btn" onclick="toggleBalanceVisibility()">
+              <div style="display:flex; align-items:center; gap:6px;"><button type="button" class="mini-copy-btn" onclick="openChargeAccountModal()">💳 شارژ حساب</button><button type="button" class="eye-toggle-btn" onclick="toggleBalanceVisibility()">
                 <span id="eyeToggleIcon">👁️</span>
-              </button>
+              </button></div>
             </div>
 
             <div class="wallet-balance-row">
@@ -1467,7 +1467,7 @@
             </div>
             <div class="credit-wallet-balance-row">
               <div>
-                <span class="wallet-balance-label">موجودی کیف کردیت (همیشه ≥ ۰)</span>
+                <span class="wallet-balance-label">موجودی کیف کردیت</span>
                 <div id="creditWalletBalanceDisplay" class="credit-wallet-balance-val eng-num">0</div>
               </div>
               <span class="wallet-currency-chip eng-num">IQD</span>
@@ -1479,40 +1479,13 @@
             <div class="credit-wallet-actions">
               <button type="button" class="credit-wallet-act-btn primary-cw" onclick="openCreditWalletModal('from_main')">از حساب به کیف</button>
               <button type="button" class="credit-wallet-act-btn" onclick="openCreditWalletModal('wallet_transfer')">ارسال بین کیف‌ها</button>
-              <button type="button" class="credit-wallet-act-btn" onclick="openCreditWalletModal('tx_history')">تراکنش‌های کیف</button>
+              <button type="button" class="credit-wallet-act-btn" onclick="switchBottomTab('wallet_tx')">تراکنش‌های کیف</button>
             </div>
           </div>
 
           <div class="currency-switcher" id="currencyTabs"></div>
 
-          <div class="quick-grid-card">
-            <div class="section-heading-row">
-              <h3>دسترسی سریع</h3>
-              <span id="lastSyncTimeText">آماده</span>
-            </div>
-            <div class="quick-grid" style="grid-template-columns: repeat(5, 1fr);">
-              <button type="button" class="quick-tile" id="qTileTransfer" onclick="openServiceForm('transfer')">
-                <div class="quick-icon-box">⇄</div>
-                <span class="quick-label">انتقال موجودی</span>
-              </button>
-              <button type="button" class="quick-tile" id="qTileAfn" onclick="openServiceForm('afn')">
-                <div class="quick-icon-box">📲</div>
-                <span class="quick-label">ارسال کردیت</span>
-              </button>
-              <button type="button" class="quick-tile" id="qTileIq" onclick="openServiceForm('iq')">
-                <div class="quick-icon-box">🇮🇶</div>
-                <span class="quick-label">شارژ عراق</span>
-              </button>
-              <button type="button" class="quick-tile" id="qTileChargeAcc" onclick="openChargeAccountModal()">
-                <div class="quick-icon-box">💳</div>
-                <span class="quick-label">شارژ کردن حساب</span>
-              </button>
-              <button type="button" class="quick-tile" id="qTileTxQuick" onclick="switchBottomTab('tx')">
-                <div class="quick-icon-box">🧾</div>
-                <span class="quick-label">تراکنش‌ها</span>
-              </button>
-            </div>
-          </div>
+          
 
           <div class="admin-notice-card" id="homeAnnouncementCard">
             <div class="admin-notice-badge">📢 اطلاعیه و راهنمای مشتریان</div>
@@ -1522,30 +1495,25 @@
           </div>
         </div>
 
-        <!-- تب ۲: تراکنش‌ها و تراکنش‌های شارژ در پایین -->
+        <!-- تب ۲: تراکنش‌های حساب -->
         <div id="tabTxView" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
           <div class="tx-feed-card">
             <div class="tx-feed-head">
-              <span style="font-size:0.88rem; font-weight:900; color:var(--slate-900);">تراکنش‌ها</span>
+              <span style="font-size:0.88rem; font-weight:900; color:var(--slate-900);">تراکنش‌های حساب</span>
               <span id="txCountBadge" class="eng-num" style="font-size:0.72rem; background:var(--emerald-50); color:var(--emerald-800); border:1px solid #a7f3d0; padding:2px 8px; border-radius:8px; font-weight:800;">0</span>
             </div>
             <div id="transactionsContainer"></div>
           </div>
+        </div>
 
+        <!-- تب مجزا: تراکنش‌های کیف پول -->
+        <div id="tabWalletTxView" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
           <div class="tx-feed-card" id="bottomCreditWalletMenuSection">
             <div class="tx-feed-head" style="background:#f0fdf4; border-bottom-color:#86efac;">
-              <span style="font-size:0.88rem; font-weight:900; color:#065f46;">💳 تراکنش‌های کیف پول کردیت</span>
+              <span style="font-size:0.88rem; font-weight:900; color:#065f46;">💳 تراکنش‌های کیف پول</span>
               <span id="bottomCreditWalletTxCount" class="eng-num" style="font-size:0.72rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:2px 8px; border-radius:8px; font-weight:900;">0</span>
             </div>
             <div id="bottomCreditWalletTxList" style="padding:8px 12px;"></div>
-          </div>
-
-          <div class="tx-feed-card" id="bottomChargeTxSection">
-            <div class="tx-feed-head" style="background:#ecfdf5; border-bottom-color:#a7f3d0;">
-              <span style="font-size:0.88rem; font-weight:900; color:#065f46;">📲 تراکنش‌های شارژ رسمی</span>
-              <span id="chargeTabCountBadge" class="eng-num" style="font-size:0.72rem; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:2px 8px; border-radius:8px; font-weight:900;">0</span>
-            </div>
-            <div id="chargeTabTransactionsContainer"></div>
           </div>
         </div>
 
@@ -1571,19 +1539,19 @@
 
           <div id="serviceEmptyPlaceholder" class="launch-hub-card">
             <div class="launch-hub-header">
-              <h4>انتخاب و باز کردن فرم عملیات</h4>
-              <span>فرم بسته است</span>
+              <h4>انتخاب عملیات انتقال و شارژ</h4>
+              <span>آماده انتخاب</span>
             </div>
             <div class="three-option-menu">
               <button type="button" class="fancy-menu-option" id="srvMenuOptTransfer" onclick="openServiceForm('transfer')">
                 <div class="fancy-opt-left">
                   <div class="fancy-opt-badge">⇄</div>
                   <div>
-                    <span class="fancy-opt-title">فرم انتقال موجودی</span>
+                    <span class="fancy-opt-title">انتقال موجودی</span>
                     <span class="fancy-opt-sub">انتقال موجودی از طریق اکانت آیدی و تایید پین</span>
                   </div>
                 </div>
-                <span class="fancy-opt-cta">باز کردن فرم</span>
+                <span class="fancy-opt-cta">انتخاب</span>
               </button>
 
               <button type="button" class="fancy-menu-option" id="srvMenuOptAfn" onclick="openServiceForm('afn')">
@@ -1594,7 +1562,7 @@
                     <span class="fancy-opt-sub">ارسال مستقیم کردیت (فقط کردیت؛ بدون بسته‌های اینترنت و تماس)</span>
                   </div>
                 </div>
-                <span class="fancy-opt-cta">باز کردن فرم</span>
+                <span class="fancy-opt-cta">انتخاب</span>
               </button>
 
               <div class="fancy-menu-option disabled-service" id="srvMenuOptBundles" aria-disabled="true" style="pointer-events:none; user-select:none;">
@@ -1616,7 +1584,7 @@
                     <span class="fancy-opt-sub">آسیاسل و زین‌العراق — ثبت تراکنش و ارسال درخواست در واتس‌اپ</span>
                   </div>
                 </div>
-                <span class="fancy-opt-cta">باز کردن فرم</span>
+                <span class="fancy-opt-cta">انتخاب</span>
               </button>
 
               <button type="button" class="fancy-menu-option" id="srvMenuOptChargeAcc" onclick="openChargeAccountModal()">
@@ -1636,7 +1604,7 @@
           <div id="panelTopupBundles" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>شارژ بسته‌ها</h4>
-              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن</button>
             </div>
             <div class="info-callout-box" style="text-align:center; padding:18px 14px;">
               <div style="font-size:1rem; font-weight:900; margin-bottom:6px;">به‌زودی</div>
@@ -1648,12 +1616,12 @@
           <div id="panelTransfer" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>انتقال موجودی حساب به حساب</h4>
-              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن</button>
             </div>
 
             <div class="mandatory-sync-banner" id="mandatoryBannerTransfer">
-              <span class="mandatory-sync-text" id="mandatoryBannerTextTransfer">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
-              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnTransfer" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی اجباری</button>
+              <span class="mandatory-sync-text" id="mandatoryBannerTextTransfer">برای ادامه عملیات، ابتدا موجودی و اطلاعات حساب باید به‌روزرسانی شود.</span>
+              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnTransfer" onclick="mandatoryRefreshBeforeForm('transfer')">به‌روزرسانی حساب</button>
             </div>
 
             <div class="form-group">
@@ -1690,12 +1658,12 @@
           <div id="panelTopupAfn" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>ارسال کردیت</h4>
-              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن</button>
             </div>
 
             <div class="mandatory-sync-banner" id="mandatoryBannerAfn">
-              <span class="mandatory-sync-text" id="mandatoryBannerTextAfn">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
-              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی اجباری</button>
+              <span class="mandatory-sync-text" id="mandatoryBannerTextAfn">برای ادامه عملیات، ابتدا موجودی و اطلاعات حساب باید به‌روزرسانی شود.</span>
+              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnAfn" onclick="mandatoryRefreshBeforeForm('afn')">به‌روزرسانی حساب</button>
             </div>
 
             <div class="form-group">
@@ -1723,12 +1691,12 @@
           <div id="panelTopupIq" class="action-panel collapsed">
             <div class="panel-banner-header">
               <h4>شارژ عراق</h4>
-              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن فرم</button>
+              <button type="button" class="mini-copy-btn" onclick="collapseServiceForms()">بستن</button>
             </div>
 
             <div class="mandatory-sync-banner" id="mandatoryBannerIq">
-              <span class="mandatory-sync-text" id="mandatoryBannerTextIq">قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)</span>
-              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnIq" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی اجباری</button>
+              <span class="mandatory-sync-text" id="mandatoryBannerTextIq">برای ادامه عملیات، ابتدا موجودی و اطلاعات حساب باید به‌روزرسانی شود.</span>
+              <button type="button" class="mandatory-sync-btn" id="mandatoryBtnIq" onclick="mandatoryRefreshBeforeForm('iq')">به‌روزرسانی حساب</button>
             </div>
 
             <div class="info-callout-box">
@@ -1858,7 +1826,7 @@
     </main>
 
     <!-- منوی ثابت پایین -->
-    <nav id="bottomNavBar" class="bottom-nav-bar hidden" style="grid-template-columns: repeat(4, 1fr);">
+    <nav id="bottomNavBar" class="bottom-nav-bar hidden" style="grid-template-columns: repeat(5, 1fr);">
       <button type="button" class="nav-tab-btn active" id="navHomeBtn" onclick="switchBottomTab('home')">
         <span class="nav-icon">🏠</span>
         <span class="nav-text">صفحه اصلی</span>
@@ -1866,6 +1834,10 @@
       <button type="button" class="nav-tab-btn" id="navTxBtn" onclick="switchBottomTab('tx')">
         <span class="nav-icon">🧾</span>
         <span class="nav-text">تراکنش‌ها</span>
+      </button>
+      <button type="button" class="nav-tab-btn" id="navWalletTxBtn" onclick="switchBottomTab('wallet_tx')">
+        <span class="nav-icon">💳</span>
+        <span class="nav-text">تراکنش کیف</span>
       </button>
       <button type="button" class="nav-tab-btn" id="navServicesBtn" onclick="switchBottomTab('services')">
         <span class="nav-icon">⇄</span>
@@ -1886,7 +1858,7 @@
         <span class="admin-badge-pill" id="mgmtActiveAdminLabel">قفل</span>
       </div>
 
-      <!-- فرم ورود مدیر -->
+      <!-- ورود مدیر -->
       <div id="mgmtLoginBox">
         <p style="font-size:0.74rem; color:var(--slate-600); margin-bottom:10px; line-height:1.5;">
           برای دسترسی به تنظیمات فعال/غیرفعال بودن بخش‌ها و نرخ تبدیل در جدول <code>app_settings</code>، شناسه/ایمیل مدیر و رمز را وارد کنید.
@@ -1952,7 +1924,7 @@
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
             <button type="button" class="btn btn-primary" onclick="saveAdminIqItemForm()">افزودن / ذخیره مورد</button>
-            <button type="button" class="btn btn-outline" onclick="clearAdminIqItemForm()">پاک کردن فرم</button>
+            <button type="button" class="btn btn-outline" onclick="clearAdminIqItemForm()">پاک کردن</button>
           </div>
           <div id="mgmtIqItemsListBox" class="admin-mini-list"></div>
         </div>
@@ -2046,10 +2018,6 @@
       <h3 style="font-size:0.96rem; font-weight:900; color:var(--emerald-950); margin-bottom:8px;">شارژ کردن حساب</h3>
       <div class="info-callout-box">
         برای شارژ کردن حساب خود، می‌توانید مبلغ را به فردی که در <b>امانت‌داری کریمی</b> موجودی یا حساب دارد پرداخت کنید تا به حساب شما منتقل شود، یا مستقیماً برای هماهنگی شارژ حساب به ادمین پیام دهید.
-      </div>
-      <div class="admin-phone-box">
-        <span style="font-size:0.74rem; font-weight:800; color:var(--emerald-900);">شماره تماس ادمین:</span>
-        <strong id="chargeAccAdminPhone" class="eng-num" style="font-size:0.84rem; color:var(--emerald-950);">9647721878997</strong>
       </div>
       <a id="chargeAccountWhatsAppBtn" href="#" target="_blank" class="btn btn-whatsapp" style="margin-bottom:6px;">پیام به ادمین در واتساپ برای شارژ حساب</a>
       <button type="button" class="btn btn-outline" onclick="closeChargeAccountModal()">بستن</button>
@@ -4034,12 +4002,16 @@
 
       document.getElementById('tabHomeView').classList.add('hidden');
       document.getElementById('tabTxView').classList.add('hidden');
+        document.getElementById('tabWalletTxView')?.classList.add('hidden');
+      document.getElementById('tabWalletTxView')?.classList.add('hidden');
       document.getElementById('tabChargeTxView')?.classList.add('hidden');
       document.getElementById('tabServicesView').classList.add('hidden');
       document.getElementById('tabProfileView').classList.add('hidden');
 
       document.getElementById('navHomeBtn').classList.remove('active');
       document.getElementById('navTxBtn').classList.remove('active');
+        document.getElementById('navWalletTxBtn')?.classList.remove('active');
+      document.getElementById('navWalletTxBtn')?.classList.remove('active');
       document.getElementById('navChargeTxBtn')?.classList.remove('active');
       document.getElementById('navServicesBtn').classList.remove('active');
       document.getElementById('navProfileBtn').classList.remove('active');
@@ -4052,8 +4024,13 @@
       } else if (tab === 'tx') {
         document.getElementById('tabTxView').classList.remove('hidden');
         document.getElementById('navTxBtn').classList.add('active');
-        document.getElementById('headerSubtitleText').innerText = 'تراکنش‌ها';
+        document.getElementById('headerSubtitleText').innerText = 'تراکنش‌های حساب';
         renderTransactionsList();
+      } else if (tab === 'wallet_tx') {
+        document.getElementById('tabWalletTxView')?.classList.remove('hidden');
+        document.getElementById('navWalletTxBtn')?.classList.add('active');
+        document.getElementById('headerSubtitleText').innerText = 'تراکنش‌های کیف پول';
+        refreshCreditWalletData(true);
       } else if (tab === 'charge_tx') {
         document.getElementById('tabChargeTxView')?.classList.remove('hidden');
         document.getElementById('navChargeTxBtn')?.classList.add('active');
@@ -4102,14 +4079,6 @@
       }
 
       resetMandatorySyncState(mode);
-      const accId = localStorage.getItem('karimi_accId') ||
-        (currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id'])).trim() : '');
-      if (accId) {
-        await forceSyncBeforeOperation(accId);
-      } else {
-        await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
-        applyAppSettingsToUi();
-      }
 
       if (!isServiceEnabledBySettings(mode)) {
         alert('این بخش در حال حاضر توسط مدیریت غیرفعال است.');
@@ -4122,12 +4091,14 @@
         activeBottomTab = 'services';
         document.getElementById('tabHomeView').classList.add('hidden');
         document.getElementById('tabTxView').classList.add('hidden');
+        document.getElementById('tabWalletTxView')?.classList.add('hidden');
         document.getElementById('tabChargeTxView')?.classList.add('hidden');
         document.getElementById('tabServicesView').classList.remove('hidden');
         document.getElementById('tabProfileView').classList.add('hidden');
 
         document.getElementById('navHomeBtn').classList.remove('active');
         document.getElementById('navTxBtn').classList.remove('active');
+        document.getElementById('navWalletTxBtn')?.classList.remove('active');
         document.getElementById('navChargeTxBtn')?.classList.remove('active');
         document.getElementById('navServicesBtn').classList.add('active');
         document.getElementById('navProfileBtn').classList.remove('active');
@@ -4163,6 +4134,7 @@
         recalcTopupCost();
       }
       ensureSentinelHistory();
+      await promptMandatorySyncWithOk(mode);
     }
 
     function toggleBalanceVisibility() {
@@ -4591,7 +4563,9 @@
 
       document.getElementById('odometerCurrencyLabel').innerText = currName;
       document.getElementById('walletCurrBadge').innerText = currName;
-      document.getElementById('odometerValue').innerText = formatBalanceDisplay(b.net);
+      const odoEl = document.getElementById('odometerValue');
+      odoEl.innerText = formatBalanceDisplay(b.net);
+      odoEl.style.color = (Number(b.net) < 0) ? 'var(--danger)' : 'var(--emerald-950)';
       document.getElementById('odometerCredit').innerText = formatBalanceDisplay(b.credit);
       document.getElementById('odometerDebit').innerText = formatBalanceDisplay(b.debit);
     }
@@ -4626,19 +4600,28 @@
           txt.style.color = done ? 'var(--emerald-800)' : '#92400e';
           txt.innerText = done
             ? 'حساب شما به‌روزرسانی شد؛ می‌توانید تراکنش را انجام دهید.'
-            : 'قبل از انجام تراکنش حسابت را به‌روزرسانی کن. (اجباری)';
+            : 'برای ادامه عملیات، ابتدا موجودی و اطلاعات حساب باید به‌روزرسانی شود.';
         }
         if (btn) {
           btn.style.background = done ? 'var(--emerald-600)' : 'var(--warning)';
-          btn.innerText = done ? 'به‌روز شد ✓' : 'به‌روزرسانی اجباری';
+          btn.innerText = done ? 'به‌روز شد ✓' : 'به‌روزرسانی حساب';
         }
       });
     }
 
-    function hasCompletedMandatorySync(mode) {
+    async function promptMandatorySyncWithOk(mode) {
       if (mandatorySyncCompletedForMode[mode]) return true;
-      alert('قبل از انجام تراکنش حسابت را به‌روزرسانی کن.');
-      return false;
+      const ok = window.confirm('برای انجام این عملیات، ابتدا باید موجودی و اطلاعات حساب به‌روزرسانی شود.\nبرای به‌روزرسانی دکمه OK را بزنید.');
+      if (!ok) {
+        return false;
+      }
+      await mandatoryRefreshBeforeForm(mode);
+      return true;
+    }
+
+    async function hasCompletedMandatorySync(mode) {
+      if (mandatorySyncCompletedForMode[mode]) return true;
+      return await promptMandatorySyncWithOk(mode);
     }
 
     async function mandatoryRefreshBeforeForm(mode) {
@@ -4686,7 +4669,7 @@
     }
 
     async function forceSyncBeforeOperation(accId) {
-      showRealLoading('در حال تازه‌سازی اجباری حساب...', 'بررسی آخرین موجودی و نرخ‌ها');
+      showRealLoading('در حال به‌روزرسانی حساب...', 'بررسی آخرین موجودی و نرخ‌ها');
       await Promise.all([fetchDataFromSupabaseFresh(), fetchAppSettingsFromSupabase()]);
       if (accId) {
         const found = accountsList.find(u =>
@@ -4780,7 +4763,7 @@
       const txBioEnabled = isTxBiometricEnabled();
       document.getElementById('pinModalHeading').innerText = headingText;
       document.getElementById('txPinSummaryText').innerHTML = summaryHtml;
-      document.getElementById('txBiometricActionBox').classList.toggle('hidden', !txBioEnabled);
+      document.getElementById('txBiometricActionBox').classList.remove('hidden');
       document.getElementById('txVerifyPinInput').value = '';
       document.getElementById('txPinConfirmModal').classList.remove('hidden');
       ensureSentinelHistory();
@@ -4789,7 +4772,7 @@
 
     async function prepareTransferWithPin() {
       if (!currentFoundUser) return;
-      // optional sync
+      if (!(await hasCompletedMandatorySync('transfer'))) return;
       if (!appSettingsState.transfer_enabled) {
         alert('انتقال موجودی توسط مدیریت غیرفعال است.');
         return;
@@ -4816,10 +4799,8 @@
         return;
       }
 
-      if (!isTxBiometricEnabled()) {
-        const hasPin = await ensureAccountHasPin(myAccId);
-        if (!hasPin) return;
-      }
+      const hasPin = await ensureAccountHasPin(myAccId);
+      if (!hasPin) return;
 
       const tId = String(getVal(targetAcc, ['AccountID', 'accountid', 'ID', 'account_id'])).trim();
       const tName = String(getVal(targetAcc, ['Name', 'name', 'fullname']) || 'مشتری مقصد').trim();
@@ -5025,6 +5006,7 @@
     function getCreditWalletOpLabel(opType) {
       switch (String(opType || '')) {
         case 'credit_topup': return 'خرید/ارسال کردیت';
+        case 'iraq_topup': return 'شارژ عراق';
         case 'topup_from_main': return 'انتقال از حساب اصلی به کیف کردیت';
         case 'admin_grant_debt': return 'افزایش کیف کردیت توسط مدیریت (بدهکار حساب اصلی)';
         case 'wallet_transfer_out': return 'ارسال به کیف پول کردیت دیگر';
@@ -5188,6 +5170,27 @@
         return;
       }
 
+      const hasPin = await ensureAccountHasPin(accId);
+      if (!hasPin) return;
+
+      const wId = getCurrentCreditWalletId();
+      openOperationAuthModal(
+        'تایید انتقال از حساب به کیف پول',
+        `انتقال <b class="eng-num">${formatEnMoney(amtIqd)} IQD</b> از حساب اصلی به کیف پول کردیت (<span class="eng-num">${wId}</span>)`,
+        { kind: 'cw_from_main', data: { accId, accName, amtIqd, wId } }
+      );
+    }
+
+    async function runTransferMainToCreditWalletAfterAuth(d) {
+      const { accId, accName, amtIqd } = d;
+      await forceSyncBeforeOperation(accId);
+      await ensureCreditWalletRow(accId);
+      const mainAvail = getNetIqdBalance();
+      if (mainAvail <= 0 || amtIqd > mainAvail) {
+        alert('موجودی دینار (IQD) در حساب اصلی کافی نیست.');
+        return;
+      }
+
       const wId = getCurrentCreditWalletId();
       const curWalletBal = getCurrentCreditWalletBalanceIqd();
       const nextWalletBal = Math.max(0, curWalletBal + amtIqd);
@@ -5302,6 +5305,32 @@
         return;
       }
 
+      await refreshCreditWalletData(true);
+      const targetW = findTargetCreditWallet(targetWalletIdRaw);
+      if (!targetW) {
+        alert('آیدی کیف پول مقصد معتبر نیست.');
+        return;
+      }
+
+      const myBal = getCurrentCreditWalletBalanceIqd();
+      if (myBal <= 0 || amtIqd > myBal) {
+        alert('موجودی کیف پول کردیت شما کافی نیست.');
+        return;
+      }
+
+      const hasPin = await ensureAccountHasPin(myAccId);
+      if (!hasPin) return;
+
+      const targetWId = String(targetW.wallet_id || '').trim();
+      openOperationAuthModal(
+        'تایید انتقال بین کیف پول‌ها',
+        `ارسال <b class="eng-num">${formatEnMoney(amtIqd)} IQD</b> به کیف پول (<span class="eng-num">${targetWId}</span>)`,
+        { kind: 'cw_wallet_transfer', data: { myAccId, targetWalletIdRaw, amtIqd } }
+      );
+    }
+
+    async function runWalletToWalletTransferAfterAuth(d) {
+      const { myAccId, targetWalletIdRaw, amtIqd } = d;
       await refreshCreditWalletData(true);
       const targetW = findTargetCreditWallet(targetWalletIdRaw);
       if (!targetW) {
@@ -5534,13 +5563,14 @@
       const iqBtn = document.getElementById('btnExecuteTopupIq');
       document.getElementById('iqCalculatedIqd').innerText = formatEnMoney(chargeAmt);
 
+      document.getElementById('iqCalculatedIqd').innerText = `${formatEnMoney(chargeAmt)} (موجودی کیف کردیت: ${formatEnMoney(creditWalletIqd)} IQD)`;
       if (!appSettingsState.topup_iq_enabled) {
         iqBox.classList.add('error');
         iqErr.innerText = 'شارژ عراق در جدول تنظیمات غیرفعال است.';
         if (iqBtn) iqBtn.disabled = true;
-      } else if (netIqd <= 0 || chargeAmt > netIqd) {
+      } else if (creditWalletIqd <= 0 || chargeAmt > creditWalletIqd) {
         iqBox.classList.add('error');
-        iqErr.innerText = 'موجودی دینار کافی نیست.';
+        iqErr.innerText = 'موجودی کیف پول کردیت کافی نیست. ابتدا از حساب اصلی به کیف کردیت منتقل کنید.';
         if (iqBtn) iqBtn.disabled = true;
       } else {
         iqBox.classList.remove('error');
@@ -5585,7 +5615,7 @@
 
     async function executeCustomerTopup(mode) {
       if (!currentFoundUser) return;
-      // optional sync
+      if (!(await hasCompletedMandatorySync('transfer'))) return;
       if (mode === 'afn' && !appSettingsState.topup_afn_enabled) {
         alert('ارسال کردیت توسط مدیریت غیرفعال است.');
         return;
@@ -5629,22 +5659,22 @@
         payloadData = { mode: 'afn', accId, accName, afnNetwork, operatorCode, targetPhone, intlPhone: detectedOp.intlPhone, afnAmt, requiredIqd, rate };
         summaryHtml = `ارسال کردیت (${afnNetwork}) — <b class="eng-num">${formatEnMoney(afnAmt)} AFN</b> به <span class="eng-num">${targetPhone}</span> (<b class="eng-num">${formatEnMoney(requiredIqd)} IQD</b>)`;
       } else {
+        await refreshCreditWalletData(false);
+        const creditWalletIqd = getCurrentCreditWalletBalanceIqd();
         const network = document.getElementById('iqNetworkSelect').value;
         const iqPkgInfo = getSelectedIraqPackageInfo();
         const cardAmt = iqPkgInfo.cardAmount;
         const chargeAmt = iqPkgInfo.chargeAmount;
-        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > netIqd) {
-          alert('موجودی دینار کافی نیست.');
+        if (cardAmt <= 0 || chargeAmt <= 0 || chargeAmt > creditWalletIqd || creditWalletIqd <= 0) {
+          alert('موجودی کیف پول کردیت کافی نیست.');
           return;
         }
         payloadData = { mode: 'iq', accId, accName, accPhone, network, cardAmt, chargeAmt, pkgLabel: iqPkgInfo.label };
-        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از حساب: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
+        summaryHtml = `شارژ <b>${network}</b> — مقدار شارژ: <b class="eng-num">${formatEnMoney(cardAmt)} IQD</b> (کسر از کیف پول: <b class="eng-num">${formatEnMoney(chargeAmt)} IQD</b>)`;
       }
 
-      if (!isTxBiometricEnabled()) {
-        const hasPin = await ensureAccountHasPin(accId);
-        if (!hasPin) return;
-      }
+      const hasPin = await ensureAccountHasPin(accId);
+      if (!hasPin) return;
 
       openOperationAuthModal('تایید عملیات شارژ', summaryHtml, { kind: 'topup', data: payloadData });
     }
@@ -5678,6 +5708,10 @@
         await runAccountTransfer(actionObj.data);
       } else if (actionObj.kind === 'topup') {
         await runTopupAfterPin(actionObj.data);
+      } else if (actionObj.kind === 'cw_from_main') {
+        await runTransferMainToCreditWalletAfterAuth(actionObj.data);
+      } else if (actionObj.kind === 'cw_wallet_transfer') {
+        await runWalletToWalletTransferAfterAuth(actionObj.data);
       }
     }
 
@@ -6033,12 +6067,20 @@
         }
         showReceiptForTransactionData(cwReceiptTx);
       } else {
-        const prevIds = getUserTransactionIds(payload.accId);
         const nowIso = new Date().toISOString();
         const txId = 'IQ-' + Math.floor(100000 + Math.random() * 900000);
-        const assigned = getVal(currentFoundUser, ['AssignedUserEmail', 'assigneduseremail']) || OWNER_EMAIL;
         const iqChargeAmt = Number(payload.chargeAmt ?? payload.cardAmt) || Number(payload.cardAmt) || 0;
         const iqCardAmt = Number(payload.cardAmt) || iqChargeAmt;
+
+        await ensureCreditWalletRow(payload.accId);
+        const wId = getCurrentCreditWalletId();
+        const curWBal = getCurrentCreditWalletBalanceIqd();
+        if (curWBal < iqChargeAmt || curWBal <= 0) {
+          hideRealLoading();
+          alert('موجودی کیف پول کردیت کافی نیست.');
+          return;
+        }
+
         const apiResult = await callExternalTopupApi({
           txId,
           accountId: payload.accId,
@@ -6048,39 +6090,78 @@
           cardAmount: iqCardAmt,
           currency: 'IQD'
         });
-        const refSuffix = (apiResult.handledByExternalApi && apiResult.referenceId) ? ` | کد پیگیری: ${apiResult.referenceId}` : '';
-        const iqTxRow = {
-          TransID: txId,
-          AccountID: payload.accId,
-          Date: nowIso,
-          Amount: iqChargeAmt,
-          Currency: 'IQD',
-          Direction: 'بدهکار',
-          OperationType: 'شارژ عراق',
-          Description: `رسید رسمی شارژ عراق — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`,
-          AssignedUserEmail: assigned,
-          Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده'
-        };
-        const { error } = await _supabase.from('transactions').insert([iqTxRow]);
-        hideRealLoading();
 
-        if (error) {
-          alert('خطا در ثبت تراکنش: ' + error.message);
+        const nextWBal = Math.max(0, curWBal - iqChargeAmt);
+        const wUpdateRes = await updateCreditWalletBalanceInDb(wId, payload.accId, nextWBal);
+        if (!wUpdateRes.ok) {
+          hideRealLoading();
+          alert('خطا در کسر مبلغ از کیف پول کردیت: ' + wUpdateRes.error);
           return;
         }
+
+        const extRef = (apiResult.handledByExternalApi && apiResult.referenceId) ? String(apiResult.referenceId) : '';
+        const refSuffix = extRef ? ` | کد پیگیری: ${extRef}` : '';
+        const officialIqDesc = `رسید رسمی شارژ عراق (از کیف پول کردیت ${wId}) — صاحب حساب: ${payload.accName} | شبکه: ${payload.network} | مبلغ شارژ: ${formatEnMoney(iqCardAmt)} IQD | مبلغ کسر: ${formatEnMoney(iqChargeAmt)} IQD${refSuffix} موفقانه ثبت شد.`;
+
+        const cwInsertRes = await insertCreditWalletTxRow({
+          tx_id: txId,
+          wallet_id: wId,
+          account_id: payload.accId,
+          operation_type: 'iraq_topup',
+          direction: 'debit',
+          amount_iqd: Number(iqChargeAmt),
+          amount_afn: 0,
+          exchange_rate: Number(getAfnExchangeRate()),
+          target_phone: String(payload.accPhone || ''),
+          operator_code: String(payload.network || ''),
+          external_ref: extRef,
+          description: officialIqDesc,
+          created_at: nowIso
+        });
+
+        hideRealLoading();
+
+        if (!cwInsertRes || !cwInsertRes.ok) {
+          alert('خطا در ثبت تراکنش در جدول تراکنش‌های کیف پول: ' + (cwInsertRes && cwInsertRes.error ? cwInsertRes.error : 'خطای نامشخص'));
+          return;
+        }
+
+        const cwIqReceiptTx = {
+          tx_id: txId,
+          TransID: txId,
+          wallet_id: wId,
+          account_id: payload.accId,
+          operation_type: 'iraq_topup',
+          OperationType: 'شارژ عراق',
+          direction: 'debit',
+          Direction: 'بدهکار (کیف کردیت)',
+          amount_iqd: Number(iqChargeAmt),
+          Amount: Number(iqChargeAmt),
+          amount_afn: 0,
+          exchange_rate: Number(getAfnExchangeRate()),
+          target_phone: String(payload.accPhone || ''),
+          operator_code: String(payload.network || ''),
+          external_ref: extRef,
+          Currency: 'IQD',
+          Status: apiResult.handledByExternalApi ? (apiResult.ok ? 'تایید شده' : 'ناموفق') : 'ثبت شده',
+          created_at: nowIso,
+          Date: nowIso,
+          description: officialIqDesc,
+          Description: officialIqDesc,
+          balance_before_iqd: Number(curWBal),
+          balance_after_iqd: Number(nextWBal),
+          is_credit_wallet_receipt: true
+        };
 
         resetAllOperationForms();
         collapseServiceForms();
         await fetchDataFromSupabaseFresh();
         processDashboard(payload.accId, false);
+        await refreshCreditWalletData(true);
         resetAllOperationForms();
         collapseServiceForms();
         updateLastSyncLabel();
-        const curIds = getUserTransactionIds(payload.accId);
-        try { localStorage.setItem(`karimi_seen_tx_ids_${payload.accId.trim().toLowerCase()}`, JSON.stringify(curIds)); } catch (e) {}
-        if (curIds.length > prevIds.length) {
-          notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
-        }
+        notifyAccountEvent('شارژ عراق ثبت شد', `${payload.network} — ${formatEnMoney(payload.cardAmt)} IQD`);
 
         const dateOnlyNow = extractDateOnly(nowIso);
         const timeOnlyNow = extractTimeOnly(nowIso) || '';
@@ -6095,7 +6176,7 @@
         });
         lastIraqTopupAdminUrl = waAdminUrl;
 
-        showReceiptForTransactionData(iqTxRow);
+        showReceiptForTransactionData(cwIqReceiptTx);
         window.open(waAdminUrl, '_blank');
       }
     }
@@ -6455,9 +6536,9 @@
 
     function openChargeAccountModal() {
       playSound('click');
-      const phoneEl = document.getElementById('chargeAccAdminPhone');
+      
       const waBtn = document.getElementById('chargeAccountWhatsAppBtn');
-      if (phoneEl) phoneEl.innerText = OWNER_WHATSAPP;
+      
 
       const accName = currentFoundUser ? (getVal(currentFoundUser, ['Name', 'name', 'fullname']) || 'مشتری') : 'مشتری';
       const accId = currentFoundUser ? String(getVal(currentFoundUser, ['AccountID', 'accountid', 'ID', 'account_id']) || '').trim() : (localStorage.getItem('karimi_accId') || '---');
@@ -6466,7 +6547,7 @@
 نام: ${accName}
 کد حساب: ${accId}
 شماره: ${accPhone || '---'}
-توضیح: لطفاً نحوه واریز وجه از طریق فرد دارای حساب یا هماهنگی شارژ حساب را اعلام فرمایید.`;
+توضیح: لطفاً نحوه واریز وجه از طریق فرد دارای حساب یا هماهنگی شارژ حساب را اعلام بخشایید.`;
 
       if (waBtn) {
         waBtn.href = `https://wa.me/${OWNER_WHATSAPP}?text=${encodeURIComponent(msg)}`;
