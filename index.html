@@ -4774,6 +4774,10 @@
      document.getElementById('txBiometricActionBox').classList.toggle('hidden', true);
       document.getElementById('txVerifyPinInput').value = '';
       document.getElementById('txPinConfirmModal').classList.remove('hidden');
+      document.getElementById('txPinConfirmModal').classList.remove('hidden');
+  if (typeof closeCreditWalletModal === 'function') closeCreditWalletModal();
+  ensureSentinelHistory();
+  setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
       ensureSentinelHistory();
       setTimeout(() => document.getElementById('txVerifyPinInput').focus(), 100);
     }
